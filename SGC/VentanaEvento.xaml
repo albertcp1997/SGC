@@ -1,0 +1,78 @@
+﻿<Window x:Class="SGC.VentanaEvento"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGC"
+        mc:Ignorable="d"
+        Title="VentanaEvento" Topmost="True" Closed="Window_Closed" Background="Transparent" WindowStartupLocation="CenterScreen" MaxHeight="650" MaxWidth="600" MinHeight="650" MinWidth="600" Width="600" Height="{Binding SystemParameters.PrimaryScreenWidth}" Loaded="WindowLoaded">
+    <Grid Background="Transparent">
+        <Border  Background="White">
+            <Grid Margin="0,0,30,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="99*"></RowDefinition>
+                    <RowDefinition Height="410*"></RowDefinition>
+                    <RowDefinition Height="160*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                    <ColumnDefinition Width="277*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Margin="30,0,0,0" Grid.Column="1" x:Name="day" Text="Viernes, 26 de Junio" VerticalAlignment="Bottom" FontFamily="Helvetica neue" FontSize="24" Height="29"></TextBlock>
+
+                <Grid Margin="30,0,0,0" Grid.Column="1" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="17*"></RowDefinition>
+                        <RowDefinition Height="135*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="13*"></RowDefinition>
+                            <RowDefinition Height="122*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="1" Text="Nota:" FontSize="18" FontFamily="helvetica neue" Foreground="#888c98" ></TextBlock>
+
+                        <TextBox GotFocus="Nota_GotFocus" AcceptsReturn="True"  FontSize="18" Foreground="#888c98" x:Name="Nota" Text="Nota..." TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" FontFamily="helvetica neue" BorderBrush="#e2e6ef" BorderThickness="3" >
+                            <TextBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"></Setter>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+
+                    </Grid>
+
+
+
+                </Grid>
+                <Grid Margin="30,0,0,0" Grid.Column="1" Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25*"></ColumnDefinition>
+                        <ColumnDefinition Width="13*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Column="1">
+                        <Button ToolTip="Cerrar ventana"  x:Name="delete_evento"  Width="40" Height="30" Margin="0,30,30,0" Click="Borrar_evento" Background="#f86e6c">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="15"></Setter>
+                                </Style>
+                            </Button.Resources>
+                            <Image Source="/iconos/cruz.png"></Image>
+                        </Button>
+                        <Button ToolTip="Guardar cambios"  x:Name="add_evento" Width="40" Margin="0,30,0,0" Height="30" Click="Añadir_evento" Background="#00bb90">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="15"></Setter>
+                                </Style>
+                            </Button.Resources>
+                            <Image Source="/iconos/check.png"></Image>
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
+                <Border Grid.RowSpan="3" Background="#00ba91" CornerRadius="15,0,0,0"></Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,100 @@
+﻿<Window x:Class="SGC.VentanaProducto"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGC"
+        mc:Ignorable="d"
+             Title="VentanaProducto" Topmost="True"  WindowStartupLocation="CenterScreen" MaxHeight="650" MaxWidth="600" MinHeight="650" MinWidth="600" Width="600" Height="650" >
+    <Grid Background="Transparent">
+        <Border  Background="White">
+            <Grid Margin="0,0,30,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="85*"></RowDefinition>
+                    <RowDefinition Height="474*"></RowDefinition>
+                    <RowDefinition Height="40*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                    <ColumnDefinition Width="277*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Margin="30,28,0,28" Grid.Column="1" x:Name="day" Text="Nuevo Producto" VerticalAlignment="Center" FontFamily="Helvetica neue" FontSize="24" Height="29"></TextBlock>
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+                    <Label Foreground="#838d99" HorizontalAlignment="Left">Nombre</Label>
+                    <ComboBox  SelectionChanged="mirarFactura2" Height="40"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" IsEditable="True" IsTextSearchEnabled="True" x:Name="Nombre" Foreground="#92959c">
+                        <ComboBox.Style>
+                            <Style>
+                                <EventSetter Event="TextBox.TextChanged" Handler="TextBox_TextChanged" />
+                                
+                            </Style>
+                            
+                        </ComboBox.Style>
+                        <ComboBox.Resources>
+                        </ComboBox.Resources>
+
+                    </ComboBox>
+                    
+                    <Label Foreground="#838d99" HorizontalAlignment="Left">Cantidad</Label>
+                    <ComboBox Height="40"  SelectionChanged="Nombre_Alarma_TextChanged2" x:Name="cantidad"   FontFamily="helvetica neue" FontSize="15" Foreground="#92959c">
+
+                    </ComboBox>
+                    <Label Foreground="#838d99" HorizontalAlignment="Left">Precio</Label>
+                    <TextBox IsEnabled="True" PreviewTextInput="NumberValidationTextBox"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" x:Name="Precio" TextChanged="Nombre_Alarma_TextChanged"></TextBox>
+
+
+                    <Label Foreground="#838d99" HorizontalAlignment="Left">IVA</Label>
+                    <ComboBox Height="40" SelectionChanged="mirarFactura3" x:Name="IVA">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Id}" Margin="0,0,5,0"></TextBlock>
+                                    <TextBlock Text="{Binding Tipo}" Margin="0,0,5,0"></TextBlock>
+                                    <TextBlock Text="{Binding Porcentaje}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <Label Foreground="#838d99" HorizontalAlignment="Left">Impuestos</Label>
+                    <TextBox IsEnabled="False" Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" x:Name="Impuestos" TextChanged="Nombre_Alarma_TextChanged"></TextBox>
+
+                    <Label Foreground="#838d99" HorizontalAlignment="Left" Visibility="Visible">Descuento %</Label>
+                    <TextBox Text="0" Height="40" BorderBrush="#e2e6ee" Visibility="Visible" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" x:Name="Descunto" TextChanged="Nombre_Alarma_TextChanged"></TextBox>
+
+
+                    <Label Foreground="#838d99" HorizontalAlignment="Left">Total</Label>
+                    <TextBox IsEnabled="False" Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" x:Name="total" TextChanged="Nombre_Alarma_TextChanged"></TextBox>
+
+                </StackPanel>
+
+                <Grid Margin="30,0,0,0" Grid.Column="1" Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25*"></ColumnDefinition>
+                        <ColumnDefinition Width="13*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Column="1">
+                        <Button ToolTip="Cerrar Ventana"  x:Name="delete_evento"  Width="40" Height="30" Margin="0,0,30,0" Click="Borrar_evento" Background="#f86e6c">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="15"></Setter>
+                                </Style>
+                            </Button.Resources>
+                            <Image Source="/iconos/cruz.png"></Image>
+                        </Button>
+                        <Button ToolTip="Guardar cambios"  x:Name="add_evento" Width="40" Visibility="Visible" Margin="0,0,0,0" Height="30" Click="Añadir_evento" Background="#00bb90">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="15"></Setter>
+                                </Style>
+                            </Button.Resources>
+                            <Image Source="/iconos/check.png"></Image>
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
+                <Border Grid.RowSpan="3" Background="#00ba91" CornerRadius="15,0,0,0"></Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

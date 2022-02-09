@@ -1,0 +1,380 @@
+﻿<Window x:Class="SGC.VentanaUsuario"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGC"
+        mc:Ignorable="d"
+        Title="VentanaUsuario" Topmost="True" WindowStartupLocation="CenterScreen" Height="600" MinHeight="600" MinWidth="1000">
+    <Grid Background="#f5f6f8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="33"></RowDefinition>
+            <RowDefinition Height="360*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Background="White">
+
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Content="Nuevo Usuario" FontFamily="helvetica neue" FontSize="23" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" FontWeight="DemiBold" Foreground="#00ba93"></Label>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+
+            </StackPanel>
+            <Rectangle Grid.ColumnSpan="2">
+                <Rectangle.Effect>
+                    <DropShadowEffect></DropShadowEffect>
+                </Rectangle.Effect>
+            </Rectangle>
+        </Grid>
+        <ScrollViewer Grid.Row="1">
+            <Grid >
+                <Grid.ColumnDefinitions>
+
+                </Grid.ColumnDefinitions>
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="0,0,0,0">
+                    <Grid.ColumnDefinitions></Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+
+
+                        <RowDefinition Height="10*"></RowDefinition>
+                        <RowDefinition Height="629*"/>
+                        <RowDefinition Height="40*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="2">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="155*"></ColumnDefinition>
+                                <ColumnDefinition Width="282*"></ColumnDefinition>
+                                <ColumnDefinition Width="204"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+
+
+
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                <Button Visibility="Hidden" Background="#f9b257" Margin="10,0,10,0" Width="40" Height="30">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="15"></Setter>
+                                        </Style>
+                                    </Button.Resources>
+                                    <Image Source="https://www.pngkit.com/png/full/824-8247550_png-file-edit-round-icon-png.png">
+
+                                    </Image>
+                                </Button>
+                                <Button ToolTip="Cerrar ventana"  Background="#e22a46"  Margin="10,0,10,0" Width="40" Height="30" Click="Clear_All">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="15"></Setter>
+                                        </Style>
+                                    </Button.Resources>
+                                    <Image Source="/iconos/cruz.png">
+
+                                    </Image>
+                                </Button>
+                                <Button ToolTip="Guardar cambios"  Visibility="Collapsed" Background="#e22a46"  Margin="10,0,10,0" Width="40" Height="30"  Click="Clear_All" x:Name="deleteAll3">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="15"></Setter>
+                                        </Style>
+                                    </Button.Resources>
+                                    <Image Source="/iconos/basura.png">
+
+                                    </Image>
+                                </Button>
+
+                                <Button Background="#00ba92" x:Name="addall2" Click="addall2_Click"  Margin="10,0,10,0" Width="40" Height="30">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="15"></Setter>
+                                        </Style>
+                                    </Button.Resources>
+                                    <Image Source="/iconos/check.png">
+
+                                    </Image>
+                                </Button>
+                            </StackPanel>
+
+
+                        </Grid>
+                    </Border>
+
+
+                    <Grid Grid.Row="1">
+                        <Border Background="White"  VerticalAlignment="Stretch">
+                            <Grid Margin="10,0,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="35"></RowDefinition>
+                                    <RowDefinition Height="81*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Label Content="Datos Usuario" FontFamily="helvetica neue" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="18"></Label>
+                                <Border BorderBrush="LightGray" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="1" Margin="5,0,5,0">
+
+                                </Border>
+
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="205*"></RowDefinition>
+                                        <RowDefinition Height="13*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+
+                                    <Border Grid.Row="0" Grid.Column="0" Margin="0,0,10,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20*"/>
+                                                <ColumnDefinition Width="47*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"></RowDefinition>
+                                                <RowDefinition Height="131*"></RowDefinition>
+                                            </Grid.RowDefinitions>
+
+                                            <Label FontFamily="Helvetica neue" Foreground="#26c09c" Grid.Row="0" Content="Usuario" FontSize="16" Grid.ColumnSpan="2"></Label>
+                                            <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="0,0.5,0,0" Grid.ColumnSpan="2">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                                                        <ColumnDefinition Width="202*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Background="#00ba91"></Border>
+                                                    <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label Content="Nombre" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        </StackPanel>
+                                                        
+                                                        <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="Nombre_Trabajador"></TextBox>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label Content="Primer Apellido" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        
+                                                        </StackPanel>
+                                                        
+                                                        <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="Apellido1_Trabajador"></TextBox>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label Content="Segundo Apellido" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        
+                                                        </StackPanel>
+                                                        
+                                                        <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="Apellido2_Trabajador"></TextBox>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label Foreground="#838d99" Content="DNI" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        
+                                                        </StackPanel>
+                                                        <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c"  TextChanged="mirar" x:Name="Dni_Trabajador"></TextBox>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label  Content="Usuario" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        </StackPanel>
+                                                        
+                                                        <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c"  TextChanged="mirar" x:Name="Nombre_Cuenta"></TextBox>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+ <Label Foreground="#838d99" Content="Contraseña" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        
+                                                        </StackPanel>
+                                                       <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c"  TextChanged="mirar" x:Name="Contrasena"></TextBox>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label Foreground="#838d99" Grid.Row="0" Grid.Column="6" HorizontalAlignment="Left" FontSize="12" FontFamily="helvetica neue" Content="Telefono" Margin="0,0,-6,0" Width="82"></Label>
+                                                        
+                                                        </StackPanel>
+                                                        <TextBox PreviewTextInput="NumberValidationTextBox" x:Name="Telefono" TextChanged="mirar" Grid.Row="1" Grid.Column="6" Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" />
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+                                                            <Label Foreground="#838d99" Grid.Row="0" Grid.Column="6" HorizontalAlignment="Left" FontSize="12" FontFamily="helvetica neue" Content="Mail" Margin="0,0,-6,0" Width="82"></Label>
+
+                                                        </StackPanel>
+                                                        <TextBox x:Name="Mail" TextChanged="mirar" Grid.Row="1" Grid.Column="6" Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" />
+
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                    <Border Grid.Row="0" Grid.Column="1" Margin="0,0,10,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"></RowDefinition>
+                                                <RowDefinition Height="131*"></RowDefinition>
+                                            </Grid.RowDefinitions>
+
+                                            <Label FontFamily="Helvetica neue" Foreground="#26c09c" Grid.Row="0" FontSize="16" Content="Dirección"></Label>
+                                            <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="0,0.5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                                                        <ColumnDefinition Width="202*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Background="#00ba91"></Border>
+                                                    <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label Foreground="#838d99" Content="Dirección" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        </StackPanel>
+                                                        
+
+                                                        <TextBox TextChanged="mirar" x:Name="direccion_cliente" Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" ></TextBox>
+                                                        <Grid HorizontalAlignment="Stretch">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="50*"></ColumnDefinition>
+                                                                <ColumnDefinition Width="5"></ColumnDefinition>
+                                                                <ColumnDefinition Width="43*"></ColumnDefinition>
+                                                                <ColumnDefinition Width="5"></ColumnDefinition>
+                                                                <ColumnDefinition Width="42*"></ColumnDefinition>
+                                                                <ColumnDefinition Width="5"></ColumnDefinition>
+                                                                <ColumnDefinition Width="62*"></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition></RowDefinition>
+                                                                <RowDefinition></RowDefinition>
+
+                                                            </Grid.RowDefinitions>
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                                                                <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label Foreground="#838d99"  HorizontalAlignment="Left" Margin="0,0,0,0" FontSize="12" FontFamily="helvetica neue" Content="Numero"></Label>
+                                                            </StackPanel>
+                                                            
+                                                            <TextBox PreviewTextInput="NumberValidationTextBox"  x:Name="numero" TextChanged="mirar" Grid.Row="1" Grid.Column="0" Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" />
+
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
+                                                              
+<Label Foreground="#838d99"  HorizontalAlignment="Left" FontSize="12" FontFamily="helvetica neue" Content="Piso" ></Label>
+                                                            </StackPanel>
+                                                            
+                                                            <TextBox x:Name="piso" TextChanged="mirar" Grid.Row="1" Grid.Column="2" Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" />
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="4">
+                                                               
+ <Label Foreground="#838d99"  HorizontalAlignment="Left" FontSize="12" FontFamily="helvetica neue" Content="Puerta" ></Label>
+                                                            </StackPanel>
+                                                           
+                                                            <TextBox x:Name="puerta" TextChanged="mirar" Grid.Row="1" Grid.Column="4" Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" />
+                                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="6">
+                                                                <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+ <Label Foreground="#838d99"  HorizontalAlignment="Left" FontSize="12" FontFamily="helvetica neue" Content="Codigo Postal" Margin="0,0,-6,0" Width="82"></Label>
+                                                            </StackPanel>
+                                                           
+                                                            <TextBox PreviewTextInput="NumberValidationTextBox" x:Name="CP" TextChanged="mirar" Grid.Row="1" Grid.Column="6" Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" />
+
+
+
+                                                        </Grid>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+ <Label Foreground="#838d99" Content="Población" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        </StackPanel>
+                                                       
+                                                        <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"  FontSize="15" Foreground="#92959c"  TextChanged="mirar" x:Name="poblacion_cliente" FontFamily="Helvetica neue" ></TextBox>
+                                                        <Grid HorizontalAlignment="Stretch">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                                <ColumnDefinition Width="5"></ColumnDefinition>
+                                                                <ColumnDefinition ></ColumnDefinition>
+
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition></RowDefinition>
+                                                                <RowDefinition></RowDefinition>
+
+                                                            </Grid.RowDefinitions>
+                                                            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0">
+                                                                <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+ <Label Foreground="#838d99" Content="Provincia" FontFamily="Helvetica neue"   FontSize="12"/>
+                                                           
+                                                            </StackPanel>
+                                                            <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"  FontSize="15" Foreground="#92959c"  TextChanged="mirar" x:Name="codigo_poblacio" FontFamily="Helvetica neue" Grid.Column="0" Grid.Row="1" ></TextBox>
+                                                            <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="0">
+                                                                <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+ <Label Foreground="#838d99" Content="Pais" FontFamily="Helvetica neue"   FontSize="12"/>
+                                                           
+                                                            </StackPanel>
+                                                            <TextBox Height="20" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"  FontSize="15" Foreground="#92959c"  TextChanged="mirar" x:Name="codigo_pais" FontFamily="Helvetica neue" Grid.Column="2" Grid.Row="1" ></TextBox>
+
+                                                        </Grid>
+
+
+
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+
+
+
+                                        </Grid>
+                                    </Border>
+
+                                    <Border Grid.Row="0" Grid.Column="2" Margin="0,0,10,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"></RowDefinition>
+                                                <RowDefinition Height="131*"></RowDefinition>
+                                            </Grid.RowDefinitions>
+
+                                            <Label FontFamily="Helvetica neue" Foreground="#26c09c" Grid.Row="0" FontSize="16" Content="Otros"></Label>
+                                            <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="0,0.5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="4*"></ColumnDefinition>
+                                                        <ColumnDefinition Width="202*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Background="#00ba91"></Border>
+                                                    <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+<Label Foreground="#838d99" Content="Rol del Usuario" FontFamily="Helvetica neue" FontSize="12"/>
+                                                        </StackPanel>
+                                                        
+                                                        <ComboBox x:Name="Rol_usuario" FontSize="9"  Height="25" BorderBrush="#e2e6ee" BorderThickness="2" SelectionChanged="Rol_usuario_SelectionChanged">
+                                                            <ComboBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <Label Content="{Binding Id}"></Label>
+                                                                        <Label Content="{Binding Nom}"></Label>
+
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </ComboBox.ItemTemplate>
+                                                        </ComboBox>
+                                                       <Label Foreground="#838d99" Grid.Row="0" Grid.Column="6" HorizontalAlignment="Left" FontSize="12" FontFamily="helvetica neue" Content="Nota" Margin="0,0,-6,0" Width="82"></Label>
+                                                        <TextBox x:Name="Nota" TextChanged="mirar" Grid.Row="1" Grid.Column="6" Height="100" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" />
+
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+
+
+
+                                        </Grid>
+                                    </Border>
+
+
+
+
+
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+
+
+
+                </Grid>
+            </Grid>
+
+        </ScrollViewer>
+
+    </Grid>
+</Window>

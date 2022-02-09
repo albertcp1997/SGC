@@ -1,0 +1,241 @@
+﻿<Window x:Class="SGC.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGC"
+        mc:Ignorable="d"
+        Title="Login"  ShowActivated="True" Height="1080" Width="1920" MinHeight="640" MinWidth="930" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="81"></RowDefinition>
+            <RowDefinition Height="968*"></RowDefinition>
+
+
+        </Grid.RowDefinitions>
+
+        <Border BorderBrush="White" BorderThickness="0,0,0,0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <Border BorderBrush="LightGray" BorderThickness="0,1,0,0">
+                <Grid Background="#f5f6f7" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="520*"></ColumnDefinition>
+                        <ColumnDefinition Width="900"></ColumnDefinition>
+                        <ColumnDefinition Width="520*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="230*"></RowDefinition>
+                        <RowDefinition Height="513"></RowDefinition>
+                        <RowDefinition Height="230*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Border  Grid.Column="1" x:Name="border" BorderBrush="Transparent" BorderThickness="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  CornerRadius="10"  Grid.RowSpan="2">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="2" Color="LightGray" BlurRadius="15"/>
+                            </Border.Effect>
+
+                            <Border KeyDown="border2_KeyDown" x:Name="border2" Background="White" BorderBrush="#00ba92" BorderThickness="10,0,0,0" CornerRadius="20">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="8*"></RowDefinition>
+                                        <RowDefinition Height="33*"></RowDefinition>
+                                        <RowDefinition Height="13*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                                        <ColumnDefinition Width="151*"></ColumnDefinition>
+                                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid  HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*" ></ColumnDefinition>
+                                            <ColumnDefinition Width="12" ></ColumnDefinition>
+                                            <ColumnDefinition Width="3*" ></ColumnDefinition>
+
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="17*"></RowDefinition>
+                                            <RowDefinition Height="48*"></RowDefinition>
+                                            <RowDefinition Height="16*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Text="SGC" Foreground="#858d9b" FontSize="40"  Style="{StaticResource CustomFont}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="UltraLight" Grid.Row="1" ></TextBlock>
+                                        <StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <TextBlock Text="SOFTWARD" Foreground="#cbcfd4" Style="{StaticResource CustomFont}" FontSize="8" Margin="0,0,0,-3" Grid.Column="1"></TextBlock>
+                                            <TextBlock Text="GESTIÓN" Foreground="#cbcfd4" FontSize="8" Margin="0,0,0,-3" Style="{StaticResource CustomFont}" Grid.Column="1"></TextBlock>
+                                            <TextBlock Text="CAMPING" Foreground="#cbcfd4" FontSize="8" Style="{StaticResource CustomFont}" Grid.Column="1"></TextBlock>
+                                        </StackPanel>
+
+
+                                    </Grid>
+
+
+                                    <Grid Grid.Row="1" Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="55*"></RowDefinition>
+                                            <RowDefinition Height="18*"></RowDefinition>
+                                            <RowDefinition Height="94*"></RowDefinition>
+                                            <RowDefinition Height="30*"></RowDefinition>
+                                            <RowDefinition Height="89*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+
+                                        <Label Content="Login" Grid.Row="0" Margin="0,0,0,10" FontSize="24" x:Name="title" FontFamily="helvetica neue"></Label>
+                                        <Grid Grid.Row="2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="49*"></RowDefinition>
+                                                <RowDefinition Height="45*"></RowDefinition>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Text="Usuario" FontSize="12" VerticalAlignment="Bottom" x:Name="user" Margin="0,0,0,5" FontFamily="helvetica neue" Foreground="#8f96a3"></TextBlock>
+                                            <TextBox Grid.Row="1" x:Name="nick"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c">
+                                                <TextBox.Resources>
+                                                    <Style TargetType="{x:Type Border}">
+                                                        <Setter Property="CornerRadius" Value="3"/>
+
+                                                    </Style>
+                                                </TextBox.Resources>
+                                            </TextBox>
+                                        </Grid>
+
+                                        <Grid Grid.Row="4">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="49*"></RowDefinition>
+                                                <RowDefinition Height="45*"></RowDefinition>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Text="Contraseña" FontSize="12" VerticalAlignment="Bottom" x:Name="contraseña" Margin="0,0,0,5" FontFamily="helvetica neue" Foreground="#8f96a3" ></TextBlock>
+                                            <Border Grid.Row="1" Background="White" BorderBrush="#e2e6ee" BorderThickness="2" CornerRadius="3">
+                                                <Grid >
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="46*"></ColumnDefinition>
+                                                        <ColumnDefinition Width="9*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <PasswordBox PasswordChar="*" BorderBrush="Transparent" x:Name="pasw"   HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c"  >
+
+                                                    </PasswordBox>
+                                                    <TextBox Visibility="Hidden"  BorderBrush="Transparent" x:Name="pas"   HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" >
+                                                        <TextBox.Resources>
+                                                            <Style TargetType="{x:Type Border}">
+                                                                <Setter Property="CornerRadius" Value="3"/>
+                                                                <Setter Property="BorderBrush" Value="LightGray"/>
+                                                            </Style>
+                                                        </TextBox.Resources>
+                                                    </TextBox>
+
+                                                    <Grid Grid.Column="1">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="15*"></ColumnDefinition>
+                                                            <ColumnDefinition Width="43*"></ColumnDefinition>
+                                                            <ColumnDefinition Width="15*"></ColumnDefinition>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="10*"></RowDefinition>
+                                                            <RowDefinition Height="20*"></RowDefinition>
+                                                            <RowDefinition Height="10*"></RowDefinition>
+                                                        </Grid.RowDefinitions>
+                                                        <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="password" BorderBrush="Transparent">
+                                                            <Image Source="/Imagenes/BotonPassword.png"></Image>
+                                                        </Button>
+                                                    </Grid>
+
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+
+                                        <StackPanel Grid.Row="4">
+
+                                        </StackPanel>
+
+                                    </Grid>
+                                    <StackPanel Grid.Row="1" Margin="10,0,10,0">
+
+
+
+
+                                    </StackPanel>
+
+                                    <Grid Grid.Column="1" Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="137*"></ColumnDefinition>
+                                            <ColumnDefinition Width="125*"></ColumnDefinition>
+                                            <ColumnDefinition Width="151*"></ColumnDefinition>
+
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="51*"></RowDefinition>
+                                            <RowDefinition Height="39*"></RowDefinition>
+                                            <RowDefinition Height="23*"></RowDefinition>
+
+
+                                        </Grid.RowDefinitions>
+
+                                        <Button   Grid.Column="2" Foreground="#c8c8c8"  FontFamily="helvetica neue" Click="log" FontWeight="DemiBold" x:Name="login" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="#f5f6f7" Content="ENTRAR" FontSize="18" VerticalContentAlignment="Center" BorderBrush="Transparent">
+                                            <Button.Resources>
+                                                <Style TargetType="{x:Type Border}">
+                                                    <Setter Property="CornerRadius" Value="10"/>
+                                                    <Setter Property="BorderBrush" Value="LightGray"/>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+
+
+
+                            </Border>
+
+                        </Border>
+
+                        <Image x:Name="image" Source="/Imagenes/FondoLogin.png" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  ></Image>
+
+                    </Grid>
+                </Grid>
+            </Border>
+        </Border>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="39*"></ColumnDefinition>
+                <ColumnDefinition Width="1873*"></ColumnDefinition>
+
+                <ColumnDefinition Width="39*"></ColumnDefinition>
+
+            </Grid.ColumnDefinitions>
+            <Grid  HorizontalAlignment="Left" Grid.Column="1" VerticalAlignment="Stretch" Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*" ></ColumnDefinition>
+                    <ColumnDefinition Width="12" ></ColumnDefinition>
+                    <ColumnDefinition Width="3*" ></ColumnDefinition>
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="17*"></RowDefinition>
+                    <RowDefinition Height="48*"></RowDefinition>
+                    <RowDefinition Height="16*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="SGC" Foreground="#858d9b" HorizontalAlignment="Center" FontSize="45"  Style="{StaticResource CustomFont}" FontWeight="Light" Grid.RowSpan="1" Grid.Row="1" ></TextBlock>
+                <StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="SOFTWARD" Foreground="#cbcfd4" Style="{StaticResource CustomFont}" FontSize="9" Margin="0,3,0,-3" Grid.Column="1"></TextBlock>
+                    <TextBlock Text="GESTIÓN" Foreground="#cbcfd4" FontSize="9" Margin="0,0,0,-3" Style="{StaticResource CustomFont}" Grid.Column="1"></TextBlock>
+                    <TextBlock Text="CAMPING" Foreground="#cbcfd4" FontSize="9" Style="{StaticResource CustomFont}" Grid.Column="1"></TextBlock>
+                </StackPanel>
+
+
+            </Grid>
+            <Image Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Source="Imagenes\Logo.png" Width="280" Stretch="UniformToFill"></Image>
+            <StackPanel Orientation="Horizontal" >
+
+
+            </StackPanel>
+        </Grid>
+
+        </Grid>
+</Window>

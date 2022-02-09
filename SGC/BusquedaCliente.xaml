@@ -1,0 +1,290 @@
+﻿<Window x:Class="SGC.BusquedaCliente"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGC"
+        mc:Ignorable="d"
+        Title="BusquedaCliente" Height="450" Width="1100" MinHeight="750" MinWidth="1000" Topmost="True" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28*"></RowDefinition>
+            <RowDefinition Height="42*"></RowDefinition>
+            <RowDefinition Height="349*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border x:Name="white" Background="#01ba91" Margin="0,0,0,0" CornerRadius="0,0,0,0" Grid.Column="7" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <Label Content="Buscador Clientes" Foreground="White" FontFamily="helvetica neue" Margin="10,0,0,0" VerticalContentAlignment="Center" FontWeight="Bold"></Label>
+
+
+        </Border >
+
+        <Border Background="#c8f7e8" Margin="0,0,0,0" CornerRadius="0,0,0,0" Grid.Column="7" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"></ColumnDefinition>
+                    <ColumnDefinition Width="180"></ColumnDefinition>
+                    <ColumnDefinition Width="220"></ColumnDefinition>
+                    <ColumnDefinition Width="121*"></ColumnDefinition>
+                    <ColumnDefinition Width="80"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Filtro:" Foreground="Black" FontFamily="helvetica neue" Margin="10,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"></Label>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal" Height="26" Margin="0,8">
+                    <Label Content="Alta/Baja: " Foreground="Black" FontFamily="helvetica neue" Margin="10,0,0,0"/>
+                    <Border HorizontalAlignment="Center" ToolTip="Editar/no editar el mapa"  Background="LightBlue" x:Name="estado_alta" CornerRadius="10" Width="80" Height="25" MouseLeftButtonDown="estado_alta_MouseLeftButtonDown" BorderBrush="LightGray" BorderThickness="2">
+                        <Border x:Name="alta_baja"  Width="40" CornerRadius="10" Background="White" HorizontalAlignment="Left"></Border>
+                    </Border>
+
+                </StackPanel>
+
+                <ComboBox Margin="10,5" Height="25" x:Name="filtrar_cliente" SelectionChanged="filtrar_cliente_SelectionChanged_1" VerticalContentAlignment="Center" FontFamily="Helvetica neue" Foreground="#03b991" FontSize="15" Grid.Column="2">
+                    <ComboBoxItem IsSelected="True">Nombre y Apellidos</ComboBoxItem>
+                    <ComboBoxItem>DNI</ComboBoxItem>
+                    <ComboBoxItem>Numero Cliente</ComboBoxItem>
+                    <ComboBoxItem>Direccion</ComboBoxItem>
+                    <ComboBoxItem>Poblacion</ComboBoxItem>
+                    <ComboBoxItem>telefono</ComboBoxItem>
+                    <ComboBoxItem>Codigo Postal</ComboBoxItem>
+                    <ComboBoxItem>Mail</ComboBoxItem>
+                    <ComboBoxItem>Pais</ComboBoxItem>
+                    <ComboBoxItem>Provincia</ComboBoxItem>
+                    <ComboBoxItem>Vehiculo</ComboBoxItem>
+                    <ComboBoxItem>Matricula</ComboBoxItem>
+                    <ComboBoxItem>Fecha entrada</ComboBoxItem>
+                    <ComboBoxItem>Fecha salida</ComboBoxItem>
+                    <ComboBoxItem>Fecha pago</ComboBoxItem>
+
+                </ComboBox>
+
+
+                <TextBox Visibility="Visible" Grid.Column="3" BorderBrush="Gray" BorderThickness="1" LostFocus="buscadorClientes_LostFocus" GotFocus="buscadorClientes_GotFocus" x:Name="buscadorClientes" TextChanged="buscadorClientes_TextChanged" Height="25" Margin="10,0,10,0" FontFamily="Helvetica neue" Background="White" Text="Buscar..." FontSize="15" Foreground="Gray" VerticalAlignment="Center" VerticalContentAlignment="Center"></TextBox>
+                <DatePicker Visibility="Collapsed" Grid.Column="3" BorderBrush="Gray" BorderThickness="1"  x:Name="buscadorClientes2"  Height="25" Margin="10,0,10,0" VerticalAlignment="Center" VerticalContentAlignment="Center">
+                    
+                </DatePicker>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="4">
+                    <Button HorizontalAlignment="Center" Background="#03b991" ToolTip="Buscar..."  Margin="0,0,0,0" Width="30" Height="25"  FontSize="12"  Click="Button_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="5"></Setter>
+                            </Style>
+                        </Button.Resources>
+                        <Button.Content>
+                            <StackPanel>
+                                <Image Source="/iconos/search.png" Width="20" VerticalAlignment="Top" ></Image>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button HorizontalAlignment="Center" Background="Red" ToolTip="Buscar..."  Margin="10,0,0,0" Width="30" Height="25"  FontSize="12"  Click="Button_Click2">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="5"></Setter>
+                            </Style>
+                        </Button.Resources>
+                        <Button.Content>
+                            <StackPanel>
+                                <Image Source="/iconos/cruz.png" Width="20" VerticalAlignment="Top"></Image>
+                               
+
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+                
+            </Grid>
+        </Border>
+        <Grid Grid.Row="2" Margin="0,0,0,0" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="197*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="0" HorizontalAlignment="Right" Orientation="Horizontal">
+                <Label VerticalContentAlignment="Center" Content="Mostrar fechas en tabla (Si/No): " Foreground="Black" FontFamily="helvetica neue" Margin="0,0,10,0"></Label>
+                <Border VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Editar/no editar el mapa"  Background="LightGray" x:Name="mostrar" CornerRadius="10" Width="80" Height="25" MouseLeftButtonDown="FichaPotencia2" BorderBrush="LightGray" BorderThickness="3" Margin="0,0,20,0">
+                    <Border x:Name="brd1"  Width="40" CornerRadius="10" Background="White" HorizontalAlignment="Right"></Border>
+                </Border>
+            </StackPanel>
+            <ScrollViewer Grid.Row="1" Grid.ColumnSpan="9" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,0,10,0" x:Name="gridd">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="90"></ColumnDefinition>
+                        <ColumnDefinition Width="140"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="110"></ColumnDefinition>
+                        <ColumnDefinition Width="110"></ColumnDefinition>
+                        <ColumnDefinition Width="110"></ColumnDefinition>
+                        <ColumnDefinition Width="110"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"></RowDefinition>
+                        <RowDefinition Height="103*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="1" Grid.ColumnSpan="13" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ListView Padding="0,0" Grid.Row="1" Grid.ColumnSpan="13" x:Name="Clientes" HorizontalContentAlignment="Stretch" BorderThickness="0"  Background="{x:Null}" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="0" Margin="0,0,0,-5" Grid.ColumnSpan="4" Background="White" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+                                        <Grid Background="White" Margin="0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="60"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="90"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="140"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="100"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="110"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="110"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="110"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="110"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="148"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="1"></ColumnDefinition>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5"></ColumnDefinition>
+                                                    <ColumnDefinition></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Background="#00ba92"></Border>
+                                                <Label Foreground="#00ba92" Margin="-5,0,0,0" FontWeight="Bold" FontFamily="helvetica neue" Content="{Binding n_cliemte}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1"></Label>
+                                            </Grid>
+
+                                            <Label Content="{Binding nombre_cliente}" VerticalContentAlignment="Center" Grid.Column="2" HorizontalContentAlignment="Center"></Label>
+
+                                            <Label Content="{Binding apellidos_cliente}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="4" HorizontalContentAlignment="Center"></Label>
+                                            <Label Content="{Binding dni}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="6" HorizontalContentAlignment="Center"></Label>
+                                            <Label Content="{Binding poblacio}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="8" HorizontalContentAlignment="Center"></Label>
+                                            <Label Content="{Binding Provincia}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="10" HorizontalContentAlignment="Center"></Label>
+                                            <Label Content="{Binding Pais}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="12" HorizontalContentAlignment="Center"></Label>
+                                            <Label Content="{Binding telefon1}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="14" HorizontalContentAlignment="Center"></Label>
+                                            <Label Content="{Binding matricula1}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="16" HorizontalContentAlignment="Center" ></Label>
+                                            <Label Content="{Binding Fecha_In}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="18" HorizontalContentAlignment="Center" x:Name="fecha1" Width="90"></Label>
+                                            <Label Content="{Binding Fecha_Out}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="20" HorizontalContentAlignment="Center" x:Name="fecha2" Width="90" ></Label>
+                                            <Label Content="{Binding fecha_entrada_estado}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="22" HorizontalContentAlignment="Center" x:Name="fecha3" Width="90"></Label>
+                                            <Label Content="{Binding fecha_pago}" VerticalContentAlignment="Center" FontFamily="helvetica neue" Grid.Column="24" HorizontalContentAlignment="Center" x:Name="fecha4"  Width="90"></Label>
+
+                                            <Border Background="LightGray" Grid.Column="1"></Border>
+                                            <Border Background="LightGray" Grid.Column="3"></Border>
+                                            <Border Background="LightGray" Grid.Column="5"></Border>
+                                            <Border Background="LightGray" Grid.Column="7"></Border>
+                                            <Border Background="LightGray" Grid.Column="9"></Border>
+                                            <Border Background="LightGray" Grid.Column="11"></Border>
+                                            <Border Background="LightGray" Grid.Column="13"></Border>
+                                            <Border Background="LightGray" Grid.Column="15" ></Border>
+                                            <Border Background="LightGray" Grid.Column="17"  x:Name="border1"></Border>
+                                            <Border Background="LightGray" Grid.Column="19"  x:Name="border2"></Border>
+                                            <Border Background="LightGray" Grid.Column="21"  x:Name="border3"></Border>
+                                            <Border Background="LightGray" Grid.Column="23"  x:Name="border4"></Border>
+
+                                        </Grid>
+
+
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding visib }" Value="True" >
+                                            <Setter TargetName="fecha1" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="False" >
+                                            <Setter TargetName="fecha1" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="True" >
+                                            <Setter TargetName="fecha2" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="False" >
+                                            <Setter TargetName="fecha2" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="True" >
+                                            <Setter TargetName="fecha3" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="False" >
+                                            <Setter TargetName="fecha3" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="True" >
+                                            <Setter TargetName="fecha4" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="False" >
+                                            <Setter TargetName="fecha4" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="True" >
+                                            <Setter TargetName="border1" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="False" >
+                                            <Setter TargetName="border1" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="True" >
+                                            <Setter TargetName="border2" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="False" >
+                                            <Setter TargetName="border2" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="True" >
+                                            <Setter TargetName="border3" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="False" >
+                                            <Setter TargetName="border3" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="True" >
+                                            <Setter TargetName="border4" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding visib }" Value="False" >
+                                            <Setter TargetName="border4" Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                    <Button Click="Button_Click_1" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="Num." Foreground="#00ba92" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center"></Button>
+                    <Button Click="Button_Click_2" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="Nombre" Foreground="#00ba92" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center"></Button>
+                    <Button Click="Button_Click_3" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="Apellidos" Foreground="#00ba92" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" ></Button>
+                    <Button Click="Button_Click_4" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="DNI" Foreground="#00ba92" Grid.Column="3" Grid.Row="0" HorizontalContentAlignment="Center"></Button>
+                    <Button Click="Button_Click_5" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="Poblacion" Foreground="#00ba92" Grid.Column="4" Grid.Row="0" HorizontalContentAlignment="Center"></Button>
+                    <Button Click="Button_Click_6" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="Provincia" Foreground="#00ba92" Grid.Column="5" Grid.Row="0" HorizontalContentAlignment="Center" Margin="-10,0,0,0"></Button>
+                    <Button Click="Button_Click_7" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="Pais" Foreground="#00ba92" Grid.Column="6" Grid.Row="0" HorizontalContentAlignment="Center" Margin="-15,0,0,0"></Button>
+                    <Button Click="Button_Click_8" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="Telefono" Foreground="#00ba92" Grid.Column="7" Grid.Row="0" HorizontalContentAlignment="Center" Margin="-25,0,0,0"></Button>
+
+                    <!--<Label Content="Correo &#xa; Electronico" Foreground="#00ba92" Grid.Column="8" Grid.Row="0" HorizontalContentAlignment="Center">
+                                                        <Label.Resources>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="TextWrapping" Value="Wrap"></Setter>
+                                                            </Style>
+                                                        </Label.Resources>
+                                                    </Label>-->
+                    <Button Click="Button_Click_9" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="Matricula" Foreground="#00ba92" Grid.Column="8" Grid.Row="0" HorizontalContentAlignment="Center" Margin="0,0,0,0">
+                        
+                    </Button>
+
+                    <Button Click="column1_Click" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="F. Entrada." Foreground="#00ba92" Grid.Column="9" Grid.Row="0" HorizontalContentAlignment="Center" Visibility="Collapsed" x:Name="column1" Width="90"></Button>
+                    <Button Click="column2_Click" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="F. Salida" Foreground="#00ba92" Grid.Column="10" Grid.Row="0" HorizontalContentAlignment="Center" Visibility="Collapsed" x:Name="column2" Width="90"></Button>
+                    <Button Click="column3_Click" BorderBrush="Transparent" Background="Transparent"  FontSize="16" Content="F. Periodo" Foreground="#00ba92" Grid.Column="11" Grid.Row="0" HorizontalContentAlignment="Center" Visibility="Collapsed" x:Name="column3" Width="90"></Button>
+                    <Button Click="column4_Click" BorderBrush="Transparent" Background="Transparent" FontSize="16" Content="F. Pago" Foreground="#00ba92" Grid.Column="12" Grid.Row="0" HorizontalContentAlignment="Center" Visibility="Collapsed" x:Name="column4" Width="90"></Button>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+    </Grid>
+</Window>

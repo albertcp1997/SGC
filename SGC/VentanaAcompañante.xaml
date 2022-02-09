@@ -1,0 +1,212 @@
+﻿<Window x:Class="SGC.x86.VentanaAcompañante"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGC.x86"
+        mc:Ignorable="d"
+        Title="VentanaAcompañante" Topmost="True"  WindowStartupLocation="CenterScreen" MaxHeight="650" MaxWidth="600" MinHeight="740" MinWidth="600" Width="600" Height="650">
+    <Grid>
+        <Border  Background="White">
+            <Grid Margin="0,0,30,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="51*"></RowDefinition>
+                    <RowDefinition Height="527*"></RowDefinition>
+                    <RowDefinition Height="41*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                    <ColumnDefinition Width="277*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Margin="30,9,0,12" Grid.Column="1" x:Name="day" Text="Añadir Acompañante" VerticalAlignment="Center" FontFamily="Helvetica neue" FontSize="24" Height="30"></TextBlock>
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+
+                    <Label Content="Nombre" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                    <TextBox Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="Nombre_Contrato"></TextBox>
+
+                    <Label Content="Apellido 1" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                    <TextBox Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="apellido1"></TextBox>
+
+                    <Label Content="Apellido 2" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                    <TextBox Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="apellido2"></TextBox>
+                    <Label Foreground="#838d99" Content="Tipo documento" FontFamily="Helvetica neue" FontSize="12"/>
+
+                    <ComboBox  x:Name="Potencia"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" SelectionChanged="Potencia_SelectionChanged">
+                        <ComboBoxItem >DNI</ComboBoxItem>
+                        <ComboBoxItem IsSelected="True">Pasaporte</ComboBoxItem>
+                        <ComboBoxItem>Documento de identidad</ComboBoxItem>
+                        <ComboBoxItem>Permiso residencia español</ComboBoxItem>
+                        <ComboBoxItem>Permiso residencia de otro estado de la Union Europea</ComboBoxItem>
+                    </ComboBox>
+                    <StackPanel >
+                        <Label Foreground="#838d99" Content="DNI" FontFamily="Helvetica neue" FontSize="12"/>
+                        <TextBox x:Name="dni"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar"></TextBox>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="2">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="3">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                    </StackPanel>
+                    <StackPanel >
+                        <Label Foreground="#838d99" Content="Pasaporte" FontFamily="Helvetica neue" FontSize="12"/>
+                        <TextBox  x:Name="pasaporte"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar"></TextBox>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="1">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="2">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="3">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                    </StackPanel>
+                    <StackPanel >
+                        <Label Foreground="#838d99" Content="Carnet de conducir" FontFamily="Helvetica neue" FontSize="12"/>
+                        <TextBox  x:Name="carnetdeconducir"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar"></TextBox>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="2">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="3">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                    </StackPanel>
+                    <StackPanel >
+                        <Label Foreground="#838d99" Content="Permiso residencia España" FontFamily="Helvetica neue" FontSize="12"/>
+                        <TextBox  x:Name="Permisoresidenciaespaña"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar"></TextBox>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="2">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="3">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                    </StackPanel>
+                    <StackPanel >
+                        <Label Foreground="#838d99" Content="Permiso residencia Europa" FontFamily="Helvetica neue" FontSize="12"/>
+                        <TextBox  x:Name="Permisoresidenciaeuropa"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar"></TextBox>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel" >
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="2">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="3">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                    </StackPanel>
+
+                    <Label Content="Fecha expedicion" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                    <TextBox Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="fechadni"></TextBox>
+                    <Label Content="Sexo" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                    <ComboBox  x:Name="Sexo"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" SelectionChanged="Potencia_SelectionChanged">
+                        <ComboBoxItem IsSelected="True">Femenino</ComboBoxItem>
+                        <ComboBoxItem>Masculino</ComboBoxItem>
+                    </ComboBox>
+                    <Label Content="Fecha nacimiento" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                    <TextBox Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="fecha"></TextBox>
+                    <Label Content="Pais" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
+                    <TextBox Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="pais"></TextBox>
+                </StackPanel>
+
+                <Border Grid.RowSpan="3" Background="#00ba91" CornerRadius="15,0,0,0"></Border>
+                <Grid Margin="30,0,0,0" Grid.Column="1" Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25*"></ColumnDefinition>
+                        <ColumnDefinition Width="13*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Column="1">
+                        <Button ToolTip="Cerrar Ventana"  x:Name="delete_evento"  Width="40" Height="30" Margin="0,0,30,0" Click="Borrar_evento" Background="#f86e6c">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="15"></Setter>
+                                </Style>
+                            </Button.Resources>
+                            <Image Source="/iconos/cruz.png"></Image>
+                        </Button>
+                        <Button ToolTip="Guardar cambios"  x:Name="add_evento" Width="40" Visibility="Visible" Margin="0,0,0,0" Height="30" Click="Añadir_evento" Background="#00bb90">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="15"></Setter>
+                                </Style>
+                            </Button.Resources>
+                            <Image Source="/iconos/check.png"></Image>
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
+            </Grid>
+
+        </Border>
+
+    </Grid>
+</Window>

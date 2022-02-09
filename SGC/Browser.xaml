@@ -1,0 +1,109 @@
+﻿<Window x:Class="SGC.Browser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGC"
+        mc:Ignorable="d"
+        Title="Guardar en..." MinHeight="200" MaxHeight="300" Height="300" MinWidth="500" MaxWidth="500" Width="500">
+    <Border Background="White" BorderThickness="2" >
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="323*"></ColumnDefinition>
+                <ColumnDefinition Width="165*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="124*"></RowDefinition>
+                <RowDefinition Height="41"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.ColumnSpan="2" Margin="0,30,0,22" VerticalAlignment="Top" Height="80">
+                <Label FontFamily="helvetica neue" FontSize="12" Foreground="#92959c" Content="Seleccione la ruta donde desea guardar el/los docuemto/s:" ></Label>
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <TextBox IsEnabled="False" x:Name="source" Height="25" Width="400" HorizontalAlignment="Left" Margin="5,0,0,0"></TextBox>
+                    <Button Width="70" Height="20" VerticalAlignment="Center" Margin="5,0,0,0" Background="LightGray" Content="Buscar..." Click="Button_Click"></Button>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Horizontal" Visibility="Collapsed">
+                    <Label FontSize="10" Content="Plantilla del PDF:" Foreground="#838d99" FontFamily="Helvetica neue"/>
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox  x:Name="pdf_name" FontFamily="Helvetica neue" BorderBrush="LightGray" Foreground="Blue" Width="150" Height="20" >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding name}" FontFamily="helvetica neue" FontSize="12" Foreground="#00ba92"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Visibility="Visible" Background="#f9b257" Click="changepdf_Click" x:Name="changepdf" Margin="15,0,0,0" Width="20" Height="20">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"></Setter>
+                                </Style>
+                            </Button.Resources>
+                            <Image Source="/iconos/pen.png" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                            </Image>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="54" Width="283" Margin="0,0,0,0">
+
+                <Label FontFamily="helvetica neue" FontSize="10" Foreground="#92959c" Content="Tipo de plantilla:" VerticalAlignment="Center" Margin="0,0,0,0"></Label>
+                <ComboBox Height="20" Width="150" SelectionChanged="ComboBox_SelectionChanged" x:Name="tipopdf">
+                        <ComboBoxItem BorderBrush="LightGray" BorderThickness="1" IsSelected="True">
+
+                            <StackPanel>
+                                <TextBlock FontFamily="helvetica neue" FontSize="12" Foreground="#00ba92">Tipo 1:</TextBlock>
+
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem BorderBrush="LightGray" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock FontFamily="helvetica neue" FontSize="12" Foreground="#00ba92">Tipo 2:</TextBlock>
+                            
+                        </StackPanel>
+                    </ComboBoxItem>
+                        <ComboBoxItem BorderBrush="LightGray" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock FontFamily="helvetica neue" FontSize="12" Foreground="#00ba92">Tipo 3:</TextBlock>
+                            
+                        </StackPanel>
+                    </ComboBoxItem>
+                    
+
+
+                </ComboBox>
+                
+            </StackPanel>
+                <Label x:Name="tipo" Content="Recibo estandar" FontFamily="helvetica neue" FontSize="10" Foreground="#00ba92" HorizontalAlignment="Center" Margin="0,0,10,5"></Label>
+            </StackPanel>
+            <Border BorderBrush="LightGray" BorderThickness="0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                <StackPanel Margin="0,0,0,0"  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <Button Background="#00ba92" x:Name="addall2" Click="addall2_Click"  Margin="10,0,10,0" Width="20" Height="20">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="25"></Setter>
+                            </Style>
+                        </Button.Resources>
+                        <Image Source="/iconos/check.png">
+
+                        </Image>
+                    </Button>
+                    <Button  Background="#e22a46"  Margin="10,0,10,0" Width="20" Height="20" Click="Clear_All">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="25"></Setter>
+                            </Style>
+                        </Button.Resources>
+                        <Image Source="/iconos/cruz.png">
+
+                        </Image>
+                    </Button>
+                </StackPanel>
+
+            </Border>
+
+        </Grid>
+    </Border>
+</Window>

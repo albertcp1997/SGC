@@ -1,0 +1,972 @@
+Id;Descripcion;Nombre;Longitud
+1;0;Torretas - On/Off;
+2;0/0;Zona A;
+3;0/0/1;Zona A - Torreta A1 - Plaza A01 - On/Off;1 bit
+4;0/0/2;Zona A - Torreta A1 - Plaza A02 - On/Off;1 bit
+5;0/0/3;Zona A - Torreta A1 - Plaza A03 - On/Off;1 bit
+6;0/0/4;Zona A - Torreta A2 - Plaza A04 - On/Off;1 bit
+7;0/0/5;Zona A - Torreta A2 - Plaza A05 - On/Off;1 bit
+8;0/0/6;Zona A - Torreta A3 - Plaza A06 - On/Off;1 bit
+9;0/0/7;Zona A - Torreta A3 - Plaza A07 - On/Off;1 bit
+10;0/0/8;Zona A - Torreta A4 - Plaza A08 - On/Off;1 bit
+11;0/0/9;Zona A - Torreta A4 - Plaza A09 - On/Off;1 bit
+12;0/0/10;Zona A - Torreta A5 - Plaza A10 - On/Off;1 bit
+13;0/0/11;Zona A - Torreta A5 - Plaza A11 - On/Off;1 bit
+14;0/0/12;Zona A - Torreta A6 - Plaza A12 - On/Off;1 bit
+15;0/0/13;Zona A - Torreta A6 - Plaza A13 - On/Off;1 bit
+16;0/0/14;Zona A - Torreta A7 - Plaza A14 - On/Off;1 bit
+17;0/0/15;Zona A - Torreta A7 - Plaza A15 - On/Off;1 bit
+18;0/0/16;Zona A - Torreta A8 - Plaza A16 - On/Off;1 bit
+19;0/0/17;Zona A - Torreta A8 - Plaza A17 - On/Off;1 bit
+20;0/0/18;Zona A - Torreta A8 - Plaza A18 - On/Off;1 bit
+21;0/1;Zona B;
+22;0/1/1;Zona B - Torreta B1 - Plaza A19 - On/Off;1 bit
+23;0/1/2;Zona B - Torreta B1 - Plaza A20 - On/Off;1 bit
+24;0/1/3;Zona B - Torreta B2 - Plaza A21 - On/Off;1 bit
+25;0/1/4;Zona B - Torreta B2 - Plaza A22 - On/Off;1 bit
+26;0/1/5;Zona B - Torreta B3 - Plaza A23 - On/Off;1 bit
+27;0/1/6;Zona B - Torreta B3 - Plaza A24 - On/Off;1 bit
+28;0/1/7;Zona B - Torreta B4 - Plaza A25 - On/Off;1 bit
+29;0/1/8;Zona B - Torreta B4 - Plaza A26 - On/Off;1 bit
+30;0/1/9;Zona B - Torreta B5 - Plaza A27 - On/Off;1 bit
+31;0/1/10;Zona B - Torreta B5 - Plaza A28 - On/Off;1 bit
+32;0/1/11;Zona B - Torreta B6 - Plaza A29/30 - On/Off;1 bit
+33;0/2;Zona X;
+34;0/2/1;Zona X - Torreta X1 - Plaza X01 - On/Off;1 bit
+35;0/2/2;Zona X - Torreta X1 - Plaza X02 - On/Off;1 bit
+36;0/2/3;Zona X - Torreta X1 - Plaza X03 - On/Off;1 bit
+37;0/2/4;Zona X - Torreta X2 - Plaza X04 - On/Off;1 bit
+38;0/2/5;Zona X - Torreta X2 - Plaza X05 - On/Off;1 bit
+39;0/2/6;Zona X - Torreta X2 - Plaza X06 - On/Off;1 bit
+40;0/3;Zona C-D-E;
+41;0/3/1;Zona C-D-E - Torreta C1 - Plaza C01 - On/Off;1 bit
+42;0/3;Zona C-D-E;
+43;0/3/2;Zona C-D-E - Torreta C1 - Plaza C02 - On/Off;1 bit
+44;0/3/3;Zona C-D-E - Torreta C2 - Plaza C03 - On/Off;1 bit
+45;0/3/4;Zona C-D-E - Torreta C2 - Plaza C04 - On/Off;1 bit
+46;0/3/5;Zona C-D-E - Torreta C3 - Plaza C05 - On/Off;1 bit
+47;0/3/6;Zona C-D-E - Torreta C3 - Plaza C06 - On/Off;1 bit
+48;0/3/7;Zona C-D-E - Torreta C4 - Plaza C07 - On/Off;1 bit
+49;0/3/8;Zona C-D-E - Torreta C4 - Plaza C08 - On/Off;1 bit
+50;0/3/9;Zona C-D-E - Torreta C5 - Plaza C09 - On/Off;1 bit
+51;0/3/10;Zona C-D-E - Torreta C5 - Plaza C10 - On/Off;1 bit
+52;0/3/11;Zona C-D-E - Torreta C6 - Plaza C11 - On/Off;1 bit
+53;0/3/12;Zona C-D-E - Torreta C6 - Plaza C12 - On/Off;1 bit
+54;0/3/13;Zona C-D-E - Torreta D1 - Plaza C13 - On/Off;1 bit
+55;0/3/14;Zona C-D-E - Torreta D1 - Plaza C14 - On/Off;1 bit
+56;0/3/15;Zona C-D-E - Torreta D2 - Plaza C15 - On/Off;1 bit
+57;0/3/16;Zona C-D-E - Torreta D2 - Plaza C16 - On/Off;1 bit
+58;0/3/17;Zona C-D-E - Torreta D3 - Plaza C17 - On/Off;1 bit
+59;0/3/18;Zona C-D-E - Torreta D3 - Plaza C18 - On/Off;1 bit
+60;0/3/19;Zona C-D-E - Torreta D4 - Plaza C19 - On/Off;1 bit
+61;0/3/20;Zona C-D-E - Torreta D4- Plaza C20 - On/Off;1 bit
+62;0/4;Zona F-G;
+63;0/4/1;Zona F-G - Bungalow 1 - Plaza B01 - On/Off;1 bit
+64;0/4/2;Zona F-G - Bungalow 2 - Plaza B02 - On/Off;1 bit
+65;0/4/3;Zona F-G - Bungalow 3 - Plaza B03 - On/Off;1 bit
+66;0/4/4;Zona F-G - Bungalow 4 - Plaza B04 - On/Off;1 bit
+67;0/4/5;Zona F-G - Bungalow 5 - Plaza B05 - On/Off;1 bit
+68;0/4/6;Zona F-G - Bungalow 6 - Plaza B06 - On/Off;1 bit
+69;0/4/7;Zona F-G - Bungalow 7 - Plaza B07 - On/Off;1 bit
+70;0/4/8;Zona F-G - Bungalow 8 - Plaza B08 - On/Off;1 bit
+71;0/4/9;Zona F-G - Bungalow 9 - Plaza B09 - On/Off;1 bit
+72;0/5;Zona H;
+73;0/5/1;Zona H - Torreta H1 - Plaza D01 - On/Off;1 bit
+74;0/5/2;Zona H - Torreta H1 - Plaza D02 - On/Off;1 bit
+75;0/5/3;Zona H - Torreta H2 - Plaza D03 - On/Off;1 bit
+76;0/5/4;Zona H - Torreta H2 - Plaza D04 - On/Off;1 bit
+77;0/5/5;Zona H - Torreta H3 - Plaza D05 - On/Off;1 bit
+78;0/5/6;Zona H - Torreta H3 - Plaza D06 - On/Off;1 bit
+79;0/5/7;Zona H - Torreta H4 - Plaza D07 - On/Off;1 bit
+80;0/5/8;Zona H - Torreta H4 - Plaza D08 - On/Off;1 bit
+81;0/5/9;Zona H - Torreta H5 - Plaza D09 - On/Off;1 bit
+82;0/5/10;Zona H - Torreta H5 - Plaza D10 - On/Off;1 bit
+83;0/5;Zona H;
+84;0/5/11;Zona H - Torreta H5 - Plaza D11 - On/Off;1 bit
+85;0/6;Zona I;
+86;0/6/1;Zona I - Torreta I1 - Plaza D12 - On/Off;1 bit
+87;0/6/2;Zona I - Torreta I1 - Plaza D13 - On/Off;1 bit
+88;0/6/3;Zona I - Torreta I2 - Plaza D14 - On/Off;1 bit
+89;0/6/4;Zona I - Torreta I2 - Plaza D15 - On/Off;1 bit
+90;0/6/5;Zona I - Torreta I3 - Plaza D16 - On/Off;1 bit
+91;0/6/6;Zona I - Torreta I3 - Plaza D17 - On/Off;1 bit
+92;0/6/7;Zona I - Torreta I4 - Plaza D18 - On/Off;1 bit
+93;0/6/8;Zona I - Torreta I4 - Plaza D19 - On/Off;1 bit
+94;0/6/9;Zona I - Torreta I5 - Plaza D20 - On/Off;1 bit
+95;0/6/10;Zona I - Torreta I5 - Plaza D21 - On/Off;1 bit
+96;0/6/11;Zona I - Torreta I6 - Plaza D22 - On/Off;1 bit
+97;0/6/12;Zona I - Torreta I6 - Plaza D23 - On/Off;1 bit
+98;0/7;Zona J-K;
+99;0/7/1;Zona J-K - Torreta J1 - Plaza E01 - On/Off;1 bit
+100;0/7/2;Zona J-K - Torreta J1 - Plaza E02 - On/Off;1 bit
+101;0/7/3;Zona J-K - Torreta J2 - Plaza E03 - On/Off;1 bit
+102;0/7/4;Zona J-K - Torreta J2 - Plaza E04 - On/Off;1 bit
+103;0/7/5;Zona J-K - Torreta J3 - Plaza E05 - On/Off;1 bit
+104;0/7/6;Zona J-K - Torreta J3 - Plaza E06 - On/Off;1 bit
+105;0/7/7;Zona J-K - Torreta J4 - Plaza E07 - On/Off;1 bit
+106;0/7/8;Zona J-K - Torreta J4 - Plaza E08 - On/Off;1 bit
+107;0/7/9;Zona J-K - Torreta J5 - Plaza E09 - On/Off;1 bit
+108;0/7/10;Zona J-K - Torreta J5 - Plaza E10 - On/Off;1 bit
+109;0/7/11;Zona J-K - Torreta J6 - Plaza E11 - On/Off;1 bit
+110;0/7/12;Zona J-K - Torreta J6 - Plaza E12 - On/Off;1 bit
+111;0/7/13;Zona J-K - Torreta J7 - Plaza E13 - On/Off;1 bit
+112;0/7/14;Zona J-K - Torreta J7 - Plaza E14 - On/Off;1 bit
+113;0/7/15;Zona J-K - Torreta J8 - Plaza E15 - On/Off;1 bit
+114;0/7/16;Zona J-K - Torreta J8 - Plaza E16 - On/Off;1 bit
+115;0/7/17;Zona J-K - Torreta J9 - Plaza E17 - On/Off;1 bit
+116;0/7/18;Zona J-K - Torreta J9 - Plaza E18 - On/Off;1 bit
+117;1;Torretas - Estados;
+118;1/0;Zona A;
+119;1/0/1;Zona A - Torreta A1 - Plaza A01 - Estado;1 bit
+120;1/0/2;Zona A - Torreta A1 - Plaza A02 - Estado;1 bit
+121;1/0/3;Zona A - Torreta A1 - Plaza A03 - Estado;1 bit
+122;1/0/4;Zona A - Torreta A2 - Plaza A04 - Estado;1 bit
+123;1/0/5;Zona A - Torreta A2 - Plaza A05 - Estado;1 bit
+124;1/0;Zona A;
+125;1/0/6;Zona A - Torreta A3 - Plaza A06 - Estado;1 bit
+126;1/0/7;Zona A - Torreta A3 - Plaza A07 - Estado;1 bit
+127;1/0/8;Zona A - Torreta A4 - Plaza A08 - Estado;1 bit
+128;1/0/9;Zona A - Torreta A4 - Plaza A09 - Estado;1 bit
+129;1/0/10;Zona A - Torreta A5 - Plaza A10 - Estado;1 bit
+130;1/0/11;Zona A - Torreta A5 - Plaza A11 - Estado;1 bit
+131;1/0/12;Zona A - Torreta A6 - Plaza A12 - Estado;1 bit
+132;1/0/13;Zona A - Torreta A6 - Plaza A13 - Estado;1 bit
+133;1/0/14;Zona A - Torreta A7 - Plaza A14 - Estado;1 bit
+134;1/0/15;Zona A - Torreta A7 - Plaza A15 - Estado;1 bit
+135;1/0/16;Zona A - Torreta A8 - Plaza A16 - Estado;1 bit
+136;1/0/17;Zona A - Torreta A8 - Plaza A17 - Estado;1 bit
+137;1/0/18;Zona A - Torreta A8 - Plaza A18 - Estado;1 bit
+138;1/1;Zona B;
+139;1/1/1;Zona B - Torreta B1 - Plaza A19 - Estado;1 bit
+140;1/1/2;Zona B - Torreta B1 - Plaza A20 - Estado;1 bit
+141;1/1/3;Zona B - Torreta B2 - Plaza A21 - Estado;1 bit
+142;1/1/4;Zona B - Torreta B2 - Plaza A22 - Estado;1 bit
+143;1/1/5;Zona B - Torreta B3 - Plaza A23 - Estado;1 bit
+144;1/1/6;Zona B - Torreta B3 - Plaza A24 - Estado;1 bit
+145;1/1/7;Zona B - Torreta B4 - Plaza A25 - Estado;1 bit
+146;1/1/8;Zona B - Torreta B4 - Plaza A26 - Estado;1 bit
+147;1/1/9;Zona B - Torreta B5 - Plaza A27 - Estado;1 bit
+148;1/1/10;Zona B - Torreta B5 - Plaza A28 - Estado;1 bit
+149;1/1/11;Zona B - Torreta B6 - Plaza A29/30 - Estado;1 bit
+150;1/2;Zona X;
+151;1/2/1;Zona X - Torreta X1 - Plaza X01 - Estado;1 bit
+152;1/2/2;Zona X - Torreta X1 - Plaza X02 - Estado;1 bit
+153;1/2/3;Zona X - Torreta X1 - Plaza X03 - Estado;1 bit
+154;1/2/4;Zona X - Torreta X2 - Plaza X04 - Estado;1 bit
+155;1/2/5;Zona X - Torreta X2 - Plaza X05 - Estado;1 bit
+156;1/2/6;Zona X - Torreta X2 - Plaza X06 - Estado;1 bit
+157;1/3;Zona C-D-E;
+158;1/3/1;Zona C-D-E - Torreta C1 - Plaza C01 - Estado;1 bit
+159;1/3/2;Zona C-D-E - Torreta C1 - Plaza C02 - Estado;1 bit
+160;1/3/3;Zona C-D-E - Torreta C2 - Plaza C03 - Estado;1 bit
+161;1/3/4;Zona C-D-E - Torreta C2 - Plaza C04 - Estado;1 bit
+162;1/3/5;Zona C-D-E - Torreta C3 - Plaza C05 - Estado;1 bit
+163;1/3/6;Zona C-D-E - Torreta C3 - Plaza C06 - Estado;1 bit
+164;1/3/7;Zona C-D-E - Torreta C4 - Plaza C07 - Estado;1 bit
+165;1/3;Zona C-D-E;
+166;1/3/8;Zona C-D-E - Torreta C4 - Plaza C08 - Estado;1 bit
+167;1/3/9;Zona C-D-E - Torreta C5 - Plaza C09 - Estado;1 bit
+168;1/3/10;Zona C-D-E - Torreta C5 - Plaza C10 - Estado;1 bit
+169;1/3/11;Zona C-D-E - Torreta C6 - Plaza C11 - Estado;1 bit
+170;1/3/12;Zona C-D-E - Torreta C6 - Plaza C12 - Estado;1 bit
+171;1/3/13;Zona C-D-E - Torreta D1 - Plaza C13 - Estado;1 bit
+172;1/3/14;Zona C-D-E - Torreta D1 - Plaza C14 - Estado;1 bit
+173;1/3/15;Zona C-D-E - Torreta D2 - Plaza C15 - Estado;1 bit
+174;1/3/16;Zona C-D-E - Torreta D2 - Plaza C16 - Estado;1 bit
+175;1/3/17;Zona C-D-E - Torreta D3 - Plaza C17 - Estado;1 bit
+176;1/3/18;Zona C-D-E - Torreta D3 - Plaza C18 - Estado;1 bit
+177;1/3/19;Zona C-D-E - Torreta D4 - Plaza C19 - Estado;1 bit
+178;1/3/20;Zona C-D-E - Torreta D4- Plaza C20 - Estado;1 bit
+179;1/4;Zona F-G;
+180;1/4/1;Zona F-G - Bungalow 1 - Plaza B01 - Estado;1 bit
+181;1/4/2;Zona F-G - Bungalow 2 - Plaza B02 - Estado;1 bit
+182;1/4/3;Zona F-G - Bungalow 3 - Plaza B03 - Estado;1 bit
+183;1/4/4;Zona F-G - Bungalow 4 - Plaza B04 - Estado;1 bit
+184;1/4/5;Zona F-G - Bungalow 5 - Plaza B05 - Estado;1 bit
+185;1/4/6;Zona F-G - Bungalow 6 - Plaza B06 - Estado;1 bit
+186;1/4/7;Zona F-G - Bungalow 7 - Plaza B07 - Estado;1 bit
+187;1/4/8;Zona F-G - Bungalow 8 - Plaza B08 - Estado;1 bit
+188;1/4/9;Zona F-G - Bungalow 9 - Plaza B09 - Estado;1 bit
+189;1/5;Zona H;
+190;1/5/1;Zona H - Torreta H1 - Plaza D01 - Estado;1 bit
+191;1/5/2;Zona H - Torreta H1 - Plaza D02 - Estado;1 bit
+192;1/5/3;Zona H - Torreta H2 - Plaza D03 - Estado;1 bit
+193;1/5/4;Zona H - Torreta H2 - Plaza D04 - Estado;1 bit
+194;1/5/5;Zona H - Torreta H3 - Plaza D05 - Estado;1 bit
+195;1/5/6;Zona H - Torreta H3 - Plaza D06 - Estado;1 bit
+196;1/5/7;Zona H - Torreta H4 - Plaza D07 - Estado;1 bit
+197;1/5/8;Zona H - Torreta H4 - Plaza D08 - Estado;1 bit
+198;1/5/9;Zona H - Torreta H5 - Plaza D09 - Estado;1 bit
+199;1/5/10;Zona H - Torreta H5 - Plaza D10 - Estado;1 bit
+200;1/5/11;Zona H - Torreta H5 - Plaza D11 - Estado;1 bit
+201;1/6;Zona I;
+202;1/6/1;Zona I - Torreta I1 - Plaza D12 - Estado;1 bit
+203;1/6/2;Zona I - Torreta I1 - Plaza D13 - Estado;1 bit
+204;1/6/3;Zona I - Torreta I2 - Plaza D14 - Estado;1 bit
+205;1/6/4;Zona I - Torreta I2 - Plaza D15 - Estado;1 bit
+206;1/6;Zona I;
+207;1/6/5;Zona I - Torreta I3 - Plaza D16 - Estado;1 bit
+208;1/6/6;Zona I - Torreta I3 - Plaza D17 - Estado;1 bit
+209;1/6/7;Zona I - Torreta I4 - Plaza D18 - Estado;1 bit
+210;1/6/8;Zona I - Torreta I4 - Plaza D19 - Estado;1 bit
+211;1/6/9;Zona I - Torreta I5 - Plaza D20 - Estado;1 bit
+212;1/6/10;Zona I - Torreta I5 - Plaza D21 - Estado;1 bit
+213;1/6/11;Zona I - Torreta I6 - Plaza D22 - Estado;1 bit
+214;1/6/12;Zona I - Torreta I6 - Plaza D23 - Estado;1 bit
+215;1/7;Zona J-K;
+216;1/7/1;Zona J-K - Torreta J1 - Plaza E01 - Estado;1 bit
+217;1/7/2;Zona J-K - Torreta J1 - Plaza E02 - Estado;1 bit
+218;1/7/3;Zona J-K - Torreta J2 - Plaza E03 - Estado;1 bit
+219;1/7/4;Zona J-K - Torreta J2 - Plaza E04 - Estado;1 bit
+220;1/7/5;Zona J-K - Torreta J3 - Plaza E05 - Estado;1 bit
+221;1/7/6;Zona J-K - Torreta J3 - Plaza E06 - Estado;1 bit
+222;1/7/7;Zona J-K - Torreta J4 - Plaza E07 - Estado;1 bit
+223;1/7/8;Zona J-K - Torreta J4 - Plaza E08 - Estado;1 bit
+224;1/7/9;Zona J-K - Torreta J5 - Plaza E09 - Estado;1 bit
+225;1/7/10;Zona J-K - Torreta J5 - Plaza E10 - Estado;1 bit
+226;1/7/11;Zona J-K - Torreta J6 - Plaza E11 - Estado;1 bit
+227;1/7/12;Zona J-K - Torreta J6 - Plaza E12 - Estado;1 bit
+228;1/7/13;Zona J-K - Torreta J7 - Plaza E13 - Estado;1 bit
+229;1/7/14;Zona J-K - Torreta J7 - Plaza E14 - Estado;1 bit
+230;1/7/15;Zona J-K - Torreta J8 - Plaza E15 - Estado;1 bit
+231;1/7/16;Zona J-K - Torreta J8 - Plaza E16 - Estado;1 bit
+232;1/7/17;Zona J-K - Torreta J9 - Plaza E17 - Estado;1 bit
+233;1/7/18;Zona J-K - Torreta J9 - Plaza E18 - Estado;1 bit
+234;2;Torretas - Corriente;
+235;2/0;Zona A;
+236;2/0/1;Zona A - Torreta A1 - Plaza A01 - Corriente;2 bytes
+237;2/0/2;Zona A - Torreta A1 - Plaza A02 - Corriente;2 bytes
+238;2/0/3;Zona A - Torreta A1 - Plaza A03 - Corriente;2 bytes
+239;2/0/4;Zona A - Torreta A2 - Plaza A04 - Corriente;2 bytes
+240;2/0/5;Zona A - Torreta A2 - Plaza A05 - Corriente;2 bytes
+241;2/0/6;Zona A - Torreta A3 - Plaza A06 - Corriente;2 bytes
+242;2/0/7;Zona A - Torreta A3 - Plaza A07 - Corriente;2 bytes
+243;2/0/8;Zona A - Torreta A4 - Plaza A08 - Corriente;2 bytes
+244;2/0/9;Zona A - Torreta A4 - Plaza A09 - Corriente;2 bytes
+245;2/0/10;Zona A - Torreta A5 - Plaza A10 - Corriente;2 bytes
+246;2/0/11;Zona A - Torreta A5 - Plaza A11 - Corriente;2 bytes
+247;2/0;Zona A;
+248;2/0/12;Zona A - Torreta A6 - Plaza A12 - Corriente;2 bytes
+249;2/0/13;Zona A - Torreta A6 - Plaza A13 - Corriente;2 bytes
+250;2/0/14;Zona A - Torreta A7 - Plaza A14 - Corriente;2 bytes
+251;2/0/15;Zona A - Torreta A7 - Plaza A15 - Corriente;2 bytes
+252;2/0/16;Zona A - Torreta A8 - Plaza A16 - Corriente;2 bytes
+253;2/0/17;Zona A - Torreta A8 - Plaza A17 - Corriente;2 bytes
+254;2/0/18;Zona A - Torreta A8 - Plaza A18 - Corriente;2 bytes
+255;2/1;Zona B;
+256;2/1/1;Zona B - Torreta B1 - Plaza A19 - Corriente;2 bytes
+257;2/1/2;Zona B - Torreta B1 - Plaza A20 - Corriente;2 bytes
+258;2/1/3;Zona B - Torreta B2 - Plaza A21 - Corriente;2 bytes
+259;2/1/4;Zona B - Torreta B2 - Plaza A22 - Corriente;2 bytes
+260;2/1/5;Zona B - Torreta B3 - Plaza A23 - Corriente;2 bytes
+261;2/1/6;Zona B - Torreta B3 - Plaza A24 - Corriente;2 bytes
+262;2/1/7;Zona B - Torreta B4 - Plaza A25 - Corriente;2 bytes
+263;2/1/8;Zona B - Torreta B4 - Plaza A26 - Corriente;2 bytes
+264;2/1/9;Zona B - Torreta B5 - Plaza A27 - Corriente;2 bytes
+265;2/1/10;Zona B - Torreta B5 - Plaza A28 - Corriente;2 bytes
+266;2/1/11;Zona B - Torreta B6 - Plaza A29/30 - Corriente;2 bytes
+267;2/2;Zona X;
+268;2/2/1;Zona X - Torreta X1 - Plaza X01 - Corriente;2 bytes
+269;2/2/2;Zona X - Torreta X1 - Plaza X02 - Corriente;2 bytes
+270;2/2/3;Zona X - Torreta X1 - Plaza X03 - Corriente;2 bytes
+271;2/2/4;Zona X - Torreta X2 - Plaza X04 - Corriente;2 bytes
+272;2/2/5;Zona X - Torreta X2 - Plaza X05 - Corriente;2 bytes
+273;2/2/6;Zona X - Torreta X2 - Plaza X06 - Corriente;2 bytes
+274;2/3;Zona C-D-E;
+275;2/3/1;Zona C-D-E - Torreta C1 - Plaza C01 - Corriente;2 bytes
+276;2/3/2;Zona C-D-E - Torreta C1 - Plaza C02 - Corriente;2 bytes
+277;2/3/3;Zona C-D-E - Torreta C2 - Plaza C03 - Corriente;2 bytes
+278;2/3/4;Zona C-D-E - Torreta C2 - Plaza C04 - Corriente;2 bytes
+279;2/3/5;Zona C-D-E - Torreta C3 - Plaza C05 - Corriente;2 bytes
+280;2/3/6;Zona C-D-E - Torreta C3 - Plaza C06 - Corriente;2 bytes
+281;2/3/7;Zona C-D-E - Torreta C4 - Plaza C07 - Corriente;2 bytes
+282;2/3/8;Zona C-D-E - Torreta C4 - Plaza C08 - Corriente;2 bytes
+283;2/3/9;Zona C-D-E - Torreta C5 - Plaza C09 - Corriente;2 bytes
+284;2/3/10;Zona C-D-E - Torreta C5 - Plaza C10 - Corriente;2 bytes
+285;2/3/11;Zona C-D-E - Torreta C6 - Plaza C11 - Corriente;2 bytes
+286;2/3/12;Zona C-D-E - Torreta C6 - Plaza C12 - Corriente;2 bytes
+287;2/3/13;Zona C-D-E - Torreta D1 - Plaza C13 - Corriente;2 bytes
+288;2/3;Zona C-D-E;
+289;2/3/14;Zona C-D-E - Torreta D1 - Plaza C14 - Corriente;2 bytes
+290;2/3/15;Zona C-D-E - Torreta D2 - Plaza C15 - Corriente;2 bytes
+291;2/3/16;Zona C-D-E - Torreta D2 - Plaza C16 - Corriente;2 bytes
+292;2/3/17;Zona C-D-E - Torreta D3 - Plaza C17 - Corriente;2 bytes
+293;2/3/18;Zona C-D-E - Torreta D3 - Plaza C18 - Corriente;2 bytes
+294;2/3/19;Zona C-D-E - Torreta D4 - Plaza C19 - Corriente;2 bytes
+295;2/3/20;Zona C-D-E - Torreta D4- Plaza C20 - Corriente;2 bytes
+296;2/4;Zona F-G;
+297;2/4/1;Zona F-G - Bungalow 1 - Plaza B01 - Corriente;2 bytes
+298;2/4/2;Zona F-G - Bungalow 2 - Plaza B02 - Corriente;2 bytes
+299;2/4/3;Zona F-G - Bungalow 3 - Plaza B03 - Corriente;2 bytes
+300;2/4/4;Zona F-G - Bungalow 4 - Plaza B04 - Corriente;2 bytes
+301;2/4/5;Zona F-G - Bungalow 5 - Plaza B05 - Corriente;2 bytes
+302;2/4/6;Zona F-G - Bungalow 6 - Plaza B06 - Corriente;2 bytes
+303;2/4/7;Zona F-G - Bungalow 7 - Plaza B07 - Corriente;2 bytes
+304;2/4/8;Zona F-G - Bungalow 8 - Plaza B08 - Corriente;2 bytes
+305;2/4/9;Zona F-G - Bungalow 9 - Plaza B09 - Corriente;2 bytes
+306;2/5;Zona H;
+307;2/5/1;Zona H - Torreta H1 - Plaza D01 - Corriente;2 bytes
+308;2/5/2;Zona H - Torreta H1 - Plaza D02 - Corriente;2 bytes
+309;2/5/3;Zona H - Torreta H2 - Plaza D03 - Corriente;2 bytes
+310;2/5/4;Zona H - Torreta H2 - Plaza D04 - Corriente;2 bytes
+311;2/5/5;Zona H - Torreta H3 - Plaza D05 - Corriente;2 bytes
+312;2/5/6;Zona H - Torreta H3 - Plaza D06 - Corriente;2 bytes
+313;2/5/7;Zona H - Torreta H4 - Plaza D07 - Corriente;2 bytes
+314;2/5/8;Zona H - Torreta H4 - Plaza D08 - Corriente;2 bytes
+315;2/5/9;Zona H - Torreta H5 - Plaza D09 - Corriente;2 bytes
+316;2/5/10;Zona H - Torreta H5 - Plaza D10 - Corriente;2 bytes
+317;2/5/11;Zona H - Torreta H5 - Plaza D11 - Corriente;2 bytes
+318;2/6;Zona I;
+319;2/6/1;Zona I - Torreta I1 - Plaza D12 - Corriente;2 bytes
+320;2/6/2;Zona I - Torreta I1 - Plaza D13 - Corriente;2 bytes
+321;2/6/3;Zona I - Torreta I2 - Plaza D14 - Corriente;2 bytes
+322;2/6/4;Zona I - Torreta I2 - Plaza D15 - Corriente;2 bytes
+323;2/6/5;Zona I - Torreta I3 - Plaza D16 - Corriente;2 bytes
+324;2/6/6;Zona I - Torreta I3 - Plaza D17 - Corriente;2 bytes
+325;2/6/7;Zona I - Torreta I4 - Plaza D18 - Corriente;2 bytes
+326;2/6/8;Zona I - Torreta I4 - Plaza D19 - Corriente;2 bytes
+327;2/6/9;Zona I - Torreta I5 - Plaza D20 - Corriente;2 bytes
+328;2/6/10;Zona I - Torreta I5 - Plaza D21 - Corriente;2 bytes
+329;2/6;Zona I;
+330;2/6/11;Zona I - Torreta I6 - Plaza D22 - Corriente;2 bytes
+331;2/6/12;Zona I - Torreta I6 - Plaza D23 - Corriente;2 bytes
+332;2/7;Zona J-K;
+333;2/7/1;Zona J-K - Torreta J1 - Plaza E01 - Corriente;2 bytes
+334;2/7/2;Zona J-K - Torreta J1 - Plaza E02 - Corriente;2 bytes
+335;2/7/3;Zona J-K - Torreta J2 - Plaza E03 - Corriente;2 bytes
+336;2/7/4;Zona J-K - Torreta J2 - Plaza E04 - Corriente;2 bytes
+337;2/7/5;Zona J-K - Torreta J3 - Plaza E05 - Corriente;2 bytes
+338;2/7/6;Zona J-K - Torreta J3 - Plaza E06 - Corriente;2 bytes
+339;2/7/7;Zona J-K - Torreta J4 - Plaza E07 - Corriente;2 bytes
+340;2/7/8;Zona J-K - Torreta J4 - Plaza E08 - Corriente;2 bytes
+341;2/7/9;Zona J-K - Torreta J5 - Plaza E09 - Corriente;2 bytes
+342;2/7/10;Zona J-K - Torreta J5 - Plaza E10 - Corriente;2 bytes
+343;2/7/11;Zona J-K - Torreta J6 - Plaza E11 - Corriente;2 bytes
+344;2/7/12;Zona J-K - Torreta J6 - Plaza E12 - Corriente;2 bytes
+345;2/7/13;Zona J-K - Torreta J7 - Plaza E13 - Corriente;2 bytes
+346;2/7/14;Zona J-K - Torreta J7 - Plaza E14 - Corriente;2 bytes
+347;2/7/15;Zona J-K - Torreta J8 - Plaza E15 - Corriente;2 bytes
+348;2/7/16;Zona J-K - Torreta J8 - Plaza E16 - Corriente;2 bytes
+349;2/7/17;Zona J-K - Torreta J9 - Plaza E17 - Corriente;2 bytes
+350;2/7/18;Zona J-K - Torreta J9 - Plaza E18 - Corriente;2 bytes
+351;3;Torretas - Umbral entrada;
+352;3/0;Zona A;
+353;3/0/1;Zona A - Torreta A1 - Plaza A01 - Umbral entrada;1 byte
+354;3/0/2;Zona A - Torreta A1 - Plaza A02 - Umbral entrada;1 byte
+355;3/0/3;Zona A - Torreta A1 - Plaza A03 - Umbral entrada;1 byte
+356;3/0/4;Zona A - Torreta A2 - Plaza A04 - Umbral entrada;1 byte
+357;3/0/5;Zona A - Torreta A2 - Plaza A05 - Umbral entrada;1 byte
+358;3/0/6;Zona A - Torreta A3 - Plaza A06 - Umbral entrada;1 byte
+359;3/0/7;Zona A - Torreta A3 - Plaza A07 - Umbral entrada;1 byte
+360;3/0/8;Zona A - Torreta A4 - Plaza A08 - Umbral entrada;1 byte
+361;3/0/9;Zona A - Torreta A4 - Plaza A09 - Umbral entrada;1 byte
+362;3/0/10;Zona A - Torreta A5 - Plaza A10 - Umbral entrada;1 byte
+363;3/0/11;Zona A - Torreta A5 - Plaza A11 - Umbral entrada;1 byte
+364;3/0/12;Zona A - Torreta A6 - Plaza A12 - Umbral entrada;1 byte
+365;3/0/13;Zona A - Torreta A6 - Plaza A13 - Umbral entrada;1 byte
+366;3/0/14;Zona A - Torreta A7 - Plaza A14 - Umbral entrada;1 byte
+367;3/0/15;Zona A - Torreta A7 - Plaza A15 - Umbral entrada;1 byte
+368;3/0/16;Zona A - Torreta A8 - Plaza A16 - Umbral entrada;1 byte
+369;3/0/17;Zona A - Torreta A8 - Plaza A17 - Umbral entrada;1 byte
+370;3/0;Zona A;
+371;3/0/18;Zona A - Torreta A8 - Plaza A18 - Umbral entrada;1 byte
+372;3/1;Zona B;
+373;3/1/1;Zona B - Torreta B1 - Plaza A19 - Umbral entrada;1 byte
+374;3/1/2;Zona B - Torreta B1 - Plaza A20 - Umbral entrada;1 byte
+375;3/1/3;Zona B - Torreta B2 - Plaza A21 - Umbral entrada;1 byte
+376;3/1/4;Zona B - Torreta B2 - Plaza A22 - Umbral entrada;1 byte
+377;3/1/5;Zona B - Torreta B3 - Plaza A23 - Umbral entrada;1 byte
+378;3/1/6;Zona B - Torreta B3 - Plaza A24 - Umbral entrada;1 byte
+379;3/1/7;Zona B - Torreta B4 - Plaza A25 - Umbral entrada;1 byte
+380;3/1/8;Zona B - Torreta B4 - Plaza A26 - Umbral entrada;1 byte
+381;3/1/9;Zona B - Torreta B5 - Plaza A27 - Umbral entrada;1 byte
+382;3/1/10;Zona B - Torreta B5 - Plaza A28 - Umbral entrada;1 byte
+383;3/1/11;Zona B - Torreta B6 - Plaza A29/30 - Umbral entrada;1 byte
+384;3/2;Zona X;
+385;3/2/1;Zona X - Torreta X1 - Plaza X01 - Umbral entrada;1 byte
+386;3/2/2;Zona X - Torreta X1 - Plaza X02 - Umbral entrada;1 byte
+387;3/2/3;Zona X - Torreta X1 - Plaza X03 - Umbral entrada;1 byte
+388;3/2/4;Zona X - Torreta X2 - Plaza X04 - Umbral entrada;1 byte
+389;3/2/5;Zona X - Torreta X2 - Plaza X05 - Umbral entrada;1 byte
+390;3/2/6;Zona X - Torreta X2 - Plaza X06 - Umbral entrada;1 byte
+391;3/3;Zona C-D-E;
+392;3/3/1;Zona C-D-E - Torreta C1 - Plaza C01 - Umbral entrada;1 byte
+393;3/3/2;Zona C-D-E - Torreta C1 - Plaza C02 - Umbral entrada;1 byte
+394;3/3/3;Zona C-D-E - Torreta C2 - Plaza C03 - Umbral entrada;1 byte
+395;3/3/4;Zona C-D-E - Torreta C2 - Plaza C04 - Umbral entrada;1 byte
+396;3/3/5;Zona C-D-E - Torreta C3 - Plaza C05 - Umbral entrada;1 byte
+397;3/3/6;Zona C-D-E - Torreta C3 - Plaza C06 - Umbral entrada;1 byte
+398;3/3/7;Zona C-D-E - Torreta C4 - Plaza C07 - Umbral entrada;1 byte
+399;3/3/8;Zona C-D-E - Torreta C4 - Plaza C08 - Umbral entrada;1 byte
+400;3/3/9;Zona C-D-E - Torreta C5 - Plaza C09 - Umbral entrada;1 byte
+401;3/3/10;Zona C-D-E - Torreta C5 - Plaza C10 - Umbral entrada;1 byte
+402;3/3;Zona C-D-E;
+403;3/3/11;Zona C-D-E - Torreta C6 - Plaza C11 - Umbral entrada;1 byte
+404;3/3/12;Zona C-D-E - Torreta C6 - Plaza C12 - Umbral entrada;1 byte
+405;3/3/13;Zona C-D-E - Torreta D1 - Plaza C13 - Umbral entrada;1 byte
+406;3/3/14;Zona C-D-E - Torreta D1 - Plaza C14 - Umbral entrada;1 byte
+407;3/3/15;Zona C-D-E - Torreta D2 - Plaza C15 - Umbral entrada;1 byte
+408;3/3/16;Zona C-D-E - Torreta D2 - Plaza C16 - Umbral entrada;1 byte
+409;3/3/17;Zona C-D-E - Torreta D3 - Plaza C17 - Umbral entrada;1 byte
+410;3/3/18;Zona C-D-E - Torreta D3 - Plaza C18 - Umbral entrada;1 byte
+411;3/3/19;Zona C-D-E - Torreta D4 - Plaza C19 - Umbral entrada;1 byte
+412;3/3/20;Zona C-D-E - Torreta D4- Plaza C20 - Umbral entrada;1 byte
+413;3/4;Zona F-G;
+414;3/4/1;Zona F-G - Bungalow 1 - Plaza B01 - Umbral entrada;1 byte
+415;3/4/2;Zona F-G - Bungalow 2 - Plaza B02 - Umbral entrada;1 byte
+416;3/4/3;Zona F-G - Bungalow 3 - Plaza B03 - Umbral entrada;1 byte
+417;3/4/4;Zona F-G - Bungalow 4 - Plaza B04 - Umbral entrada;1 byte
+418;3/4/5;Zona F-G - Bungalow 5 - Plaza B05 - Umbral entrada;1 byte
+419;3/4/6;Zona F-G - Bungalow 6 - Plaza B06 - Umbral entrada;1 byte
+420;3/4/7;Zona F-G - Bungalow 7 - Plaza B07 - Umbral entrada;1 byte
+421;3/4/8;Zona F-G - Bungalow 8 - Plaza B08 - Umbral entrada;1 byte
+422;3/4/9;Zona F-G - Bungalow 9 - Plaza B09 - Umbral entrada;1 byte
+423;3/5;Zona H;
+424;3/5/1;Zona H - Torreta H1 - Plaza D01 - Umbral entrada;1 byte
+425;3/5/2;Zona H - Torreta H1 - Plaza D02 - Umbral entrada;1 byte
+426;3/5/3;Zona H - Torreta H2 - Plaza D03 - Umbral entrada;1 byte
+427;3/5/4;Zona H - Torreta H2 - Plaza D04 - Umbral entrada;1 byte
+428;3/5/5;Zona H - Torreta H3 - Plaza D05 - Umbral entrada;1 byte
+429;3/5;Zona H;
+430;3/5/6;Zona H - Torreta H3 - Plaza D06 - Umbral entrada;1 byte
+431;3/5/7;Zona H - Torreta H4 - Plaza D07 - Umbral entrada;1 byte
+432;3/5/8;Zona H - Torreta H4 - Plaza D08 - Umbral entrada;1 byte
+433;3/5/9;Zona H - Torreta H5 - Plaza D09 - Umbral entrada;1 byte
+434;3/5/10;Zona H - Torreta H5 - Plaza D10 - Umbral entrada;1 byte
+435;3/5/11;Zona H - Torreta H5 - Plaza D11 - Umbral entrada;1 byte
+436;3/6;Zona I;
+437;3/6/1;Zona I - Torreta I1 - Plaza D12 - Umbral entrada;1 byte
+438;3/6/2;Zona I - Torreta I1 - Plaza D13 - Umbral entrada;1 byte
+439;3/6/3;Zona I - Torreta I2 - Plaza D14 - Umbral entrada;1 byte
+440;3/6/4;Zona I - Torreta I2 - Plaza D15 - Umbral entrada;1 byte
+441;3/6/5;Zona I - Torreta I3 - Plaza D16 - Umbral entrada;1 byte
+442;3/6/6;Zona I - Torreta I3 - Plaza D17 - Umbral entrada;1 byte
+443;3/6/7;Zona I - Torreta I4 - Plaza D18 - Umbral entrada;1 byte
+444;3/6/8;Zona I - Torreta I4 - Plaza D19 - Umbral entrada;1 byte
+445;3/6/9;Zona I - Torreta I5 - Plaza D20 - Umbral entrada;1 byte
+446;3/6/10;Zona I - Torreta I5 - Plaza D21 - Umbral entrada;1 byte
+447;3/6/11;Zona I - Torreta I6 - Plaza D22 - Umbral entrada;1 byte
+448;3/6/12;Zona I - Torreta I6 - Plaza D23 - Umbral entrada;1 byte
+449;3/7;Zona J-K;
+450;3/7/1;Zona J-K - Torreta J1 - Plaza E01 - Umbral entrada;1 byte
+451;3/7/2;Zona J-K - Torreta J1 - Plaza E02 - Umbral entrada;1 byte
+452;3/7/3;Zona J-K - Torreta J2 - Plaza E03 - Umbral entrada;1 byte
+453;3/7/4;Zona J-K - Torreta J2 - Plaza E04 - Umbral entrada;1 byte
+454;3/7/5;Zona J-K - Torreta J3 - Plaza E05 - Umbral entrada;1 byte
+455;3/7/6;Zona J-K - Torreta J3 - Plaza E06 - Umbral entrada;1 byte
+456;3/7/7;Zona J-K - Torreta J4 - Plaza E07 - Umbral entrada;1 byte
+457;3/7/8;Zona J-K - Torreta J4 - Plaza E08 - Umbral entrada;1 byte
+458;3/7/9;Zona J-K - Torreta J5 - Plaza E09 - Umbral entrada;1 byte
+459;3/7/10;Zona J-K - Torreta J5 - Plaza E10 - Umbral entrada;1 byte
+460;3/7/11;Zona J-K - Torreta J6 - Plaza E11 - Umbral entrada;1 byte
+461;3/7/12;Zona J-K - Torreta J6 - Plaza E12 - Umbral entrada;1 byte
+462;3/7/13;Zona J-K - Torreta J7 - Plaza E13 - Umbral entrada;1 byte
+463;3/7/14;Zona J-K - Torreta J7 - Plaza E14 - Umbral entrada;1 byte
+464;3/7/15;Zona J-K - Torreta J8 - Plaza E15 - Umbral entrada;1 byte
+465;3/7/16;Zona J-K - Torreta J8 - Plaza E16 - Umbral entrada;1 byte
+466;3/7/17;Zona J-K - Torreta J9 - Plaza E17 - Umbral entrada;1 byte
+467;3/7/18;Zona J-K - Torreta J9 - Plaza E18 - Umbral entrada;1 byte
+468;4;Torretas - Umbral cambiar;
+469;4/0;Zona A;
+470;4/0;Zona A;
+471;4/0/1;Zona A - Torreta A1 - Plaza A01 - Umbral cambiar;1 byte
+472;4/0/2;Zona A - Torreta A1 - Plaza A02 - Umbral cambiar;1 byte
+473;4/0/3;Zona A - Torreta A1 - Plaza A03 - Umbral cambiar;1 byte
+474;4/0/4;Zona A - Torreta A2 - Plaza A04 - Umbral cambiar;1 byte
+475;4/0/5;Zona A - Torreta A2 - Plaza A05 - Umbral cambiar;1 byte
+476;4/0/6;Zona A - Torreta A3 - Plaza A06 - Umbral cambiar;1 byte
+477;4/0/7;Zona A - Torreta A3 - Plaza A07 - Umbral cambiar;1 byte
+478;4/0/8;Zona A - Torreta A4 - Plaza A08 - Umbral cambiar;1 byte
+479;4/0/9;Zona A - Torreta A4 - Plaza A09 - Umbral cambiar;1 byte
+480;4/0/10;Zona A - Torreta A5 - Plaza A10 - Umbral cambiar;1 byte
+481;4/0/11;Zona A - Torreta A5 - Plaza A11 - Umbral cambiar;1 byte
+482;4/0/12;Zona A - Torreta A6 - Plaza A12 - Umbral cambiar;1 byte
+483;4/0/13;Zona A - Torreta A6 - Plaza A13 - Umbral cambiar;1 byte
+484;4/0/14;Zona A - Torreta A7 - Plaza A14 - Umbral cambiar;1 byte
+485;4/0/15;Zona A - Torreta A7 - Plaza A15 - Umbral cambiar;1 byte
+486;4/0/16;Zona A - Torreta A8 - Plaza A16 - Umbral cambiar;1 byte
+487;4/0/17;Zona A - Torreta A8 - Plaza A17 - Umbral cambiar;1 byte
+488;4/0/18;Zona A - Torreta A8 - Plaza A18 - Umbral cambiar;1 byte
+489;4/1;Zona B;
+490;4/1/1;Zona B - Torreta B1 - Plaza A19 - Umbral cambiar;1 byte
+491;4/1/2;Zona B - Torreta B1 - Plaza A20 - Umbral cambiar;1 byte
+492;4/1/3;Zona B - Torreta B2 - Plaza A21 - Umbral cambiar;1 byte
+493;4/1/4;Zona B - Torreta B2 - Plaza A22 - Umbral cambiar;1 byte
+494;4/1/5;Zona B - Torreta B3 - Plaza A23 - Umbral cambiar;1 byte
+495;4/1/6;Zona B - Torreta B3 - Plaza A24 - Umbral cambiar;1 byte
+496;4/1/7;Zona B - Torreta B4 - Plaza A25 - Umbral cambiar;1 byte
+497;4/1/8;Zona B - Torreta B4 - Plaza A26 - Umbral cambiar;1 byte
+498;4/1/9;Zona B - Torreta B5 - Plaza A27 - Umbral cambiar;1 byte
+499;4/1/10;Zona B - Torreta B5 - Plaza A28 - Umbral cambiar;1 byte
+500;4/1/11;Zona B - Torreta B6 - Plaza A29/30 - Umbral cambiar;1 byte
+501;4/2;Zona X;
+502;4/2/1;Zona X - Torreta X1 - Plaza X01 - Umbral cambiar;1 byte
+503;4/2/2;Zona X - Torreta X1 - Plaza X02 - Umbral cambiar;1 byte
+504;4/2/3;Zona X - Torreta X1 - Plaza X03 - Umbral cambiar;1 byte
+505;4/2/4;Zona X - Torreta X2 - Plaza X04 - Umbral cambiar;1 byte
+506;4/2/5;Zona X - Torreta X2 - Plaza X05 - Umbral cambiar;1 byte
+507;4/2/6;Zona X - Torreta X2 - Plaza X06 - Umbral cambiar;1 byte
+508;4/3;Zona C-D-E;
+509;4/3/1;Zona C-D-E - Torreta C1 - Plaza C01 - Umbral cambiar;1 byte
+510;4/3;Zona C-D-E;
+511;4/3/2;Zona C-D-E - Torreta C1 - Plaza C02 - Umbral cambiar;1 byte
+512;4/3/3;Zona C-D-E - Torreta C2 - Plaza C03 - Umbral cambiar;1 byte
+513;4/3/4;Zona C-D-E - Torreta C2 - Plaza C04 - Umbral cambiar;1 byte
+514;4/3/5;Zona C-D-E - Torreta C3 - Plaza C05 - Umbral cambiar;1 byte
+515;4/3/6;Zona C-D-E - Torreta C3 - Plaza C06 - Umbral cambiar;1 byte
+516;4/3/7;Zona C-D-E - Torreta C4 - Plaza C07 - Umbral cambiar;1 byte
+517;4/3/8;Zona C-D-E - Torreta C4 - Plaza C08 - Umbral cambiar;1 byte
+518;4/3/9;Zona C-D-E - Torreta C5 - Plaza C09 - Umbral cambiar;1 byte
+519;4/3/10;Zona C-D-E - Torreta C5 - Plaza C10 - Umbral cambiar;1 byte
+520;4/3/11;Zona C-D-E - Torreta C6 - Plaza C11 - Umbral cambiar;1 byte
+521;4/3/12;Zona C-D-E - Torreta C6 - Plaza C12 - Umbral cambiar;1 byte
+522;4/3/13;Zona C-D-E - Torreta D1 - Plaza C13 - Umbral cambiar;1 byte
+523;4/3/14;Zona C-D-E - Torreta D1 - Plaza C14 - Umbral cambiar;1 byte
+524;4/3/15;Zona C-D-E - Torreta D2 - Plaza C15 - Umbral cambiar;1 byte
+525;4/3/16;Zona C-D-E - Torreta D2 - Plaza C16 - Umbral cambiar;1 byte
+526;4/3/17;Zona C-D-E - Torreta D3 - Plaza C17 - Umbral cambiar;1 byte
+527;4/3/18;Zona C-D-E - Torreta D3 - Plaza C18 - Umbral cambiar;1 byte
+528;4/3/19;Zona C-D-E - Torreta D4 - Plaza C19 - Umbral cambiar;1 byte
+529;4/3/20;Zona C-D-E - Torreta D4- Plaza C20 - Umbral cambiar;1 byte
+530;4/4;Zona F-G;
+531;4/4/1;Zona F-G - Bungalow 1 - Plaza B01 - Umbral cambiar;1 byte
+532;4/4/2;Zona F-G - Bungalow 2 - Plaza B02 - Umbral cambiar;1 byte
+533;4/4/3;Zona F-G - Bungalow 3 - Plaza B03 - Umbral cambiar;1 byte
+534;4/4;Zona F-G;
+535;4/4/4;Zona F-G - Bungalow 4 - Plaza B04 - Umbral cambiar;1 byte
+536;4/4/5;Zona F-G - Bungalow 5 - Plaza B05 - Umbral cambiar;1 byte
+537;4/4/6;Zona F-G - Bungalow 6 - Plaza B06 - Umbral cambiar;1 byte
+538;4/4/7;Zona F-G - Bungalow 7 - Plaza B07 - Umbral cambiar;1 byte
+539;4/4/8;Zona F-G - Bungalow 8 - Plaza B08 - Umbral cambiar;1 byte
+540;4/4/9;Zona F-G - Bungalow 9 - Plaza B09 - Umbral cambiar;1 byte
+541;4/5;Zona H;
+542;4/5/1;Zona H - Torreta H1 - Plaza D01 - Umbral cambiar;1 byte
+543;4/5/2;Zona H - Torreta H1 - Plaza D02 - Umbral cambiar;1 byte
+544;4/5/3;Zona H - Torreta H2 - Plaza D03 - Umbral cambiar;1 byte
+545;4/5/4;Zona H - Torreta H2 - Plaza D04 - Umbral cambiar;1 byte
+546;4/5/5;Zona H - Torreta H3 - Plaza D05 - Umbral cambiar;1 byte
+547;4/5/6;Zona H - Torreta H3 - Plaza D06 - Umbral cambiar;1 byte
+548;4/5/7;Zona H - Torreta H4 - Plaza D07 - Umbral cambiar;1 byte
+549;4/5/8;Zona H - Torreta H4 - Plaza D08 - Umbral cambiar;1 byte
+550;4/5/9;Zona H - Torreta H5 - Plaza D09 - Umbral cambiar;1 byte
+551;4/5/10;Zona H - Torreta H5 - Plaza D10 - Umbral cambiar;1 byte
+552;4/5/11;Zona H - Torreta H5 - Plaza D11 - Umbral cambiar;1 byte
+553;4/6;Zona I;
+554;4/6/1;Zona I - Torreta I1 - Plaza D12 - Umbral cambiar;1 byte
+555;4/6/2;Zona I - Torreta I1 - Plaza D13 - Umbral cambiar;1 byte
+556;4/6/3;Zona I - Torreta I2 - Plaza D14 - Umbral cambiar;1 byte
+557;4/6/4;Zona I - Torreta I2 - Plaza D15 - Umbral cambiar;1 byte
+558;4/6/5;Zona I - Torreta I3 - Plaza D16 - Umbral cambiar;1 byte
+559;4/6/6;Zona I - Torreta I3 - Plaza D17 - Umbral cambiar;1 byte
+560;4/6/7;Zona I - Torreta I4 - Plaza D18 - Umbral cambiar;1 byte
+561;4/6/8;Zona I - Torreta I4 - Plaza D19 - Umbral cambiar;1 byte
+562;4/6/9;Zona I - Torreta I5 - Plaza D20 - Umbral cambiar;1 byte
+563;4/6/10;Zona I - Torreta I5 - Plaza D21 - Umbral cambiar;1 byte
+564;4/6/11;Zona I - Torreta I6 - Plaza D22 - Umbral cambiar;1 byte
+565;4/6/12;Zona I - Torreta I6 - Plaza D23 - Umbral cambiar;1 byte
+566;4/7;Zona J-K;
+567;4/7/1;Zona J-K - Torreta J1 - Plaza E01 - Umbral cambiar;1 byte
+568;4/7/2;Zona J-K - Torreta J1 - Plaza E02 - Umbral cambiar;1 byte
+569;4/7/3;Zona J-K - Torreta J2 - Plaza E03 - Umbral cambiar;1 byte
+570;4/7/4;Zona J-K - Torreta J2 - Plaza E04 - Umbral cambiar;1 byte
+571;4/7;Zona J-K;
+572;4/7/5;Zona J-K - Torreta J3 - Plaza E05 - Umbral cambiar;1 byte
+573;4/7/6;Zona J-K - Torreta J3 - Plaza E06 - Umbral cambiar;1 byte
+574;4/7/7;Zona J-K - Torreta J4 - Plaza E07 - Umbral cambiar;1 byte
+575;4/7/8;Zona J-K - Torreta J4 - Plaza E08 - Umbral cambiar;1 byte
+576;4/7/9;Zona J-K - Torreta J5 - Plaza E09 - Umbral cambiar;1 byte
+577;4/7/10;Zona J-K - Torreta J5 - Plaza E10 - Umbral cambiar;1 byte
+578;4/7/11;Zona J-K - Torreta J6 - Plaza E11 - Umbral cambiar;1 byte
+579;4/7/12;Zona J-K - Torreta J6 - Plaza E12 - Umbral cambiar;1 byte
+580;4/7/13;Zona J-K - Torreta J7 - Plaza E13 - Umbral cambiar;1 byte
+581;4/7/14;Zona J-K - Torreta J7 - Plaza E14 - Umbral cambiar;1 byte
+582;4/7/15;Zona J-K - Torreta J8 - Plaza E15 - Umbral cambiar;1 byte
+583;4/7/16;Zona J-K - Torreta J8 - Plaza E16 - Umbral cambiar;1 byte
+584;4/7/17;Zona J-K - Torreta J9 - Plaza E17 - Umbral cambiar;1 byte
+585;4/7/18;Zona J-K - Torreta J9 - Plaza E18 - Umbral cambiar;1 byte
+586;5;Torretas - Umbral estado corriente 1;
+587;5/0;Zona A;
+588;5/0/1;Zona A - Torreta A1 - Plaza A01 - Umbral estado corriente 1;1 bit
+589;5/0/2;Zona A - Torreta A1 - Plaza A02 - Umbral estado corriente 1;1 bit
+590;5/0/3;Zona A - Torreta A1 - Plaza A03 - Umbral estado corriente 1;1 bit
+591;5/0/4;Zona A - Torreta A2 - Plaza A04 - Umbral estado corriente 1;1 bit
+592;5/0/5;Zona A - Torreta A2 - Plaza A05 - Umbral estado corriente 1;1 bit
+593;5/0/6;Zona A - Torreta A3 - Plaza A06 - Umbral estado corriente 1;1 bit
+594;5/0/7;Zona A - Torreta A3 - Plaza A07 - Umbral estado corriente 1;1 bit
+595;5/0/8;Zona A - Torreta A4 - Plaza A08 - Umbral estado corriente 1;1 bit
+596;5/0/9;Zona A - Torreta A4 - Plaza A09 - Umbral estado corriente 1;1 bit
+597;5/0/10;Zona A - Torreta A5 - Plaza A10 - Umbral estado corriente 1;1 bit
+598;5/0/11;Zona A - Torreta A5 - Plaza A11 - Umbral estado corriente 1;1 bit
+599;5/0/12;Zona A - Torreta A6 - Plaza A12 - Umbral estado corriente 1;1 bit
+600;5/0/13;Zona A - Torreta A6 - Plaza A13 - Umbral estado corriente 1;1 bit
+601;5/0/14;Zona A - Torreta A7 - Plaza A14 - Umbral estado corriente 1;1 bit
+602;5/0;Zona A;
+603;5/0/15;Zona A - Torreta A7 - Plaza A15 - Umbral estado corriente 1;1 bit
+604;5/0/16;Zona A - Torreta A8 - Plaza A16 - Umbral estado corriente 1;1 bit
+605;5/0/17;Zona A - Torreta A8 - Plaza A17 - Umbral estado corriente 1;1 bit
+606;5/0/18;Zona A - Torreta A8 - Plaza A18 - Umbral estado corriente 1;1 bit
+607;5/1;Zona B;
+608;5/1/1;Zona B - Torreta B1 - Plaza A19 - Umbral estado corriente 1;1 bit
+609;5/1/2;Zona B - Torreta B1 - Plaza A20 - Umbral estado corriente 1;1 bit
+610;5/1/3;Zona B - Torreta B2 - Plaza A21 - Umbral estado corriente 1;1 bit
+611;5/1/4;Zona B - Torreta B2 - Plaza A22 - Umbral estado corriente 1;1 bit
+612;5/1/5;Zona B - Torreta B3 - Plaza A23 - Umbral estado corriente 1;1 bit
+613;5/1/6;Zona B - Torreta B3 - Plaza A24 - Umbral estado corriente 1;1 bit
+614;5/1/7;Zona B - Torreta B4 - Plaza A25 - Umbral estado corriente 1;1 bit
+615;5/1/8;Zona B - Torreta B4 - Plaza A26 - Umbral estado corriente 1;1 bit
+616;5/1/9;Zona B - Torreta B5 - Plaza A27 - Umbral estado corriente 1;1 bit
+617;5/1/10;Zona B - Torreta B5 - Plaza A28 - Umbral estado corriente 1;1 bit
+618;5/1/11;Zona B - Torreta B6 - Plaza A29/30 - Umbral estado corriente 1;1 bit
+619;5/2;Zona X;
+620;5/2/1;Zona X - Torreta X1 - Plaza X01 - Umbral estado corriente 1;1 bit
+621;5/2/2;Zona X - Torreta X1 - Plaza X02 - Umbral estado corriente 1;1 bit
+622;5/2/3;Zona X - Torreta X1 - Plaza X03 - Umbral estado corriente 1;1 bit
+623;5/2/4;Zona X - Torreta X2 - Plaza X04 - Umbral estado corriente 1;1 bit
+624;5/2/5;Zona X - Torreta X2 - Plaza X05 - Umbral estado corriente 1;1 bit
+625;5/2/6;Zona X - Torreta X2 - Plaza X06 - Umbral estado corriente 1;1 bit
+626;5/3;Zona C-D-E;
+627;5/3;Zona C-D-E;
+628;5/3/1;Zona C-D-E - Torreta C1 - Plaza C01 - Umbral estado corriente 1;1 bit
+629;5/3/2;Zona C-D-E - Torreta C1 - Plaza C02 - Umbral estado corriente 1;1 bit
+630;5/3/3;Zona C-D-E - Torreta C2 - Plaza C03 - Umbral estado corriente 1;1 bit
+631;5/3/4;Zona C-D-E - Torreta C2 - Plaza C04 - Umbral estado corriente 1;1 bit
+632;5/3/5;Zona C-D-E - Torreta C3 - Plaza C05 - Umbral estado corriente 1;1 bit
+633;5/3/6;Zona C-D-E - Torreta C3 - Plaza C06 - Umbral estado corriente 1;1 bit
+634;5/3/7;Zona C-D-E - Torreta C4 - Plaza C07 - Umbral estado corriente 1;1 bit
+635;5/3/8;Zona C-D-E - Torreta C4 - Plaza C08 - Umbral estado corriente 1;1 bit
+636;5/3/9;Zona C-D-E - Torreta C5 - Plaza C09 - Umbral estado corriente 1;1 bit
+637;5/3/10;Zona C-D-E - Torreta C5 - Plaza C10 - Umbral estado corriente 1;1 bit
+638;5/3/11;Zona C-D-E - Torreta C6 - Plaza C11 - Umbral estado corriente 1;1 bit
+639;5/3/12;Zona C-D-E - Torreta C6 - Plaza C12 - Umbral estado corriente 1;1 bit
+640;5/3/13;Zona C-D-E - Torreta D1 - Plaza C13 - Umbral estado corriente 1;1 bit
+641;5/3/14;Zona C-D-E - Torreta D1 - Plaza C14 - Umbral estado corriente 1;1 bit
+642;5/3/15;Zona C-D-E - Torreta D2 - Plaza C15 - Umbral estado corriente 1;1 bit
+643;5/3/16;Zona C-D-E - Torreta D2 - Plaza C16 - Umbral estado corriente 1;1 bit
+644;5/3/17;Zona C-D-E - Torreta D3 - Plaza C17 - Umbral estado corriente 1;1 bit
+645;5/3/18;Zona C-D-E - Torreta D3 - Plaza C18 - Umbral estado corriente 1;1 bit
+646;5/3/19;Zona C-D-E - Torreta D4 - Plaza C19 - Umbral estado corriente 1;1 bit
+647;5/3/20;Zona C-D-E - Torreta D4- Plaza C20 - Umbral estado corriente 1;1 bit
+648;5/4;Zona F-G;
+649;5/4/1;Zona F-G - Bungalow 1 - Plaza B01 - Umbral estado corriente 1;1 bit
+650;5/4/2;Zona F-G - Bungalow 2 - Plaza B02 - Umbral estado corriente 1;1 bit
+651;5/4;Zona F-G;
+652;5/4/3;Zona F-G - Bungalow 3 - Plaza B03 - Umbral estado corriente 1;1 bit
+653;5/4/4;Zona F-G - Bungalow 4 - Plaza B04 - Umbral estado corriente 1;1 bit
+654;5/4/5;Zona F-G - Bungalow 5 - Plaza B05 - Umbral estado corriente 1;1 bit
+655;5/4/6;Zona F-G - Bungalow 6 - Plaza B06 - Umbral estado corriente 1;1 bit
+656;5/4/7;Zona F-G - Bungalow 7 - Plaza B07 - Umbral estado corriente 1;1 bit
+657;5/4/8;Zona F-G - Bungalow 8 - Plaza B08 - Umbral estado corriente 1;1 bit
+658;5/4/9;Zona F-G - Bungalow 9 - Plaza B09 - Umbral estado corriente 1;1 bit
+659;5/5;Zona H;
+660;5/5/1;Zona H - Torreta H1 - Plaza D01 - Umbral estado corriente 1;1 bit
+661;5/5/2;Zona H - Torreta H1 - Plaza D02 - Umbral estado corriente 1;1 bit
+662;5/5/3;Zona H - Torreta H2 - Plaza D03 - Umbral estado corriente 1;1 bit
+663;5/5/4;Zona H - Torreta H2 - Plaza D04 - Umbral estado corriente 1;1 bit
+664;5/5/5;Zona H - Torreta H3 - Plaza D05 - Umbral estado corriente 1;1 bit
+665;5/5/6;Zona H - Torreta H3 - Plaza D06 - Umbral estado corriente 1;1 bit
+666;5/5/7;Zona H - Torreta H4 - Plaza D07 - Umbral estado corriente 1;1 bit
+667;5/5/8;Zona H - Torreta H4 - Plaza D08 - Umbral estado corriente 1;1 bit
+668;5/5/9;Zona H - Torreta H5 - Plaza D09 - Umbral estado corriente 1;1 bit
+669;5/5/10;Zona H - Torreta H5 - Plaza D10 - Umbral estado corriente 1;1 bit
+670;5/5/11;Zona H - Torreta H5 - Plaza D11 - Umbral estado corriente 1;1 bit
+671;5/6;Zona I;
+672;5/6/1;Zona I - Torreta I1 - Plaza D12 - Umbral estado corriente 1;1 bit
+673;5/6/2;Zona I - Torreta I1 - Plaza D13 - Umbral estado corriente 1;1 bit
+674;5/6/3;Zona I - Torreta I2 - Plaza D14 - Umbral estado corriente 1;1 bit
+675;5/6/4;Zona I - Torreta I2 - Plaza D15 - Umbral estado corriente 1;1 bit
+676;5/6;Zona I;
+677;5/6/5;Zona I - Torreta I3 - Plaza D16 - Umbral estado corriente 1;1 bit
+678;5/6/6;Zona I - Torreta I3 - Plaza D17 - Umbral estado corriente 1;1 bit
+679;5/6/7;Zona I - Torreta I4 - Plaza D18 - Umbral estado corriente 1;1 bit
+680;5/6/8;Zona I - Torreta I4 - Plaza D19 - Umbral estado corriente 1;1 bit
+681;5/6/9;Zona I - Torreta I5 - Plaza D20 - Umbral estado corriente 1;1 bit
+682;5/6/10;Zona I - Torreta I5 - Plaza D21 - Umbral estado corriente 1;1 bit
+683;5/6/11;Zona I - Torreta I6 - Plaza D22 - Umbral estado corriente 1;1 bit
+684;5/6/12;Zona I - Torreta I6 - Plaza D23 - Umbral estado corriente 1;1 bit
+685;5/7;Zona J-K;
+686;5/7/1;Zona J-K - Torreta J1 - Plaza E01 - Umbral estado corriente 1;1 bit
+687;5/7/2;Zona J-K - Torreta J1 - Plaza E02 - Umbral estado corriente 1;1 bit
+688;5/7/3;Zona J-K - Torreta J2 - Plaza E03 - Umbral estado corriente 1;1 bit
+689;5/7/4;Zona J-K - Torreta J2 - Plaza E04 - Umbral estado corriente 1;1 bit
+690;5/7/5;Zona J-K - Torreta J3 - Plaza E05 - Umbral estado corriente 1;1 bit
+691;5/7/6;Zona J-K - Torreta J3 - Plaza E06 - Umbral estado corriente 1;1 bit
+692;5/7/7;Zona J-K - Torreta J4 - Plaza E07 - Umbral estado corriente 1;1 bit
+693;5/7/8;Zona J-K - Torreta J4 - Plaza E08 - Umbral estado corriente 1;1 bit
+694;5/7/9;Zona J-K - Torreta J5 - Plaza E09 - Umbral estado corriente 1;1 bit
+695;5/7/10;Zona J-K - Torreta J5 - Plaza E10 - Umbral estado corriente 1;1 bit
+696;5/7/11;Zona J-K - Torreta J6 - Plaza E11 - Umbral estado corriente 1;1 bit
+697;5/7/12;Zona J-K - Torreta J6 - Plaza E12 - Umbral estado corriente 1;1 bit
+698;5/7/13;Zona J-K - Torreta J7 - Plaza E13 - Umbral estado corriente 1;1 bit
+699;5/7/14;Zona J-K - Torreta J7 - Plaza E14 - Umbral estado corriente 1;1 bit
+700;5/7;Zona J-K;
+701;5/7/15;Zona J-K - Torreta J8 - Plaza E15 - Umbral estado corriente 1;1 bit
+702;5/7/16;Zona J-K - Torreta J8 - Plaza E16 - Umbral estado corriente 1;1 bit
+703;5/7/17;Zona J-K - Torreta J9 - Plaza E17 - Umbral estado corriente 1;1 bit
+704;5/7/18;Zona J-K - Torreta J9 - Plaza E18 - Umbral estado corriente 1;1 bit
+705;6;Torretas - Umbral estado corriente 2;
+706;6/0;Zona A;
+707;6/0/1;Zona A - Torreta A1 - Plaza A01 - Umbral estado corriente 2;1 bit
+708;6/0/2;Zona A - Torreta A1 - Plaza A02 - Umbral estado corriente 2;1 bit
+709;6/0/3;Zona A - Torreta A1 - Plaza A03 - Umbral estado corriente 2;1 bit
+710;6/0/4;Zona A - Torreta A2 - Plaza A04 - Umbral estado corriente 2;1 bit
+711;6/0/5;Zona A - Torreta A2 - Plaza A05 - Umbral estado corriente 2;1 bit
+712;6/0/6;Zona A - Torreta A3 - Plaza A06 - Umbral estado corriente 2;1 bit
+713;6/0/7;Zona A - Torreta A3 - Plaza A07 - Umbral estado corriente 2;1 bit
+714;6/0/8;Zona A - Torreta A4 - Plaza A08 - Umbral estado corriente 2;1 bit
+715;6/0/9;Zona A - Torreta A4 - Plaza A09 - Umbral estado corriente 2;1 bit
+716;6/0/10;Zona A - Torreta A5 - Plaza A10 - Umbral estado corriente 2;1 bit
+717;6/0/11;Zona A - Torreta A5 - Plaza A11 - Umbral estado corriente 2;1 bit
+718;6/0/12;Zona A - Torreta A6 - Plaza A12 - Umbral estado corriente 2;1 bit
+719;6/0/13;Zona A - Torreta A6 - Plaza A13 - Umbral estado corriente 2;1 bit
+720;6/0/14;Zona A - Torreta A7 - Plaza A14 - Umbral estado corriente 2;1 bit
+721;6/0/15;Zona A - Torreta A7 - Plaza A15 - Umbral estado corriente 2;1 bit
+722;6/0/16;Zona A - Torreta A8 - Plaza A16 - Umbral estado corriente 2;1 bit
+723;6/0/17;Zona A - Torreta A8 - Plaza A17 - Umbral estado corriente 2;1 bit
+724;6/0/18;Zona A - Torreta A8 - Plaza A18 - Umbral estado corriente 2;1 bit
+725;6/1;Zona B;
+726;6/1/1;Zona B - Torreta B1 - Plaza A19 - Umbral estado corriente 2;1 bit
+727;6/1/2;Zona B - Torreta B1 - Plaza A20 - Umbral estado corriente 2;1 bit
+728;6/1/3;Zona B - Torreta B2 - Plaza A21 - Umbral estado corriente 2;1 bit
+729;6/1/4;Zona B - Torreta B2 - Plaza A22 - Umbral estado corriente 2;1 bit
+730;6/1/5;Zona B - Torreta B3 - Plaza A23 - Umbral estado corriente 2;1 bit
+731;6/1/6;Zona B - Torreta B3 - Plaza A24 - Umbral estado corriente 2;1 bit
+732;6/1/7;Zona B - Torreta B4 - Plaza A25 - Umbral estado corriente 2;1 bit
+733;6/1/8;Zona B - Torreta B4 - Plaza A26 - Umbral estado corriente 2;1 bit
+734;6/1/9;Zona B - Torreta B5 - Plaza A27 - Umbral estado corriente 2;1 bit
+735;6/1/10;Zona B - Torreta B5 - Plaza A28 - Umbral estado corriente 2;1 bit
+736;6/1/11;Zona B - Torreta B6 - Plaza A29/30 - Umbral estado corriente 2;1 bit
+737;6/2;Zona X;
+738;6/2/1;Zona X - Torreta X1 - Plaza X01 - Umbral estado corriente 2;1 bit
+739;6/2/2;Zona X - Torreta X1 - Plaza X02 - Umbral estado corriente 2;1 bit
+740;6/2/3;Zona X - Torreta X1 - Plaza X03 - Umbral estado corriente 2;1 bit
+741;6/2/4;Zona X - Torreta X2 - Plaza X04 - Umbral estado corriente 2;1 bit
+742;6/2/5;Zona X - Torreta X2 - Plaza X05 - Umbral estado corriente 2;1 bit
+743;6/2/6;Zona X - Torreta X2 - Plaza X06 - Umbral estado corriente 2;1 bit
+744;6/3;Zona C-D-E;
+745;6/3/1;Zona C-D-E - Torreta C1 - Plaza C01 - Umbral estado corriente 2;1 bit
+746;6/3/2;Zona C-D-E - Torreta C1 - Plaza C02 - Umbral estado corriente 2;1 bit
+747;6/3/3;Zona C-D-E - Torreta C2 - Plaza C03 - Umbral estado corriente 2;1 bit
+748;6/3/4;Zona C-D-E - Torreta C2 - Plaza C04 - Umbral estado corriente 2;1 bit
+749;6/3/5;Zona C-D-E - Torreta C3 - Plaza C05 - Umbral estado corriente 2;1 bit
+750;6/3;Zona C-D-E;
+751;6/3/6;Zona C-D-E - Torreta C3 - Plaza C06 - Umbral estado corriente 2;1 bit
+752;6/3/7;Zona C-D-E - Torreta C4 - Plaza C07 - Umbral estado corriente 2;1 bit
+753;6/3/8;Zona C-D-E - Torreta C4 - Plaza C08 - Umbral estado corriente 2;1 bit
+754;6/3/9;Zona C-D-E - Torreta C5 - Plaza C09 - Umbral estado corriente 2;1 bit
+755;6/3/10;Zona C-D-E - Torreta C5 - Plaza C10 - Umbral estado corriente 2;1 bit
+756;6/3/11;Zona C-D-E - Torreta C6 - Plaza C11 - Umbral estado corriente 2;1 bit
+757;6/3/12;Zona C-D-E - Torreta C6 - Plaza C12 - Umbral estado corriente 2;1 bit
+758;6/3/13;Zona C-D-E - Torreta D1 - Plaza C13 - Umbral estado corriente 2;1 bit
+759;6/3/14;Zona C-D-E - Torreta D1 - Plaza C14 - Umbral estado corriente 2;1 bit
+760;6/3/15;Zona C-D-E - Torreta D2 - Plaza C15 - Umbral estado corriente 2;1 bit
+761;6/3/16;Zona C-D-E - Torreta D2 - Plaza C16 - Umbral estado corriente 2;1 bit
+762;6/3/17;Zona C-D-E - Torreta D3 - Plaza C17 - Umbral estado corriente 2;1 bit
+763;6/3/18;Zona C-D-E - Torreta D3 - Plaza C18 - Umbral estado corriente 2;1 bit
+764;6/3/19;Zona C-D-E - Torreta D4 - Plaza C19 - Umbral estado corriente 2;1 bit
+765;6/3/20;Zona C-D-E - Torreta D4- Plaza C20 - Umbral estado corriente 2;1 bit
+766;6/4;Zona F-G;
+767;6/4/1;Zona F-G - Bungalow 1 - Plaza B01 - Umbral estado corriente 2;1 bit
+768;6/4/2;Zona F-G - Bungalow 2 - Plaza B02 - Umbral estado corriente 2;1 bit
+769;6/4/3;Zona F-G - Bungalow 3 - Plaza B03 - Umbral estado corriente 2;1 bit
+770;6/4/4;Zona F-G - Bungalow 4 - Plaza B04 - Umbral estado corriente 2;1 bit
+771;6/4/5;Zona F-G - Bungalow 5 - Plaza B05 - Umbral estado corriente 2;1 bit
+772;6/4/6;Zona F-G - Bungalow 6 - Plaza B06 - Umbral estado corriente 2;1 bit
+773;6/4/7;Zona F-G - Bungalow 7 - Plaza B07 - Umbral estado corriente 2;1 bit
+774;6/4;Zona F-G;
+775;6/4/8;Zona F-G - Bungalow 8 - Plaza B08 - Umbral estado corriente 2;1 bit
+776;6/4/9;Zona F-G - Bungalow 9 - Plaza B09 - Umbral estado corriente 2;1 bit
+777;6/5;Zona H;
+778;6/5/1;Zona H - Torreta H1 - Plaza D01 - Umbral estado corriente 2;1 bit
+779;6/5/2;Zona H - Torreta H1 - Plaza D02 - Umbral estado corriente 2;1 bit
+780;6/5/3;Zona H - Torreta H2 - Plaza D03 - Umbral estado corriente 2;1 bit
+781;6/5/4;Zona H - Torreta H2 - Plaza D04 - Umbral estado corriente 2;1 bit
+782;6/5/5;Zona H - Torreta H3 - Plaza D05 - Umbral estado corriente 2;1 bit
+783;6/5/6;Zona H - Torreta H3 - Plaza D06 - Umbral estado corriente 2;1 bit
+784;6/5/7;Zona H - Torreta H4 - Plaza D07 - Umbral estado corriente 2;1 bit
+785;6/5/8;Zona H - Torreta H4 - Plaza D08 - Umbral estado corriente 2;1 bit
+786;6/5/9;Zona H - Torreta H5 - Plaza D09 - Umbral estado corriente 2;1 bit
+787;6/5/10;Zona H - Torreta H5 - Plaza D10 - Umbral estado corriente 2;1 bit
+788;6/5/11;Zona H - Torreta H5 - Plaza D11 - Umbral estado corriente 2;1 bit
+789;6/6;Zona I;
+790;6/6/1;Zona I - Torreta I1 - Plaza D12 - Umbral estado corriente 2;1 bit
+791;6/6/2;Zona I - Torreta I1 - Plaza D13 - Umbral estado corriente 2;1 bit
+792;6/6/3;Zona I - Torreta I2 - Plaza D14 - Umbral estado corriente 2;1 bit
+793;6/6/4;Zona I - Torreta I2 - Plaza D15 - Umbral estado corriente 2;1 bit
+794;6/6/5;Zona I - Torreta I3 - Plaza D16 - Umbral estado corriente 2;1 bit
+795;6/6/6;Zona I - Torreta I3 - Plaza D17 - Umbral estado corriente 2;1 bit
+796;6/6/7;Zona I - Torreta I4 - Plaza D18 - Umbral estado corriente 2;1 bit
+797;6/6/8;Zona I - Torreta I4 - Plaza D19 - Umbral estado corriente 2;1 bit
+798;6/6/9;Zona I - Torreta I5 - Plaza D20 - Umbral estado corriente 2;1 bit
+799;6/6;Zona I;
+800;6/6/10;Zona I - Torreta I5 - Plaza D21 - Umbral estado corriente 2;1 bit
+801;6/6/11;Zona I - Torreta I6 - Plaza D22 - Umbral estado corriente 2;1 bit
+802;6/6/12;Zona I - Torreta I6 - Plaza D23 - Umbral estado corriente 2;1 bit
+803;6/7;Zona J-K;
+804;6/7/1;Zona J-K - Torreta J1 - Plaza E01 - Umbral estado corriente 2;1 bit
+805;6/7/2;Zona J-K - Torreta J1 - Plaza E02 - Umbral estado corriente 2;1 bit
+806;6/7/3;Zona J-K - Torreta J2 - Plaza E03 - Umbral estado corriente 2;1 bit
+807;6/7/4;Zona J-K - Torreta J2 - Plaza E04 - Umbral estado corriente 2;1 bit
+808;6/7/5;Zona J-K - Torreta J3 - Plaza E05 - Umbral estado corriente 2;1 bit
+809;6/7/6;Zona J-K - Torreta J3 - Plaza E06 - Umbral estado corriente 2;1 bit
+810;6/7/7;Zona J-K - Torreta J4 - Plaza E07 - Umbral estado corriente 2;1 bit
+811;6/7/8;Zona J-K - Torreta J4 - Plaza E08 - Umbral estado corriente 2;1 bit
+812;6/7/9;Zona J-K - Torreta J5 - Plaza E09 - Umbral estado corriente 2;1 bit
+813;6/7/10;Zona J-K - Torreta J5 - Plaza E10 - Umbral estado corriente 2;1 bit
+814;6/7/11;Zona J-K - Torreta J6 - Plaza E11 - Umbral estado corriente 2;1 bit
+815;6/7/12;Zona J-K - Torreta J6 - Plaza E12 - Umbral estado corriente 2;1 bit
+816;6/7/13;Zona J-K - Torreta J7 - Plaza E13 - Umbral estado corriente 2;1 bit
+817;6/7/14;Zona J-K - Torreta J7 - Plaza E14 - Umbral estado corriente 2;1 bit
+818;6/7/15;Zona J-K - Torreta J8 - Plaza E15 - Umbral estado corriente 2;1 bit
+819;6/7/16;Zona J-K - Torreta J8 - Plaza E16 - Umbral estado corriente 2;1 bit
+820;6/7/17;Zona J-K - Torreta J9 - Plaza E17 - Umbral estado corriente 2;1 bit
+821;6/7/18;Zona J-K - Torreta J9 - Plaza E18 - Umbral estado corriente 2;1 bit
+822;10;Varios;
+823;10/0;Torretas Grupos;
+824;10/0/0;GR. Plazas A;1 bit
+825;10/0;Torretas Grupos;
+826;10/0/1;GR. Plazas X;1 bit
+827;10/0/2;GR. Plazas C;1 bit
+828;10/0/3;GR. Plazas B;1 bit
+829;10/0/4;GR. Plazas C;1 bit
+830;10/0/5;GR. Plazas D;1 bit
+831;10/0/6;GR. Plazas E;1 bit
+832;10/0/7;GR. Torretas general;1 bit
+833;10/1;Iluminación Vial;
+834;10/1/0;Vial. Iluminación. A - On/Off;1 bit
+835;10/1/1;Vial. Iluminación. B - On/Off;1 bit
+836;10/1/2;Vial. Iluminación. X - On/Off;1 bit
+837;10/1/3;Vial. Iluminación. C-D-E - On/Off;1 bit
+838;10/1/4;Vial. Iluminación. F-G - On/Off;1 bit
+839;10/1/5;Vial. Iluminación. H - On/Off;1 bit
+840;10/1/6;Vial. Iluminación. I - On/Off;1 bit
+841;10/1/7;Vial. Iluminación. J-K - On/Off;1 bit
+842;10/1/8;Vial. Iluminación. General - On/Off;1 bit
+843;10/1/9;Vial. Iluminación. entrada - On/Off;1 bit
+844;10/2;Iluminación Vial - Estados;
+845;10/2/0;Vial. Iluminación. A - Estado;1 bit
+846;10/2/1;Vial. Iluminación. B - Estado;1 bit
+847;10/2/2;Vial. Iluminación. X - Estado;1 bit
+848;10/2/3;Vial. Iluminación. C-D-E - Estado;1 bit
+849;10/2/4;Vial. Iluminación. F-G - Estado;1 bit
+850;10/2/5;Vial. Iluminación. H - Estado;1 bit
+851;10/2/6;Vial. Iluminación. I - Estado;1 bit
+852;10/2/7;Vial. Iluminación. J-K - Estado;1 bit
+853;10/2/8;Vial. Iluminación. General - Estado;
+854;10/2/9;Vial. Iluminación. entrada - Estado;1 bit
+855;15;Torretas;
+856;15/0;Zona A;
+857;15/0/1;Zona A - Torreta A1 - Plaza A01;
+858;15/0/2;Zona A - Torreta A1 - Plaza A02;
+859;15/0/3;Zona A - Torreta A1 - Plaza A03;
+860;15/0/4;Zona A - Torreta A2 - Plaza A04;
+861;15/0/5;Zona A - Torreta A2 - Plaza A05;
+862;15/0/6;Zona A - Torreta A3 - Plaza A06;
+863;15/0/7;Zona A - Torreta A3 - Plaza A07;
+864;15/0/8;Zona A - Torreta A4 - Plaza A08;
+865;15/0/9;Zona A - Torreta A4 - Plaza A09;
+866;15/0;Zona A;
+867;15/0/10;Zona A - Torreta A5 - Plaza A10;
+868;15/0/11;Zona A - Torreta A5 - Plaza A11;
+869;15/0/12;Zona A - Torreta A6 - Plaza A12;
+870;15/0/13;Zona A - Torreta A6 - Plaza A13;
+871;15/0/14;Zona A - Torreta A7 - Plaza A14;
+872;15/0/15;Zona A - Torreta A7 - Plaza A15;
+873;15/0/16;Zona A - Torreta A8 - Plaza A16;
+874;15/0/17;Zona A - Torreta A8 - Plaza A17;
+875;15/0/18;Zona A - Torreta A8 - Plaza A18;
+876;15/1;Zona B;
+877;15/1/1;Zona B - Torreta B1 - Plaza A19;
+878;15/1/2;Zona B - Torreta B1 - Plaza A20;
+879;15/1/3;Zona B - Torreta B2 - Plaza A21;
+880;15/1/4;Zona B - Torreta B2 - Plaza A22;
+881;15/1/5;Zona B - Torreta B3 - Plaza A23;
+882;15/1/6;Zona B - Torreta B3 - Plaza A24;
+883;15/1/7;Zona B - Torreta B4 - Plaza A25;
+884;15/1/8;Zona B - Torreta B4 - Plaza A26;
+885;15/1/9;Zona B - Torreta B5 - Plaza A27;
+886;15/1/10;Zona B - Torreta B5 - Plaza A28;
+887;15/1/11;Zona B - Torreta B6 - Plaza A29/30;
+888;15/2;Zona X;
+889;15/2/1;Zona X - Torreta X1 - Plaza X01;
+890;15/2/2;Zona X - Torreta X1 - Plaza X02;
+891;15/2/3;Zona X - Torreta X1 - Plaza X03;
+892;15/2/4;Zona X - Torreta X2 - Plaza X04;
+893;15/2/5;Zona X - Torreta X2 - Plaza X05;
+894;15/2/6;Zona X - Torreta X2 - Plaza X06;
+895;15/3;Zona C-D-E;
+896;15/3/1;Zona C-D-E - Torreta C1 - Plaza C01;
+897;15/3/2;Zona C-D-E - Torreta C1 - Plaza C02;
+898;15/3/3;Zona C-D-E - Torreta C2 - Plaza C03;
+899;15/3/4;Zona C-D-E - Torreta C2 - Plaza C04;
+900;15/3/5;Zona C-D-E - Torreta C3 - Plaza C05;
+901;15/3/6;Zona C-D-E - Torreta C3 - Plaza C06;
+902;15/3/7;Zona C-D-E - Torreta C4 - Plaza C07;
+903;15/3/8;Zona C-D-E - Torreta C4 - Plaza C08;
+904;15/3/9;Zona C-D-E - Torreta C5 - Plaza C09;
+905;15/3/10;Zona C-D-E - Torreta C5 - Plaza C10;
+906;15/3/11;Zona C-D-E - Torreta C6 - Plaza C11;
+907;15/3;Zona C-D-E;
+908;15/3/12;Zona C-D-E - Torreta C6 - Plaza C12;
+909;15/3/13;Zona C-D-E - Torreta D1 - Plaza C13;
+910;15/3/14;Zona C-D-E - Torreta D1 - Plaza C14;
+911;15/3/15;Zona C-D-E - Torreta D2 - Plaza C15;
+912;15/3/16;Zona C-D-E - Torreta D2 - Plaza C16;
+913;15/3/17;Zona C-D-E - Torreta D3 - Plaza C17;
+914;15/3/18;Zona C-D-E - Torreta D3 - Plaza C18;
+915;15/3/19;Zona C-D-E - Torreta D4 - Plaza C19;
+916;15/3/20;Zona C-D-E - Torreta D4- Plaza C20;
+917;15/4;Zona F-G;
+918;15/4/1;Zona F-G - Bungalow 1 - Plaza B01;
+919;15/4/2;Zona F-G - Bungalow 2 - Plaza B02;
+920;15/4/3;Zona F-G - Bungalow 3 - Plaza B03;
+921;15/4/4;Zona F-G - Bungalow 4 - Plaza B04;
+922;15/4/5;Zona F-G - Bungalow 5 - Plaza B05;
+923;15/4/6;Zona F-G - Bungalow 6 - Plaza B06;
+924;15/4/7;Zona F-G - Bungalow 7 - Plaza B07;
+925;15/4/8;Zona F-G - Bungalow 8 - Plaza B08;
+926;15/4/9;Zona F-G - Bungalow 9 - Plaza B09;
+927;15/5;Zona H;
+928;15/5/1;Zona H - Torreta H1 - Plaza D01;
+929;15/5/2;Zona H - Torreta H1 - Plaza D02;
+930;15/5/3;Zona H - Torreta H2 - Plaza D03;
+931;15/5/4;Zona H - Torreta H2 - Plaza D04;
+932;15/5/5;Zona H - Torreta H3 - Plaza D05;
+933;15/5/6;Zona H - Torreta H3 - Plaza D06;
+934;15/5/7;Zona H - Torreta H4 - Plaza D07;
+935;15/5/8;Zona H - Torreta H4 - Plaza D08;
+936;15/5/9;Zona H - Torreta H5 - Plaza D09;
+937;15/5/10;Zona H - Torreta H5 - Plaza D10;
+938;15/5/11;Zona H - Torreta H5 - Plaza D11;
+939;15/6;Zona I;
+940;15/6/1;Zona I - Torreta I1 - Plaza D12;
+941;15/6/2;Zona I - Torreta I1 - Plaza D13;
+942;15/6/3;Zona I - Torreta I2 - Plaza D14;
+943;15/6/4;Zona I - Torreta I2 - Plaza D15;
+944;15/6/5;Zona I - Torreta I3 - Plaza D16;
+945;15/6/6;Zona I - Torreta I3 - Plaza D17;
+946;15/6/7;Zona I - Torreta I4 - Plaza D18;
+947;15/6/8;Zona I - Torreta I4 - Plaza D19;
+948;15/6;Zona I;
+949;15/6/9;Zona I - Torreta I5 - Plaza D20;
+950;15/6/10;Zona I - Torreta I5 - Plaza D21;
+951;15/6/11;Zona I - Torreta I6 - Plaza D22;
+952;15/6/12;Zona I - Torreta I6 - Plaza D23;
+953;15/7;Zona J-K;
+954;15/7/1;Zona J-K - Torreta J1 - Plaza E01;
+955;15/7/2;Zona J-K - Torreta J1 - Plaza E02;
+956;15/7/3;Zona J-K - Torreta J2 - Plaza E03;
+957;15/7/4;Zona J-K - Torreta J2 - Plaza E04;
+958;15/7/5;Zona J-K - Torreta J3 - Plaza E05;
+959;15/7/6;Zona J-K - Torreta J3 - Plaza E06;
+960;15/7/7;Zona J-K - Torreta J4 - Plaza E07;
+961;15/7/8;Zona J-K - Torreta J4 - Plaza E08;
+962;15/7/9;Zona J-K - Torreta J5 - Plaza E09;
+963;15/7/10;Zona J-K - Torreta J5 - Plaza E10;
+964;15/7/11;Zona J-K - Torreta J6 - Plaza E11;
+965;15/7/12;Zona J-K - Torreta J6 - Plaza E12;
+966;15/7/13;Zona J-K - Torreta J7 - Plaza E13;
+967;15/7/14;Zona J-K - Torreta J7 - Plaza E14;
+968;15/7/15;Zona J-K - Torreta J8 - Plaza E15;
+969;15/7/16;Zona J-K - Torreta J8 - Plaza E16;
+970;15/7/17;Zona J-K - Torreta J9 - Plaza E17;
+971;15/7/18;Zona J-K - Torreta J9 - Plaza E18;

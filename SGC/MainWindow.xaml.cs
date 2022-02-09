@@ -1332,6 +1332,7 @@ namespace SGC
                                             {
                                                 dd2.Descripcion = "0/" + desc[1] + "/" + desc[2] + "/false";
                                                 dd2.Id = d.Id;
+                                                cc2.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " El cliente " + cc2.dni + " contrato hasta " + ((DateTime)cc2.fecha_entrada_estado).ToString("yyyyy/MM/dd") + " " + cc2.Hora_salida);
                                                 direcciones2.Insert(0, dd2);
                                             }
                                             else
@@ -1434,6 +1435,7 @@ namespace SGC
                                                 dd2.Descripcion = "0/" + desc[1] + "/" + desc[2] + "/false";
                                                 dd2.Id = d.Id;
                                                 direcciones2.Insert(0, dd2);
+                                                cc2.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " El cliente " + cc2.dni + " ha sobrepasado el limite contratado");
 
                                             }
                                             if (direcciones2.Count > 0)
@@ -1700,7 +1702,6 @@ namespace SGC
                                         d.imagee = "ERROR";
                                         d.onIsSelected = false;
                                         //nodirecciones.Add(d);
-
                                         //comprobarcliente(d, 1);
                                         if (direcciones2.Count > 0)
                                         {
@@ -1813,6 +1814,7 @@ namespace SGC
                                         this.Dispatcher.Invoke(() =>
                                         {
                                             Clientes cc = Clientes.SelectedItem as Clientes;
+
                                             Parcelas pp = null;
                                             if (cc != null)
                                                 if (cc.n_plaza != null)
@@ -1822,7 +1824,10 @@ namespace SGC
                                                 {
                                                     luz.Content = "ERROR";
                                                     luzPanel.IsEnabled = false;
+                                                    cc.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " No se ha establecido conexión con la parcela" + pp.nom);
                                                 }
+
+                                           
                                         });
                                         //nodirecciones.Add(d);
                                         this.Dispatcher.Invoke(() =>
@@ -10778,6 +10783,7 @@ namespace SGC
                     {
                         Console.WriteLine(ee.Message);
                     }
+                    logs.ItemsSource = c.lstring;
 
                     try
                     {

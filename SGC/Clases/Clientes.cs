@@ -104,9 +104,11 @@ namespace SGC.Clases
 
             visib = false;
 
+
+            lstring = new List<string>();
         }
 
-        public Clientes(int n_cliemte, string n_tarjeta, string nombre_cliente, string apellidos_cliente, string dni, string direccion, string poblacio, string telefon1, string telefon2, string codigo_postal, string mail, string titular, string caducidad, string numero_secreto, string entidad_bacnaria, string iban, string swift, string pais, string numero, string piso, string puerta, string provincia, string entidad_bacnaria2, string iban2, string swift2, string m2,string tarjeta)
+        public Clientes(int n_cliemte, string n_tarjeta, string nombre_cliente, string apellidos_cliente, string dni, string direccion, string poblacio, string telefon1, string telefon2, string codigo_postal, string mail, string titular, string caducidad, string numero_secreto, string entidad_bacnaria, string iban, string swift, string pais, string numero, string piso, string puerta, string provincia, string entidad_bacnaria2, string iban2, string swift2, string m2, string tarjeta)
         {
             this.n_cliemte = n_cliemte;
             this.n_tarjeta = n_tarjeta;
@@ -143,6 +145,8 @@ namespace SGC.Clases
             visib = false;
             N_tarjeta = tarjeta;
             mostrarElec = false;
+
+            lstring = new List<string>();
 
         }
 
@@ -205,9 +209,11 @@ namespace SGC.Clases
             N_tarjeta = tarjeta;
             mostrarElec = false;
 
+            lstring = new List<string>();
+
         }
 
-        public Clientes(int id, int n_cliemte, string n_plaza, string n_tarjeta, string nombre_cliente, string apellidos_cliente, string dni, string direccion, string poblacio, string telefon1, string telefon2, string codigo_postal, string mail, bool asignado, string titular, string caducidad, string numero_secreto, string entidad_bacnaria, string iban, string swift, string pais, string numero, string piso, string puerta, string provincia, bool deBaja, DateTime? fecha_In, DateTime? fecha_Out, int potencia, int switchh, string vehiculo1, string matricula1, string numero_Bastidor1, string vehiculo2, string matricula2, string numero_Bastidor2, string nota1, string e, string s, string entidad_bacnaria2, string iban2, string swift2, string m2, DateTime? d1, DateTime? d2, DateTime? d3, string mv1, string mv2, string vhc3, string mtc3, string vhc4, string mtc4, string nota2, string bastido3, string bastidor4,string medidas3, string medidas4, string tarjeta)
+        public Clientes(int id, int n_cliemte, string n_plaza, string n_tarjeta, string nombre_cliente, string apellidos_cliente, string dni, string direccion, string poblacio, string telefon1, string telefon2, string codigo_postal, string mail, bool asignado, string titular, string caducidad, string numero_secreto, string entidad_bacnaria, string iban, string swift, string pais, string numero, string piso, string puerta, string provincia, bool deBaja, DateTime? fecha_In, DateTime? fecha_Out, int potencia, int switchh, string vehiculo1, string matricula1, string numero_Bastidor1, string vehiculo2, string matricula2, string numero_Bastidor2, string nota1, string e, string s, string entidad_bacnaria2, string iban2, string swift2, string m2, DateTime? d1, DateTime? d2, DateTime? d3, string mv1, string mv2, string vhc3, string mtc3, string vhc4, string mtc4, string nota2, string bastido3, string bastidor4, string medidas3, string medidas4, string tarjeta)
         {
             this.id = id;
             this.n_cliemte = n_cliemte;
@@ -280,6 +286,7 @@ namespace SGC.Clases
 
             N_tarjeta = tarjeta;
             mostrarElec = false;
+            lstring = new List<string>();
         }
 
         private void ObservarTodo2(object state)
@@ -384,6 +391,8 @@ namespace SGC.Clases
 
         public string nplaza { get; set; }
         public bool mostrarElec { get; set; }
+
+        public List<String> lstring {get; set;}
 
         public System.Threading.Timer tiempo { get; set; }
         public delegate void temporizador();

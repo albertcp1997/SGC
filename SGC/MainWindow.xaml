@@ -3387,11 +3387,11 @@
                                                                                                             <Label Content="BAJA/ALTA" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9"/>
 
                                                                                                         </StackPanel>
-                                                                                                        
+
                                                                                                     </Border>
 
                                                                                                     <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" x:Name="luzPanel">
-                                                                                                        <Label VerticalContentAlignment="Center" x:Name="luz" Margin="0,0,5,0"> NA
+                                                                                                        <Label VerticalContentAlignment="Center" x:Name="luz" Margin="0,0,5,0">NA
                                                                                                             <Label.Style>
                                                                                                                 <Style TargetType="Label">
                                                                                                                     <Style.Triggers>
@@ -3423,7 +3423,7 @@
                                                                                                                 </Style>
                                                                                                             </Button.Resources>
                                                                                                         </Button>
-                                                                                                            
+
                                                                                                     </StackPanel>
 
                                                                                                 </Grid>
@@ -4670,9 +4670,15 @@
                                                                                                         </Border>
                                                                                                     </StackPanel>
                                                                                                     <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                                                                                                        <Grid>
+                                                                                                        <Grid Height="200">
+                                                                                                            <Grid.RowDefinitions>
+                                                                                                                <RowDefinition Height="25"></RowDefinition>
+                                                                                                                <RowDefinition Height="157*"></RowDefinition>
+                                                                                                            </Grid.RowDefinitions>
                                                                                                             <Label Foreground="#838d99" Content="Aviso"></Label>
-                                                                                                            <ScrollViewer Height="75" Margin="10,0,0,0" VerticalScrollBarVisibility="Auto"></ScrollViewer>
+                                                                                                            <ScrollViewer Margin="10,0,10,10" VerticalScrollBarVisibility="Auto" Grid.Row="1">
+                                                                                                                <ListView x:Name="logs"></ListView>
+                                                                                                            </ScrollViewer>
                                                                                                         </Grid>
                                                                                                     </Border>
 
@@ -7274,7 +7280,7 @@
                                                                                     <RowDefinition Height="182*"></RowDefinition>
                                                                                     <RowDefinition Height="201*"></RowDefinition>
                                                                                 </Grid.RowDefinitions>
-                                                                                
+
 
                                                                                 <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"  Width="170">
                                                                                     <Label>Conexión:</Label>
@@ -7298,7 +7304,7 @@
                                                                                         <Button Click="Button_Click_22" Width="30" Margin="0,0,5,0">Off</Button>
                                                                                         <TextBox x:Name="conexion" IsEnabled="True" Width="100"></TextBox>
                                                                                     </StackPanel>
-                                                                                   
+
                                                                                 </StackPanel>
                                                                                 <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="5" HorizontalScrollBarVisibility="Visible">
                                                                                     <TextBlock  x:Name="busstext" ></TextBlock>
@@ -7365,7 +7371,7 @@
 
                                                                                                 </Border>
                                                                                                 <DataTemplate.Triggers>
-                                                                                                    
+
                                                                                                     <DataTrigger Binding="{Binding onIsSelected }" Value="False" >
                                                                                                         <Setter TargetName="bdr" Property="Foreground" Value="Red" />
                                                                                                     </DataTrigger>
@@ -7434,12 +7440,12 @@
 
                                                                             </Border>
                                                                             <Label VerticalContentAlignment="Center" FontSize="16" FontFamily="helvetica neue">Automático</Label>
-                                                                           
-                                                                            
-                                                                           
+
+
+
                                                                         </StackPanel>
                                                                         <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Center" x:Name="timerbox">
-                                                                            
+
                                                                             <Label VerticalContentAlignment="Center" FontSize="16" FontFamily="helvetica neue">Volver a revisar en:</Label>
                                                                             <ComboBox x:Name="timerNumber" Width="100" Height="30" Background="Transparent" BorderBrush="Transparent" SelectionChanged="timerNumber_SelectionChanged">
                                                                                 <ComboBoxItem>5</ComboBoxItem>

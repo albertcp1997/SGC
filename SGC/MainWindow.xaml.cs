@@ -718,8 +718,7 @@ namespace SGC
                         oLog.Add("8");
                         if (mirarRegistros != null)
                         {
-                            mirarRegistros.Dispose();
-                            mirarRegistros.Change(-1, -1);
+                            mirarRegistros.Change(Timeout.Infinite, Timeout.Infinite);
                             timerqueobserva.Content = 0;
                             timepocnt = 0;
                             timerObs.Stop();
@@ -947,37 +946,7 @@ namespace SGC
 
         }
 
-        private void comprobarcorriente2(Clientes c, Direcciones d)
-        {
-            string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            Log oLog = new Log(path2);
-            if (c.Fecha_In <= DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy")))
-            {
-                
-
-                oLog.Add(c.Hora_entrada + " " + DateTime.Now.ToString("HH:mm"));
-
-                DateTime dt = DateTime.Parse(DateTime.Now.ToString("HH:mm"));
-                DateTime dt2 = DateTime.Parse(c.Hora_entrada);
-                oLog.Add(dt2 + " " + dt);
-                oLog.Add("estado: " + d.imagee);
-                if (dt2 < dt)
-                {
-                    //haceraccion(d);
-                }
-                if (d.imagee.Length > 0)
-                {
-                    if (d.imagee.Equals("ON"))
-                    {
-                        oLog.Add("ON");
-                    }
-                    else if (d.imagee.Equals("OFF"))
-                    {
-                        oLog.Add("OFF");
-                    }
-                }
-            }
-        }
+  
 
         private int comprobarcorriente1(Clientes c)
         {
@@ -1188,8 +1157,10 @@ namespace SGC
             {
                 num2.Text = l.Count() + "";
                 num1.Text = "0";
+                actualizarbuss.IsEnabled = false;
             });
             string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+           
             cargarBuss(l);
         }
         private void cargarBuss(List<Direcciones> direcciones)
@@ -1277,6 +1248,10 @@ namespace SGC
                                                 dd.mostrar = false;
                                             if (!conectado)
                                                 _connection.Connect();
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                actualizarbuss.IsEnabled = true;
+                                            });
                                         }
                                     }
                                 }
@@ -1309,6 +1284,9 @@ namespace SGC
                                                 {
                                                     luz.Content = "ON";
                                                     luzPanel.IsEnabled = true;
+                                                    onoffparcela.IsEnabled = true;
+                                                    actu.IsEnabled = false;
+                                                    luzPanel.UpdateLayout();
                                                 }
 
                                         });
@@ -1355,6 +1333,10 @@ namespace SGC
                                                 dd.mostrar = false;
                                             if (!conectado)
                                                 _connection.Connect();
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                actualizarbuss.IsEnabled = true;
+                                            });
                                         }
                                     }
                                     else if (a == -2)
@@ -1383,6 +1365,10 @@ namespace SGC
                                                 {
                                                     luz.Content = "OFF";
                                                     luzPanel.IsEnabled = true;
+
+                                                    onoffparcela.IsEnabled = true;
+                                                    actu.IsEnabled = false;
+                                                    luzPanel.UpdateLayout();
                                                 }
                                         });
                                         //sidirecciones.Add(d);
@@ -1408,6 +1394,10 @@ namespace SGC
 
                                             if (!conectado)
                                                 _connection.Connect();
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                actualizarbuss.IsEnabled = true;
+                                            });
                                         }
                                     }
                                 }
@@ -1450,6 +1440,10 @@ namespace SGC
                                                     dd.mostrar = false;
                                                 if (!conectado)
                                                     _connection.Connect();
+                                                this.Dispatcher.Invoke(() =>
+                                                {
+                                                    actualizarbuss.IsEnabled = true;
+                                                });
                                             }
                                         }
 
@@ -1540,38 +1534,7 @@ namespace SGC
             return null;
         }
 
-        private void comprobarcliente(Direcciones d)
-        {
-            string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-            Log oLog = new Log(path2 + "\\Log");
-            oLog.Add("Mirando clientes activos: "+clientesCorriente.Count+" - " + d.Descripcion);
-            foreach (Clientes c in clientesCorriente)
-            {
-                    Parcelas p = lprc.Find(x => x.id == int.Parse(c.n_plaza));
-                    oLog.Add("Parcelas: " + lprc.Count);
-                    if (p != null)
-                    {
-                        Direcciones d2 = ldir.Find(x => x.Id ==p.Direccion);
-                        
-                        if (d2 != null)
-                        {
-                            oLog.Add("Direccion de la parcela: " + d2.Descripcion+" - "+d.Id+" == "+d2.Id);
-                            if (d.Id == d2.Id)
-                            {
-                                oLog.Add("Comprobando direccion: " + d.Descripcion);
-                                //comprobarcorriente1(c, d);
-                                if (d.imagee.Equals("ON"))
-                                if (Ejecutarconsultas2(d)> lcnt.Find(x => x.Id == c.Potencia).Amperios_Max)
-                                {
-                                    oLog.Add("Mirando CORRIENTE: " + d.Descripcion);
-                                    //haceraccion(d);
-                                }
-                            }
-                        }
-                    }
-            }            
-        }
+      
 
         private Double Ejecutarconsultas2(Direcciones d)
         {
@@ -1716,7 +1679,10 @@ namespace SGC
                                                 dd.mostrar = false;
                                             if (!conectado)
                                                 _connection.Connect();
-
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                actualizarbuss.IsEnabled = true;
+                                            });
                                         }
                                     }
                                     else
@@ -1761,7 +1727,11 @@ namespace SGC
                                             if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                                             {
                                                 luz.Content = "ON";
+
+                                                onoffparcela.IsEnabled = true;
+                                                actu.IsEnabled = false;
                                                 luzPanel.IsEnabled = true;
+                                                luzPanel.UpdateLayout();
                                             }
                                     });
                                     //sidirecciones.Add(d);
@@ -1803,6 +1773,10 @@ namespace SGC
                                             dd.mostrar = false;
                                         if (!conectado)
                                             _connection.Connect();
+                                        this.Dispatcher.Invoke(() =>
+                                        {
+                                            actualizarbuss.IsEnabled = true;
+                                        });
                                     }
                                 }
                                 else if (a == -2)
@@ -1823,8 +1797,15 @@ namespace SGC
                                                 if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                                                 {
                                                     luz.Content = "ERROR";
-                                                    luzPanel.IsEnabled = false;
+
+
+
+                                                    onoffparcela.IsEnabled = false;
+                                                    actu.IsEnabled = true;
                                                     cc.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " No se ha establecido conexión con la parcela" + pp.nom);
+                                                    logs.Items.Refresh();
+                                                    luzPanel.UpdateLayout();
+
                                                 }
 
                                            
@@ -1851,6 +1832,10 @@ namespace SGC
                                                 dd.mostrar = false;
                                             if (!conectado)
                                                 _connection.Connect();
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                actualizarbuss.IsEnabled = true;
+                                            });
                                         }
                                     }
                                     else
@@ -1874,7 +1859,10 @@ namespace SGC
                                             if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                                             {
                                                 luz.Content = "OFF";
-                                                luzPanel.IsEnabled = true;
+
+                                                onoffparcela.IsEnabled = true;
+                                                actu.IsEnabled = false;
+                                                luzPanel.UpdateLayout();
                                             }
                                     });
                                     //sidirecciones.Add(d);
@@ -1900,6 +1888,10 @@ namespace SGC
 
                                         if (!conectado)
                                             _connection.Connect();
+                                        this.Dispatcher.Invoke(() =>
+                                        {
+                                            actualizarbuss.IsEnabled = true;
+                                        });
                                     }
                                 }
                             }
@@ -1951,6 +1943,10 @@ namespace SGC
                                                 dd.mostrar = false;
                                             if (!conectado)
                                                 _connection.Connect();
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                actualizarbuss.IsEnabled = true;
+                                            });
                                         }
                                     }
                                     else
@@ -1997,6 +1993,10 @@ namespace SGC
                             dd.mostrar = false;
                         if (!conectado)
                             _connection.Connect();
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            actualizarbuss.IsEnabled = true;
+                        });
 
                     }
 
@@ -11277,22 +11277,31 @@ namespace SGC
                                 {
                                     numero_plaza_alta.Items.Add(ppp);
                                 }
-
-                                luzPanel.IsEnabled = true;
-                                if (d.imagee!=null)
-                                    if(d.imagee.Length>0)
+                                if (d.imagee != null)
+                                    if (d.imagee.Length > 0)
+                                    {
                                         luz.Content = d.imagee;
+
+                                        luzPanel.UpdateLayout();
+                                    }
                                     else
                                     {
 
                                         luz.Content = "NA";
-                                        luzPanel.IsEnabled = false;
+                                        onoffparcela.IsEnabled = false;
+                                        actu.IsEnabled = false;
+
+                                        luzPanel.UpdateLayout();
                                     }
                                 else
                                 {
 
                                     luz.Content = "NA";
-                                    luzPanel.IsEnabled = false;
+
+                                    onoffparcela.IsEnabled = false;
+                                    actu.IsEnabled = false;
+
+                                    luzPanel.UpdateLayout();
                                 }
                                 numero_plaza_alta.SelectedIndex = 0;
                                 
@@ -11314,7 +11323,9 @@ namespace SGC
                                 }
 
                                 luz.Content = "NA";
-                                luzPanel.IsEnabled = false;
+
+                                onoffparcela.IsEnabled = false;
+                                actu.IsEnabled = false;
                                 on_off.IsEnabled = false;
                                 Potencia_alta.IsEnabled = false;
                                 numero_plaza_alta.SelectedIndex =-1;
@@ -41516,7 +41527,10 @@ namespace SGC
                 if (lista_clientes_ficha.Count > 0)
                 {
                     cargarClientes();
-                    lista_clientes_ficha = lista_clientes_ficha.Select(x => x).OrderBy(x => x.nplaza).ToList();
+                    List<Clientes> cero = new List<Clientes>();
+                    cero= lista_clientes_ficha.Select(x => x).Where(x=>x.n_plaza.Equals("0")).OrderBy(x => x.n_plaza).ToList();
+                    lista_clientes_ficha = lista_clientes_ficha.Select(x => x).Where(x => !x.n_plaza.Equals("0")).OrderBy(x => int.Parse(x.n_plaza)).ToList();
+                    lista_clientes_ficha.AddRange(cero);
                     posicion = 0;
 
 
@@ -41527,14 +41541,22 @@ namespace SGC
             {
                 if (contadorfiltroficha == 0)
                 {
-                    lista_clientes_ficha = lista_clientes_ficha.Select(x => x).OrderByDescending(x => x.nplaza).ToList();
+                    List<Clientes> cero = new List<Clientes>();
+                    cero = lista_clientes_ficha.Select(x => x).Where(x => x.n_plaza.Equals("0")).OrderBy(x => x.n_plaza).ToList();
+                    lista_clientes_ficha = lista_clientes_ficha.Select(x => x).Where(x => !x.n_plaza.Equals("0")).OrderByDescending(x => int.Parse(x.n_plaza)).ToList();
+
+                    lista_clientes_ficha.AddRange(cero);
                     posicion = 0;
                     contadorfiltroficha = 1;
                     Clientes.SelectedItem = lista_clientes_ficha[posicion];
                 }
                 else
                 {
-                    lista_clientes_ficha = lista_clientes_ficha.Select(x => x).OrderBy(x => x.nplaza).ToList();
+                    List<Clientes> cero = new List<Clientes>();
+                    cero = lista_clientes_ficha.Select(x => x).Where(x => x.n_plaza.Equals("0")).OrderBy(x => x.n_plaza).ToList();
+                    lista_clientes_ficha = lista_clientes_ficha.Select(x => x).Where(x => !x.n_plaza.Equals("0")).OrderBy(x => int.Parse(x.n_plaza)).ToList();
+
+                    lista_clientes_ficha.AddRange(cero);
                     posicion = 0;
                     Clientes.SelectedItem = lista_clientes_ficha[posicion];
                     contadorfiltroficha = 0;
@@ -49939,6 +49961,9 @@ namespace SGC
             Thread.Sleep(1000);
             if (bb.Content.Equals("ON"))
             {
+                bb.Content = "Comprobando...";
+                bb.Foreground = Brushes.Black;
+
                 oLog.Add("Mirar accion ojo " + mirarDeNuevo);
                 if (mirarDeNuevo)
                 {
@@ -50017,8 +50042,11 @@ namespace SGC
             {
 
                 oLog.Add("Mirar accion ojo " + mirarDeNuevo);
-                oLog.Add("Mirar accion"); 
-                    if (mirarDeNuevo)
+                oLog.Add("Mirar accion");
+
+                bb.Content = "Comprobando...";
+                bb.Foreground = Brushes.Black;
+                if (mirarDeNuevo)
                     {
                     string[] ss = dir.Content.ToString().Split('/');
 
@@ -50289,8 +50317,7 @@ namespace SGC
                 oLog.Add("lock 4 "+mirarRegistros);
                 if (mirarRegistros != null)
                 {
-                    mirarRegistros.Dispose();
-                    mirarRegistros.Change(-1, -1);
+                    mirarRegistros.Change(Timeout.Infinite, Timeout.Infinite);
                     timepocnt = 0;
                     timerObs.Stop();
                 }
@@ -50332,8 +50359,7 @@ namespace SGC
                 oLog.Add("lock 44");
                 if (mirarRegistros != null)
                 {
-                    mirarRegistros.Dispose();
-                    mirarRegistros.Change(-1, -1);
+                    mirarRegistros.Change(Timeout.Infinite, Timeout.Infinite);
                     timepocnt = 0;
                     timerObs.Stop();
                 }
@@ -54662,8 +54688,7 @@ namespace SGC
                 timepocnt = 0;
                 
                 timerObs.Stop();
-                mirarRegistros.Dispose();
-                mirarRegistros.Change(-1, -1);
+                mirarRegistros.Change(Timeout.Infinite, Timeout.Infinite);
                 mirarRegistros.Change(int.Parse(Properties.Settings.Default.timer) * 60000, int.Parse(Properties.Settings.Default.timer) * 60000);
                 timerObs = new DispatcherTimer();
                 timerqueobserva.Content = "00:00";
@@ -54706,7 +54731,12 @@ namespace SGC
             if (luz.Content.Equals("ON"))
             {
                     luz.Content = "Comprobando...";
-                    oLog.Add("Mirar accion ojo " + mirarDeNuevo);
+
+                    onoffparcela.IsEnabled = false;
+                    actu.IsEnabled = false;
+
+                    luzPanel.UpdateLayout();
+                    oLog.Add("Mirar accion ficha ON" + mirarDeNuevo);
                 if (mirarDeNuevo)
                 {
                     string[] ss = pp.Descripción.Split('/');
@@ -54784,8 +54814,13 @@ namespace SGC
             else if (luz.Content.Equals("OFF"))
             {
                     luz.Content = "Comprobando...";
-                    oLog.Add("Mirar accion ojo " + mirarDeNuevo);
-                oLog.Add("Mirar accion");
+
+                    onoffparcela.IsEnabled = false;
+                    actu.IsEnabled = false;
+
+                    luzPanel.UpdateLayout();
+                    oLog.Add("Mirar accion ficha OFF ");
+                    oLog.Add("Mirar accion");
                 if (mirarDeNuevo)
                 {
                     string[] ss = pp.Descripción.Split('/');
@@ -54873,19 +54908,71 @@ namespace SGC
                         
                 }
                     
-                }
-
-
-
-
+            }
             Thread.Sleep(200);
 
             comprobar = false;
 
         }
 
+        private void Button_Click_25(object sender, RoutedEventArgs e)
+        {
+            string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            Log oLog = new Log(path2);
+            //comprobar = true;
+            int a = -1;
+            Button b = sender as Button;
+            Grid g = b.Parent as Grid;
+            if (!conectado)
+                _connection.Connect();
+            Thread.Sleep(1000);
+            Clientes cc = Clientes.SelectedItem as Clientes;
+
+            Parcelas pp = numero_plaza_alta.SelectedItem as Parcelas;
+            if (pp != null)
+            {
+                luz.Content = "Comprobando...";
+                onoffparcela.IsEnabled = false;
+                actu.IsEnabled = false;
 
 
+                luzPanel.UpdateLayout();
+                string[] ss = pp.direccion.Split('/');
+
+                oLog.Add("Mirar accion " + pp.Descripción);
+                Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
+                Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
+                ddd.asignada = ddd2.asignada;
+                ddd.imagee = ddd2.imagee;
+                ddd.mostrar = ddd2.mostrar;
+                ddd.onIsSelected = ddd2.onIsSelected;
+
+                oLog.Add("Mirar accion " + ddd.Descripcion);
+
+                if (ddd != null)
+                {
+                    if (direcciones2.Count > 0)
+                    {
+                        ddd.Descripcion = "1/" + ss[1] + "/" + ss[2];
+                        direcciones2.Insert(1, ddd);
+
+                    }
+                    else
+                    {
+                        ddd.Descripcion = "1/" + ss[1] + "/" + ss[2];
+                        direcciones2.Add(ddd);
+
+                        cargarBus2();
+                    }
+                }
+
+
+                Thread.Sleep(200);
+
+                comprobar = false;
+            }
+        }
 
         ///////////////////////////////////////////////////////////////////////////
     }

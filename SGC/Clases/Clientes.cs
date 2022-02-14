@@ -399,6 +399,11 @@ namespace SGC.Clases
         public event temporizador refresh;
         public Clientes le;
 
+        public string ToString()
+        {
+            return "Cliente "+id+" plaza: "+nplaza;
+        }
+
         public void OrdenarAcompañantes()
         {
             if(lista_acompañantes!=null)

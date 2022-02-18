@@ -562,5 +562,17 @@ namespace SGC.Properties {
                 this["background"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string valorPotencia {
+            get {
+                return ((string)(this["valorPotencia"]));
+            }
+            set {
+                this["valorPotencia"] = value;
+            }
+        }
     }
 }

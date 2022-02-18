@@ -3120,12 +3120,12 @@
                                                                                                         <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
                                                                                                         <Button BorderThickness="0" Background="Transparent"  Content="F. entrada" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" x:Name="filtrar_entrada" Click="filtrar_entrada_Click"/>
                                                                                                     </StackPanel>
-                                                                                                    <DatePicker IsEnabled="False" Grid.Row="3" Grid.Column="1" Margin="0,2,25,2" Height="26"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"   x:Name="Clientes_FechaEntrada_alta" SelectedDateChanged="MirarFicha3" VerticalAlignment="Center" Grid.ColumnSpan="1"/>
+                                                                                                    <DatePicker IsEnabled="False" Grid.Row="3" Grid.Column="1" Margin="0,2,25,2" Height="26"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="Black"   x:Name="Clientes_FechaEntrada_alta" SelectedDateChanged="MirarFicha3" VerticalAlignment="Center" Grid.ColumnSpan="1"/>
                                                                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center"  Grid.Column="0" HorizontalAlignment="Left" Grid.Row="4" Height="22" Margin="0,4" Width="43">
                                                                                                         <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
                                                                                                         <Button BorderThickness="0" Background="Transparent"  VerticalContentAlignment="Center"  Content="Hora" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" x:Name="filtrar_hora1" Click="filtrar_hora1_Click"/>
                                                                                                     </StackPanel>
-                                                                                                    <xctk:TimePicker IsEnabled="False" Grid.Column="1" Grid.Row="4" DefaultValue="12:00" Margin="0,2,25,2"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"  ValueChanged="MirarFicha4" x:Name="Clientes_HoraEntrada_alta"/>
+                                                                                                    <xctk:TimePicker IsEnabled="False" Grid.Column="1" Grid.Row="4" DefaultValue="12:00" Margin="0,2,25,2"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="Black"  ValueChanged="MirarFicha4" x:Name="Clientes_HoraEntrada_alta"/>
 
                                                                                                     <TextBox Visibility="Collapsed" Margin="0,5,25,5"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" x:Name="corrientes" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Stretch"/>
 
@@ -3138,7 +3138,7 @@
                                                                                                         <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
                                                                                                         <Button Content="Corriente" Foreground="#838d99" FontFamily="Helvetica neue" Width="70" FontSize="9" Click="Button_Click_15" />
                                                                                                     </StackPanel>
-                                                                                                    <DatePicker IsEnabled="False" Grid.Column="1" Margin="0,2,25,2"   BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"   x:Name="Clientes_FechaPeriodo_alta" SelectedDateChanged="MirarFicha3" Grid.Row="5"/>
+                                                                                                    <DatePicker IsEnabled="False" Grid.Column="1" Margin="0,2,25,2"   BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="Black"   x:Name="Clientes_FechaPeriodo_alta" SelectedDateChanged="MirarFicha3" Grid.Row="5"/>
                                                                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="6" Height="22" Width="43">
                                                                                                         <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
                                                                                                         <Button BorderThickness="0" Background="Transparent"   Content="Hora" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" x:Name="filtrar_hora2" Click="filtrar_hora2_Click"/>
@@ -3147,7 +3147,7 @@
                                                                                                         <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
                                                                                                         <Button  BorderThickness="0" Background="Transparent"   Content="N.Tarjeta" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" x:Name="filtrar_ntarjeta" Click="filtrar_ntarjeta_Click"/>
                                                                                                     </StackPanel>
-                                                                                                    <xctk:TimePicker IsEnabled="False" Grid.Column="1" Grid.Row="6" DefaultValue="12:00" Margin="0,2,25,2"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"  ValueChanged="MirarFicha4" x:Name="Clientes_HoraPeriodo_alta"/>
+                                                                                                    <xctk:TimePicker IsEnabled="False" Grid.Column="1" Grid.Row="6" DefaultValue="12:00" Margin="0,2,25,2"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="Black"  ValueChanged="MirarFicha4" x:Name="Clientes_HoraPeriodo_alta"/>
 
                                                                                                     <StackPanel  Visibility="Collapsed"  Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="0" Grid.Row="10" Height="22" Margin="0,4">
                                                                                                         <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
@@ -3207,7 +3207,7 @@
                                                                                                         <Border x:Name="on_off_border"  Width="20" CornerRadius="10" Background="White" HorizontalAlignment="Left"></Border>
                                                                                                     </Border>
 
-                                                                                                    <TextBox Margin="0,2,25,2" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="tarjeta_alta" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch"></TextBox>
+                                                                                                    <TextBox Margin="0,2,25,2" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="Black" TextChanged="MirarFicha" x:Name="tarjeta_alta" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch"></TextBox>
 
                                                                                                     <StackPanel Margin="0,2,0,2" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                                                                                                         <ComboBox IsEnabled="False" Margin="0,0,0,0" Height="25"  Width="{Binding Path=ActualWidth, ElementName=numero_cliente_alta}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"  SelectionChanged="MirarFicha2" x:Name="numero_plaza_alta"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
@@ -3356,8 +3356,8 @@
                                                                                                         <Button BorderThickness="0" Background="Transparent"  VerticalAlignment="Center" Content="Importe" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" Grid.Row="10" x:Name="filtrar_importe" Click="filtrar_importe_Click"/>
                                                                                                     </StackPanel>
                                                                                                    
-                                                                                                    <DatePicker HorizontalAlignment="Left"  Grid.Column="1" Grid.Row="0" Margin="0,2" Width="{Binding Path=ActualWidth, ElementName=numero_cliente_alta}"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"   x:Name="Clientes_FechaSalida_alta" SelectedDateChanged="MirarFicha3"/>
-                                                                                                    <DatePicker HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1" Margin="0,2" Width="{Binding Path=ActualWidth, ElementName=numero_cliente_alta}"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"   x:Name="Clientes_FechaPago_alta" SelectedDateChanged="MirarFicha3"/>
+                                                                                                    <DatePicker HorizontalAlignment="Left"  Grid.Column="1" Grid.Row="0" Margin="0,2" Width="{Binding Path=ActualWidth, ElementName=numero_cliente_alta}"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" x:Name="Clientes_FechaSalida_alta" SelectedDateChanged="MirarFicha3"/>
+                                                                                                    <DatePicker HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1" Margin="0,2" Width="{Binding Path=ActualWidth, ElementName=numero_cliente_alta}"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" x:Name="Clientes_FechaPago_alta" SelectedDateChanged="MirarFicha3"/>
                                                                                                     <TextBox Margin="0,5,25,5"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="importe_alta" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch"/>
                                                                                                     <Border  BorderThickness="2" Margin="0,5,0,0" Grid.Row="3" Grid.ColumnSpan="2">
                                                                                                         <StackPanel Orientation="Horizontal">
@@ -4627,8 +4627,34 @@
                                                                                                                     </StackPanel>
                                                                                                                 </DataTemplate>
                                                                                                             </ComboBox.ItemTemplate>
+                                                                                                            <ComboBox.Style>
+                                                                                                                <Style TargetType="ComboBox">
+                                                                                                                    <Style.Triggers>
+                                                                                                                        <DataTrigger Binding="{Binding ElementName=numero_plaza, Path=SelectedItem}" Value="null">
+                                                                                                                           <Setter Property="IsEnabled" Value="False"></Setter>
+                                                                                                                        </DataTrigger>
+                                                                                                                        <DataTrigger Binding="{Binding ElementName=numero_plaza, Path=SelectedItem}" Value="SGC.Clases.Parcelas">
+                                                                                                                           <Setter Property="IsEnabled" Value="True"></Setter>
+                                                                                                                        </DataTrigger>
+                                                                                                                    </Style.Triggers>
+                                                                                                                </Style>
+                                                                                                            </ComboBox.Style>
                                                                                                         </ComboBox>
                                                                                                     </Border>
+                                                                                                    <Label Foreground="red" Content="Asigna primeor una parcela al cliente" Visibility="Collapsed">
+                                                                                                        <Label.Style >
+                                                                                                            <Style TargetType="Label">
+                                                                                                                <Style.Triggers>
+                                                                                                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=IsEnable}" Value="True">
+                                                                                                                        <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                                                                                    </DataTrigger>
+                                                                                                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=IsEnable}" Value="False">
+                                                                                                                        <Setter Property="Visibility" Value="Visible"></Setter>
+                                                                                                                    </DataTrigger>
+                                                                                                                </Style.Triggers>
+                                                                                                            </Style>
+                                                                                                        </Label.Style>
+                                                                                                    </Label>
                                                                                                     <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" x:Name="luzPanel" Margin="0,0,0,20">
                                                                                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4" Height="22" Margin="0,4">
                                                                                                             <Label BorderThickness="0" Background="Transparent"  VerticalAlignment="Center" Content="Luz parcela" Foreground="#838d99" FontFamily="Helvetica neue" Grid.Row="10"/>
@@ -4653,10 +4679,10 @@
                                                                                                                 </Style>
                                                                                                             </Label.Style>
                                                                                                         </Label>
-                                                                                                        <Button  x:Name="onoffparcela" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="Button_Click_24"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
+                                                                                                        <Button  x:Name="onparcela" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="Button_Click_24"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
                                                                                                             <Button.Content>
                                                                                                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                                                                                                                    <TextBlock FontSize="7" Text="ON/OFF" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,0"></TextBlock>
+                                                                                                                    <TextBlock FontSize="9" Text="ON" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,0"></TextBlock>
                                                                                                                 </StackPanel>
                                                                                                             </Button.Content>
                                                                                                             <Button.Resources>
@@ -4685,7 +4711,41 @@
                                                                                                                 </Style>
                                                                                                             </Button.Resources>
                                                                                                             
-                                                                                                        </Button> <Button x:Name="actu" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="Button_Click_25"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
+                                                                                                        </Button>
+                                                                                                        <Button  x:Name="offparcela" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="offparcela_Click"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
+                                                                                                            <Button.Content>
+                                                                                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                                                                                                    <TextBlock FontSize="9" Text="OFF" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                                                                                                                </StackPanel>
+                                                                                                            </Button.Content>
+                                                                                                            <Button.Resources>
+                                                                                                                <Style TargetType="Border">
+                                                                                                                    <Setter Property="CornerRadius" Value="5"></Setter>
+                                                                                                                    <Style.Triggers>
+                                                                                                                        <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ON">
+                                                                                                                            <Setter Property="IsEnabled" Value="true"/>
+                                                                                                                        </DataTrigger>
+                                                                                                                        <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="OFF">
+                                                                                                                            <Setter Property="IsEnabled" Value="true"/>
+                                                                                                                        </DataTrigger>
+                                                                                                                        <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ERROR">
+                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                        </DataTrigger>
+                                                                                                                        <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="NA">
+                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                        </DataTrigger>
+                                                                                                                        <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="">
+                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                        </DataTrigger>
+                                                                                                                        <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="Comprobando...">
+                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                        </DataTrigger>
+                                                                                                                    </Style.Triggers>
+                                                                                                                </Style>
+                                                                                                            </Button.Resources>
+
+                                                                                                        </Button>
+                                                                                                        <Button x:Name="actu" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="Button_Click_25"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
                                                                                                             <Button.Content>
                                                                                                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                                                                                                                     <TextBlock FontSize="7" Text="Actualizar" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,0"></TextBlock>

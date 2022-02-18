@@ -662,7 +662,9 @@ namespace SGC
                     {
                         timepocnt++;
                         TimeSpan t = TimeSpan.FromSeconds(timepocnt);
-                        timerqueobserva.Content = t.TotalMinutes.ToString("0") + ":" + t.TotalSeconds.ToString("00");
+
+                        timerqueobserva.Content = t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00");
+                        Console.WriteLine(t.Minutes + ":" + t.Seconds);
                     };
                     oLog.Add("5");
                     oLog.Add(Properties.Settings.Default.posicion+"");
@@ -953,7 +955,8 @@ namespace SGC
             string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
             Log oLog = new Log(path2 + "\\Log");
-            oLog.Add(c.Fecha_In + " " + c.fecha_entrada_estado+" "+ DateTime.Now);
+            oLog.Add("Cliente "+c.id +": "+c.nombre_completo+" in: "+c.Fecha_In + " out: " + c.fecha_entrada_estado+" now: "+ DateTime.Now);
+
             if(c.fecha_entrada_estado.HasValue)
             if (c.Fecha_In <= DateTime.Now && c.fecha_entrada_estado >= DateTime.Now)
             {
@@ -1171,16 +1174,32 @@ namespace SGC
                 {
                     ThreadPool.SetMaxThreads(1, 0);
                     direcciones2 = new List<Direcciones>();
-                    foreach (Direcciones d in direcciones)
+                    List<Parcelas> lpar = new List<Parcelas>();
+                    foreach(Clientes cc in lcln)
                     {
-                        string[] s = d.Descripcion.Split('/');
-                        d.Descripcion = "1/" + s[1] +"/"+ s[2];
-                        direcciones2.Add(d);
-
+                        if (!cc.n_plaza.Equals("0"))
+                        {
+                            lpar.Add(lprc.Find(x => x.id == int.Parse(cc.n_plaza)));
+                        }
                     }
+                    if (lpar.Count > 0)
+                    {
+                        foreach (Direcciones d in direcciones)
+                        {
+                            if (lpar.Find(x => x.Direccion == d.Id) != null)
+                            {
+                                string[] s = d.Descripcion.Split('/');
+                                d.Descripcion = "1/" + s[1] + "/" + s[2];
+                                direcciones2.Add(d);
+                            }
 
-                    ThreadPool.QueueUserWorkItem(Ejecutarconsultas, direcciones2[0]);
-                    direcciones2.RemoveAt(0);
+                        }
+                        if (direcciones2.Count > 0)
+                        {
+                            ThreadPool.QueueUserWorkItem(Ejecutarconsultas, direcciones2[0]);
+                            direcciones2.RemoveAt(0);
+                        }
+                    }
 
                 }
             }catch(Exception e){
@@ -1200,6 +1219,8 @@ namespace SGC
                 string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
                 Log oLog = new Log(path2 + "\\Log");
+                Log oLog2 = new Log(path2 + "\\CORREINTE");
+                oLog2.Add("MIRANDO Consulta "+ comprobar);
                 oLog.Add(comprobar+"");
                 if (!comprobar)
                 {
@@ -1284,7 +1305,7 @@ namespace SGC
                                                 {
                                                     luz.Content = "ON";
                                                     luzPanel.IsEnabled = true;
-                                                    onoffparcela.IsEnabled = true;
+                                                    //onoffparcela.IsEnabled = true;
                                                     actu.IsEnabled = false;
                                                     luzPanel.UpdateLayout();
                                                 }
@@ -1306,15 +1327,21 @@ namespace SGC
                                         {
                                             int aCorr = comprobarcorriente1(cc2);
                                             Direcciones dd2 = new Direcciones();
+                                            oLog.Add("CLIENTE DEBE ESTAR: " + aCorr);
                                             if (aCorr == 1)
                                             {
                                                 dd2.Descripcion = "0/" + desc[1] + "/" + desc[2] + "/false";
                                                 dd2.Id = d.Id;
                                                 cc2.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " El cliente " + cc2.dni + " contrato hasta " + ((DateTime)cc2.fecha_entrada_estado).ToString("yyyyy/MM/dd") + " " + cc2.Hora_salida);
                                                 direcciones2.Insert(0, dd2);
+                                                this.Dispatcher.Invoke(() =>
+                                                {
+                                                    logs.Items.Refresh();
+                                                });
                                             }
                                             else
                                             {
+                                                oLog.Add("Añadiendo: 2 / " + desc[1] + " / " + desc[2]);
                                                 dd2.Descripcion = "2/" + desc[1] + "/" + desc[2];
                                                 dd2.Id = d.Id;
                                                 direcciones2.Insert(0, dd2);
@@ -1366,7 +1393,7 @@ namespace SGC
                                                     luz.Content = "OFF";
                                                     luzPanel.IsEnabled = true;
 
-                                                    onoffparcela.IsEnabled = true;
+                                                    //onoffparcela.IsEnabled = true;
                                                     actu.IsEnabled = false;
                                                     luzPanel.UpdateLayout();
                                                 }
@@ -1405,28 +1432,34 @@ namespace SGC
                             case "2":
                                 {
                                     oLog.Add("Mirando direccion 2: " + d.Descripcion);
-                                    task = Task<int>.Factory.StartNew(() => mirarbus(d.Descripcion));
+                                    var task3 = Task<double>.Factory.StartNew(() => mirarbusCorriente(d.Descripcion));
                                     var task2 = esperar();
 
                                     //original code: await task;  
-                                    int index = Task.WaitAny(task, task2);
-                                    double dob = -2;
+                                    int index = Task.WaitAny(task3, task2);
+                                    double dob = -1;
                                     if (index == 0)
-                                        dob = double.Parse(Properties.Settings.Default.valor);
+                                        dob = double.Parse(Properties.Settings.Default.valorPotencia);
+                                    oLog.Add("Potencia direccion 2: " + dob);
 
-                                    if (a > 0)
+                                    if (dob >= 0)
                                     {
                                         Clientes cc2 = comprobarCliente(d);
                                         Direcciones dd2 = new Direcciones();
                                         if (cc2 != null)
                                         {
+                                            oLog.Add("MIRANDO DIRECCION 2 AMPERIOSs: " + d.Descripcion+" POTENCIA "+ cc2.Potencia+" POTENCIA ACTUAL:"+ dob);
+                                            oLog.Add("MIRANDO DIRECCION 2  AMPERIOS: " + d.Descripcion+" "+dob+" "+ lcnt.Find(x => x.Id == cc2.Potencia).Amperios_Max);
                                             if (dob> lcnt.Find(x => x.Id == cc2.Potencia).Amperios_Max)
                                             {
                                                 dd2.Descripcion = "0/" + desc[1] + "/" + desc[2] + "/false";
                                                 dd2.Id = d.Id;
                                                 direcciones2.Insert(0, dd2);
                                                 cc2.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " El cliente " + cc2.dni + " ha sobrepasado el limite contratado");
-
+                                                this.Dispatcher.Invoke(() =>
+                                                {
+                                                    logs.Items.Refresh();
+                                                });
                                             }
                                             if (direcciones2.Count > 0)
                                             {
@@ -1492,15 +1525,15 @@ namespace SGC
                 }
                 else
                 {
-                    Thread.Sleep(500);
-                    Ejecutarconsultas(state);
+
+
                 }
             }
             catch (Exception e)
             {
                 string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-                Log oLog = new Log(path2 + "\\Log");
+                Log oLog = new Log(path2 + "\\CORRIENTE");
 
                 oLog.Add("1281: " + e.Message);
             }
@@ -1728,7 +1761,7 @@ namespace SGC
                                             {
                                                 luz.Content = "ON";
 
-                                                onoffparcela.IsEnabled = true;
+                                                //onoffparcela.IsEnabled = true;
                                                 actu.IsEnabled = false;
                                                 luzPanel.IsEnabled = true;
                                                 luzPanel.UpdateLayout();
@@ -1800,7 +1833,7 @@ namespace SGC
 
 
 
-                                                    onoffparcela.IsEnabled = false;
+                                                   // onoffparcela.IsEnabled = false;
                                                     actu.IsEnabled = true;
                                                     cc.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " No se ha establecido conexión con la parcela" + pp.nom);
                                                     logs.Items.Refresh();
@@ -1860,7 +1893,7 @@ namespace SGC
                                             {
                                                 luz.Content = "OFF";
 
-                                                onoffparcela.IsEnabled = true;
+                                                //onoffparcela.IsEnabled = true;
                                                 actu.IsEnabled = false;
                                                 luzPanel.UpdateLayout();
                                             }
@@ -1905,7 +1938,7 @@ namespace SGC
                                 int index = Task.WaitAny(task, task2);
                                 double dob = -2;
                                 if (index == 0)
-                                    dob = double.Parse(Properties.Settings.Default.valor);
+                                    dob = double.Parse(Properties.Settings.Default.valorPotencia);
 
                                 if (a > 0)
                                 {
@@ -2019,10 +2052,12 @@ namespace SGC
             }
         }
         private void cargarBus2()
-        {
+        { string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                Log oLog2 = new Log(path2 + "\\CORREINTE");
+                oLog2.Add("mIRANDO Seguir "+ seguir);
             if (seguir)
             {
-                string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+               
                 Log oLog = new Log(path2 + "\\Log");
                 oLog.Add("Cargando Bus2");
                     ThreadPool.QueueUserWorkItem(Ejecutarconsultas, direcciones2[0]);
@@ -2045,7 +2080,7 @@ namespace SGC
         {
             //t.Inlines.Add("Esperando Task 2 5 segundos..." + "\n");
             Console.WriteLine("esperando... " + Thread.CurrentThread.ManagedThreadId);
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
             int resultado = -2;
             Console.WriteLine("saliendo... " + Thread.CurrentThread.ManagedThreadId);
 
@@ -2140,6 +2175,57 @@ namespace SGC
                 }
 
                 oLog.Add("hola 8:");
+                //cambiarNumero2.Change(-1, -1);
+                return a;
+
+            }
+            catch { }
+            return a;
+        }
+
+        private double mirarbusCorriente(string d)
+        {
+            string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            Log oLog = new Log(path2 + "\\Log");
+            DateTime dt = DateTime.Now;
+            dt.AddSeconds(5);
+            double a = -1;
+            try
+            {
+                oLog.Add("hola 1 corriente:");
+                Properties.Settings.Default.sepuede = false;
+
+                Properties.Settings.Default.valorPotencia = -1 + "";
+                Properties.Settings.Default.Save();
+
+                oLog.Add("hola 2 corriente:");
+                string[] desc = d.Split('/');
+
+                //Thread.Sleep(50);
+                try
+                {
+                    oLog.Add("hola 3  corriente:");
+                    //cambiarNumero2 = new System.Threading.Timer(new TimerCallback(holaaa), null, 50, 5000);
+                    _connection.RequestStatus("2/" + desc[1] + "/" + desc[2]);
+
+                    //oLog.Add("MIrar Respuesta "+ aaa);
+                    Thread.Sleep(200);
+
+                    oLog.Add("hola 6 corriente:");
+                    a = double.Parse(Properties.Settings.Default.valorPotencia);
+                    Properties.Settings.Default.Save();
+
+                    oLog.Add("hola 7  corriente:");
+
+
+                }
+                catch (Exception e)
+                {
+                    oLog.Add("ERROR 1425: " + e.Message);
+                }
+
+                oLog.Add("hola 8 corriente:");
                 //cambiarNumero2.Change(-1, -1);
                 return a;
 
@@ -3391,13 +3477,13 @@ namespace SGC
                 buss.Items.Refresh();
                 Clientes.Items.Refresh();
 
-            }
+                }
                 else if (address.StartsWith("5/"))
                 {   
                 string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 
                 Log oLog = new Log(path2);
-                oLog.Add("MIRAR ESTADO AMPERIOS: " + address + " - " + (int)_connection.FromDataPoint("3.007", state));
+                //oLog.Add("MIRAR ESTADO AMPERIOS: " + address + " - " + (int)_connection.FromDataPoint("3.007", state));
 
             }
             else
@@ -3443,10 +3529,12 @@ namespace SGC
 
             mirado = false;
             Properties.Settings.Default.valor = "-2";
+            Properties.Settings.Default.valorPotencia = "-1";
+            
 
             Properties.Settings.Default.Save();
 
-            oLog.Add("hola 4:");
+            oLog.Add("hola 1:"+ address);
             if (d[0].Equals("0"))
             {
 
@@ -3454,7 +3542,6 @@ namespace SGC
             else if (d[0].Equals("1"))
             {
 
-                oLog.Add("hola 5:");
                 valores = (int)_connection.FromDataPoint("3.008", state) + "";
                 Properties.Settings.Default.valor = (int)_connection.FromDataPoint("3.008", state) + "";
                 Properties.Settings.Default.sepuede = true;
@@ -3463,7 +3550,6 @@ namespace SGC
                 Dispatcher.InvokeAsync(() =>
                 {
 
-                    oLog.Add("hola 5:");
 
                     if (valores.Equals("-7"))
                         busstext.Inlines.Add("Estado evento  3.008: ON" + "\n");
@@ -3473,7 +3559,6 @@ namespace SGC
                         busstext.Inlines.Add("Estado evento  3.008: ERROR" + "\n");
 
 
-                    oLog.Add("hola 6:");
 
                 });
                 }catch(Exception e){
@@ -3485,15 +3570,20 @@ namespace SGC
             }
             else if (d[0].Equals("2"))
             {
-                Dispatcher.InvokeAsync(() =>
-                {
+                Log oLog2 = new Log(path2 + "\\CORRIENTE");
+                oLog2.Add("Estado evento  9.021: " );
+                valores = (((double)_connection.FromDataPoint("9.001", state))/1000).ToString();
 
-                    busstext.Inlines.Add("Estado evento  9.001: " + (decimal)_connection.FromDataPoint("9.001", state) + "\n");
-                });
-                valores = (decimal)_connection.FromDataPoint("9.001", state) + "";
-                Properties.Settings.Default.valor = (decimal)_connection.FromDataPoint("9.001", state) + "";
+                oLog2.Add("Estado evento  9.021: " + valores);
+                oLog2.Add("Estado evento  9.021: " + valores);
+                Properties.Settings.Default.valorPotencia = valores;
                 Properties.Settings.Default.sepuede = true;
                 Properties.Settings.Default.Save();
+                Dispatcher.InvokeAsync(() =>
+                {
+                    busstext.Inlines.Add("Estado evento  9.001: " + valores + "\n");                    
+                });
+                
 
 
             }
@@ -8536,6 +8626,7 @@ namespace SGC
                                                 a = true;
                                                 sql_query += "caducidad='" + caducidad.Text + "/" + caducidad1.Text + "', ";
                                                 parametros.Add("caducidad:" + caducidad + "/" + caducidad1);
+                                                
                                             }
                                         }
                                         else
@@ -8628,6 +8719,7 @@ namespace SGC
                                         {
                                             a = true;
                                             c.Fecha_In = Clientes_FechaEntrada.SelectedDate.Value;
+                                            cliente.Fecha_In = Clientes_FechaEntrada.SelectedDate.Value;
                                             DateTime dt = new DateTime();
                                             if (c.Fecha_In != null)
                                             {
@@ -8852,7 +8944,8 @@ namespace SGC
                                         try
                                         {
                                             if (!(Fecha_Entrada_Estado.SelectedDate==c.fecha_entrada_estado))
-                                            {
+                                            {   if (Fecha_Entrada_Estado.SelectedDate.HasValue)
+                                                    cliente.fecha_entrada_estado = Fecha_Entrada_Estado.SelectedDate.Value;
                                                 a = true;
                                                 sql_query += "Fecha_Entrada='" + Fecha_Entrada_Estado.Text + "', ";
                                                 parametros.Add("Fecha_Entrada:" + ((DateTime)Fecha_Entrada_Estado.SelectedDate).ToString("yyyy/MM/dd HH:mm:ss"));
@@ -9606,7 +9699,6 @@ namespace SGC
                                     Peta(ee, line+"");
                                     string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                                 }
-                            
                             clientebool = true; 
                             cargarClientes();
                             pasos = 0;
@@ -10784,6 +10876,8 @@ namespace SGC
                         Console.WriteLine(ee.Message);
                     }
                     logs.ItemsSource = c.lstring;
+                    
+                    logs.Items.Refresh();
 
                     try
                     {
@@ -11014,16 +11108,14 @@ namespace SGC
                         Clientes_FechaSalida.SelectedDate = c.Fecha_Out;
                     }
                     catch { }
-                    Potencia pp = lcnt.Find(x => x.Id == c.Potencia);
+                   
+                  
 
-                    try
+                    /*int b = 0;
+                    if (Switch.IsChecked.Value)
                     {
-                        if (pp != null)
-                            Potencia.SelectedItem = pp;
-                        else
-                            Potencia.SelectedItem = null;
-                    }
-                    catch { }
+                        b = 1;
+                    }*/
 
                     try
                     {
@@ -11288,7 +11380,7 @@ namespace SGC
                                     {
 
                                         luz.Content = "NA";
-                                        onoffparcela.IsEnabled = false;
+                                       // onoffparcela.IsEnabled = false;
                                         actu.IsEnabled = false;
 
                                         luzPanel.UpdateLayout();
@@ -11298,7 +11390,7 @@ namespace SGC
 
                                     luz.Content = "NA";
 
-                                    onoffparcela.IsEnabled = false;
+                                   // onoffparcela.IsEnabled = false;
                                     actu.IsEnabled = false;
 
                                     luzPanel.UpdateLayout();
@@ -11324,7 +11416,7 @@ namespace SGC
 
                                 luz.Content = "NA";
 
-                                onoffparcela.IsEnabled = false;
+                               // onoffparcela.IsEnabled = false;
                                 actu.IsEnabled = false;
                                 on_off.IsEnabled = false;
                                 Potencia_alta.IsEnabled = false;
@@ -11495,16 +11587,7 @@ namespace SGC
                                 FichaPotencia(on_off, merg);
                             }
                         }
-                        pp = lcnt.Find(x => x.Id == c.Potencia);
-
-                        try
-                        {
-                            if (pp != null)
-                                Potencia_alta.SelectedItem = pp;
-                            else
-                                Potencia_alta.SelectedItem = null;
-                        }
-                        catch { }
+                       
 
 
                         nota1_alta.Text = c.Nota1;
@@ -11541,6 +11624,27 @@ namespace SGC
                         {
                             numero_plaza_alta.SelectedIndex = -1;
                         }
+                        Potencia pp = lcnt.Find(x => x.Id == c.Potencia);
+
+                        try
+                        {
+                            if (pp != null)
+                                Potencia.SelectedItem = pp;
+                            else
+                                Potencia.SelectedItem = null;
+                        }
+                        catch { }
+                        //pp = lcnt.Find(x => x.Id == c.Potencia);
+
+                        try
+                        {
+                            if (pp != null)
+                                Potencia_alta.SelectedItem = pp;
+                            else
+                                Potencia_alta.SelectedItem = null;
+                        }
+                        catch { }
+
 
                         BrushConverter bc = new BrushConverter();
                         numero_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
@@ -11954,6 +12058,16 @@ namespace SGC
                         safe = false;
                         change_client.IsEnabled = false;
 
+
+                        if (numero_plaza.SelectedItem == null)
+                        {
+                            Potencia.IsEnabled = false;
+                        }
+                        else
+                        {
+                            Potencia.IsEnabled = true;
+                        }
+
                     }
                     else
                     {
@@ -11993,6 +12107,15 @@ namespace SGC
                     vehiculo4.IsDropDownOpen = false;
                     vehiculo4.IsDropDownOpen = false;
                     vehiculo4.IsDropDownOpen = false;
+
+                    if (numero_plaza.SelectedItem == null)
+                    {
+                        Potencia.IsEnabled = false;
+                    }
+                    else
+                    {
+                        Potencia.IsEnabled = true;
+                    }
 
                     nombre_cliente_alta.Focus();
                     tarjeta.Focus();
@@ -16662,6 +16785,22 @@ namespace SGC
                     if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                         pos = true;
 
+                   
+
+                    /*int b = 0;
+                    if (Switch.IsChecked.Value)
+                    {
+                        b = 1;
+                    }*/
+                    if (numero_plaza.SelectedItem == null)
+                    {
+                        Potencia.IsEnabled = false;
+                    }
+                    else
+                    {
+                        Potencia.IsEnabled = true;
+                    }
+
                     //console.writeline(p.id + " " + cc.n_plaza);
                     if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                     {
@@ -19319,6 +19458,7 @@ namespace SGC
                     matricula1.Focus();
 
                     vehiculo1.IsDropDownOpen = false;
+                    clientesCorriente = lcln.Select(x => x).Where(x => x.DeBaja == false).ToList();
 
                 }
             }catch(Exception e)
@@ -28703,11 +28843,11 @@ namespace SGC
             Log oLog = new Log(path2);
             try
             {
-                oLog.Add("1:6");
+                //oLog.Add("1:6");
                 if (mirarDeNuevo)
                 {
 
-                    oLog.Add("1:7");
+                   // oLog.Add("1:7");
                     backgroundWorker1.RunWorkerAsync(0);
                 }
             }catch(Exception e)
@@ -28860,9 +29000,29 @@ namespace SGC
 
         private void Clientes_FechaSalida_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
+            
             Clientes cc = Clientes.SelectedItem as Clientes;
             if (!(cc is null))
             {
+                if (numero_plaza.SelectedItem == null)
+                {
+                    Potencia.SelectedItem = null;
+                    Potencia.IsEnabled = false;
+                }
+                else
+                {
+                    Potencia.SelectedItem = null;
+                    Potencia.IsEnabled = true;
+                }
+                Parcelas p = numero_plaza.SelectedItem as Parcelas;
+                if (p == null)
+                {
+                    p = new Parcelas();
+                    p.id = 0;
+
+                }
+                else
+                    Potencia.SelectedItem = lcnt.Find(x=>x.Id==cc.Potencia);
                 if (Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In))
                 {
 
@@ -28909,13 +29069,25 @@ namespace SGC
                 {
                     b = 1;
                 }*/
-
-                Parcelas p = numero_plaza.SelectedItem as Parcelas;
-                if (p == null)
+                if (numero_plaza.SelectedItem == null)
                 {
-                    p = new Parcelas();
-                    p.id = 0;
+                    Potencia.SelectedItem = null;
+                    Potencia.IsEnabled = false;
                 }
+                else
+                {
+                    Potencia.SelectedItem = null;
+                    Potencia.IsEnabled = true;
+                }
+                Parcelas pp = numero_plaza.SelectedItem as Parcelas;
+                if (pp == null)
+                {
+                    pp = new Parcelas();
+                    pp.id = 0;
+
+                }
+                else
+                    Potencia.SelectedItem = pot;
                 bool pos = false;
                 if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                     pos = true;
@@ -28998,10 +29170,10 @@ namespace SGC
                     }
                 }
 
-                Potencia pp = Potencia.SelectedItem as Potencia;
-                if (pp != null)
+                Potencia pp2 = Potencia.SelectedItem as Potencia;
+                if (pp2 != null)
                 {
-                    if (cc.Potencia != pp.Id )
+                    if (cc.Potencia != pp2.Id )
                     {
 
                         Potencia.BorderBrush = Brushes.Red;
@@ -49947,197 +50119,222 @@ namespace SGC
 
         private async void On_Off(object sender, RoutedEventArgs e)
         {
-            string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            Log oLog = new Log(path2);
-            //comprobar = true;
-            int a = -1;
-            Button b = sender as Button;
-            Grid g = b.Parent as Grid;
-            Label bb = g.Children[2] as Label;
-            Grid dir2 = g.Children[0] as Grid;
-            Label dir = dir2.Children[1] as Label;
-            if (!conectado)
-                _connection.Connect();
-            Thread.Sleep(1000);
-            if (bb.Content.Equals("ON"))
+            try
             {
-                bb.Content = "Comprobando...";
-                bb.Foreground = Brushes.Black;
-
-                oLog.Add("Mirar accion ojo " + mirarDeNuevo);
-                if (mirarDeNuevo)
+                string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                Log oLog = new Log(path2+ "//CORREINTE");
+                //comprobar = true;//
+                int a = -1;
+                Button b = sender as Button;
+                Grid g = b.Parent as Grid;
+                Label bb = g.Children[2] as Label;
+                Grid dir2 = g.Children[0] as Grid;
+                Label dir = dir2.Children[1] as Label;
+                if (!conectado)
+                    _connection.Connect();
+                Thread.Sleep(1000);
+                if (bb.Content.Equals("ON"))
                 {
-                    string[] ss = dir.Content.ToString().Split('/');
+                    try
+                    {
+                        bb.Content = "Comprobando...";
+                        bb.Foreground = Brushes.Black;
 
-                    oLog.Add("Mirar accion "+ dir.Content);
-                    Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
-                    Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
-                    ddd.asignada = ddd2.asignada;
-                    ddd.imagee = ddd2.imagee;
-                    ddd.mostrar = ddd2.mostrar;
-                    ddd.onIsSelected = ddd2.onIsSelected;
-                    
-
-                    oLog.Add("Mirar accion " + ddd.Descripcion);
-
-                    if (ddd!=null)
-                    {if (direcciones2.Count > 0)
+                        oLog.Add("Mirar accion ojo " + mirarDeNuevo);
+                        if (mirarDeNuevo)
                         {
-                            ddd.Descripcion += "/false";
+                            string[] ss = dir.Content.ToString().Split('/');
+
+                            oLog.Add("Mirar accion " + dir.Content);
+                            Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
+                            Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
+                            ddd.asignada = ddd2.asignada;
+                            ddd.imagee = ddd2.imagee;
+                            ddd.mostrar = ddd2.mostrar;
+                            ddd.onIsSelected = ddd2.onIsSelected;
+
+
+                            oLog.Add("Mirar accion " + ddd.Descripcion + " " + direcciones2.Count);
+
+                            if (ddd != null)
+                            {
+                                if (direcciones2.Count > 0)
+                                {
+                                    ddd.Descripcion += "/false";
+
+                                    oLog.Add("Mirar accion " + ddd.Descripcion + " " + direcciones2.Count);
+                                    ss = ddd.Descripcion.Split('/');
+                                    ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+                                    direcciones2.Insert(1, ddd);
+
+                                }
+                                else
+                                {
+                                    oLog.Add("Mirar accion " + ddd.Descripcion + " " + direcciones2.Count);
+                                    ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+                                    direcciones2.Add(ddd);
+
+                                    cargarBus2();
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            string[] ss = dir.Content.ToString().Split('/');
+
+                            oLog.Add("Mirar accion " + dir.Content);
+                            Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
+                            Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
+                            ddd.asignada = ddd2.asignada;
+                            ddd.imagee = ddd2.imagee;
+                            ddd.mostrar = ddd2.mostrar;
+                            ddd.onIsSelected = ddd2.onIsSelected;
+
+
+                            oLog.Add("Mirar accion " + ddd.Descripcion);
+                            if (ddd != null)
+                            {
+                                ddd.Descripcion += "/false";
+                                ss = ddd.Descripcion.Split('/');
+                                oLog.Add("Mirar accion " + ddd.Descripcion+" "+ direcciones2.Count);
+                                if (direcciones2.Count > 0)
+                                {
+                                    ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+
+                                    oLog.Add("Mirar accion en 1 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
+                                    direcciones2.Insert(1, ddd);
+
+                                }
+                                else
+                                {
+                                    ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+                                    oLog.Add("Mirar accion en 2 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
+                                    direcciones2.Add(ddd);
+
+                                }
+                            }
+                        }
+                    }catch(Exception ee2)
+                    {
+                        oLog.Add("Error 50148 "+ee2.Message );
+                    }
+
+                }
+                else if (bb.Content.Equals("OFF"))
+                {
+                    try { 
+
+                    oLog.Add("Mirar accion ojo " + mirarDeNuevo);
+                    oLog.Add("Mirar accion");
+
+                    bb.Content = "Comprobando...";
+                    bb.Foreground = Brushes.Black;
+                    if (mirarDeNuevo)
+                    {
+                        string[] ss = dir.Content.ToString().Split('/');
+
+                        oLog.Add("Mirar accion " + dir.Content);
+                        Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
+                        Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
+                        ddd.asignada = ddd2.asignada;
+                        ddd.imagee = ddd2.imagee;
+                        ddd.mostrar = ddd2.mostrar;
+                        ddd.onIsSelected = ddd2.onIsSelected;
+
+
+                        oLog.Add("Mirar accion " + ddd);
+                        oLog.Add("Mirar accion 3" + ddd);
+                        if (ddd != null)
+                        {
+                            ddd.Descripcion += "/true";
                             ss = ddd.Descripcion.Split('/');
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
-                            direcciones2.Insert(1, ddd);
 
-                        }
-                        else
-                        {
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
-                            direcciones2.Add(ddd);
+                                oLog.Add("Mirar accion " + ddd.Descripcion + " " + direcciones2.Count);
+                                if (direcciones2.Count > 0)
+                            {
+                                ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
 
-                            cargarBus2();
+                                oLog.Add("Mirar accion en 3 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
+                                direcciones2.Insert(1, ddd);
+
+                            }
+                            else
+                            {
+                                ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]; ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+
+                                oLog.Add("Mirar accion en 4 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
+                                direcciones2.Add(ddd);
+
+                                cargarBus2();
+                            }
                         }
+
                     }
-
-                }
-                else
-                {
-                    string[] ss = dir.Content.ToString().Split('/');
-
-                    oLog.Add("Mirar accion " + dir.Content);
-                    Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
-                    Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
-                    ddd.asignada = ddd2.asignada;
-                    ddd.imagee = ddd2.imagee;
-                    ddd.mostrar = ddd2.mostrar;
-                    ddd.onIsSelected = ddd2.onIsSelected;
-                  
-
-                    oLog.Add("Mirar accion " + ddd.Descripcion);
-                    if (ddd != null)
+                    else
                     {
-                        ddd.Descripcion += "/false";
-                        ss = ddd.Descripcion.Split('/');
-                        oLog.Add("Mirar accion " + ddd.Descripcion);
-                        if (direcciones2.Count > 0)
-                        {
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+                        string[] ss = dir.Content.ToString().Split('/');
 
-                            oLog.Add("Mirar accion en 1 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Insert(1, ddd);
-
-                        }
-                        else
-                        {
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
-                            oLog.Add("Mirar accion en 2 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Add(ddd);
-
-                        }
-                    }
-                }
-                
-               
-            }
-            else if (bb.Content.Equals("OFF"))
-            {
-
-                oLog.Add("Mirar accion ojo " + mirarDeNuevo);
-                oLog.Add("Mirar accion");
-
-                bb.Content = "Comprobando...";
-                bb.Foreground = Brushes.Black;
-                if (mirarDeNuevo)
-                    {
-                    string[] ss = dir.Content.ToString().Split('/');
-
-                    oLog.Add("Mirar accion " + dir.Content); 
-                    Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
-                    Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
-                    ddd.asignada = ddd2.asignada;
-                    ddd.imagee = ddd2.imagee;
-                    ddd.mostrar = ddd2.mostrar;
-                    ddd.onIsSelected = ddd2.onIsSelected;
+                        oLog.Add("Mirar accion " + dir.Content);
+                        Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
+                        Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
+                        ddd.asignada = ddd2.asignada;
+                        ddd.imagee = ddd2.imagee;
+                        ddd.mostrar = ddd2.mostrar;
+                        ddd.onIsSelected = ddd2.onIsSelected;
 
 
-                    oLog.Add("Mirar accion "+ddd);
-                    oLog.Add("Mirar accion 3" + ddd);
-                    if (ddd != null)
-                    {
-                        ddd.Descripcion += "/true";
-                        ss = ddd.Descripcion.Split('/');
-                        if (direcciones2.Count > 0)
-                        {
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+                        oLog.Add("Mirar accion " + ddd);
 
-                            oLog.Add("Mirar accion en 3 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Insert(1, ddd);
-
-                        }
-                        else
-                        {
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]; ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
-
-                            oLog.Add("Mirar accion en 4 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Add(ddd);
-
-                            cargarBus2();
-                        }
-                    }
-
-                }
-                else
-                {
-                    string[] ss = dir.Content.ToString().Split('/');
-
-                    oLog.Add("Mirar accion " + dir.Content);
-                    Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
-                    Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
-                    ddd.asignada = ddd2.asignada;
-                    ddd.imagee = ddd2.imagee;
-                    ddd.mostrar = ddd2.mostrar;
-                    ddd.onIsSelected = ddd2.onIsSelected;
-                   
-
-                    oLog.Add("Mirar accion " + ddd);
-                    
 
                         oLog.Add("Mirar accion 2" + ddd);
                         if (ddd != null)
-                    {
-                        ddd.Descripcion += "/true";
-                        ss = ddd.Descripcion.Split('/');
-                        oLog.Add("direcciones2 " + direcciones2.Count);
+                        {
+                            ddd.Descripcion += "/true";
+                            ss = ddd.Descripcion.Split('/');
+                            oLog.Add("direcciones2 " + direcciones2.Count);
                             if (direcciones2.Count > 0)
                             {
 
                                 oLog.Add("ddd");
                                 ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
                                 oLog.Add("ddd2");
-                            oLog.Add("Mirar accion en 5 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Insert(1, ddd);
+                                oLog.Add("Mirar accion en 5 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
+                                direcciones2.Insert(1, ddd);
 
-                            oLog.Add("ddd3");
+                                oLog.Add("ddd3");
                             }
                             else
                             {
                                 oLog.Add("ddd4");
                                 ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
                                 oLog.Add("ddd5");
-                            oLog.Add("Mirar accion en 6 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Add(ddd);
+                                oLog.Add("Mirar accion en 6 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
+                                direcciones2.Add(ddd);
 
-                            oLog.Add("ddd6");
+                                oLog.Add("ddd6");
                             }
                         }
+                    }
+                    }
+                    catch (Exception ee2)
+                    {
+                        oLog.Add("Error 50247 " + ee2.Message);
                     }
                 }
 
 
-            
 
-            Thread.Sleep(200);
 
-            comprobar = false;
+                Thread.Sleep(200);
+
+                comprobar = false;
+            }catch(Exception ee)
+            {
+                string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                Log oLog = new Log(path2);
+                oLog.Add("ERROR 50243 "+ee.Message);
+            }
 
         }
 
@@ -50233,8 +50430,8 @@ namespace SGC
         {
             string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             Log oLog = new Log(path2);
-            DateTime dt = DateTime.Now;
-            dt.AddSeconds(5);
+            //DateTime dt = DateTime.Now;
+            //dt.AddSeconds(5);
             string a = "error";
             try
             {
@@ -54697,7 +54894,9 @@ namespace SGC
                 {
                     timepocnt++;
                     TimeSpan t = TimeSpan.FromSeconds(timepocnt);
-                    timerqueobserva.Content = t.TotalMinutes.ToString("0") + ":" + t.TotalSeconds.ToString("00");
+
+                    timerqueobserva.Content = t.Minutes.ToString("00") +":"+ t.Seconds.ToString("00");
+                    Console.WriteLine(t.Minutes + ":" + t.Seconds);
                 };
                 timerObs.Start();
                
@@ -54727,17 +54926,17 @@ namespace SGC
             Thread.Sleep(1000);
             Clientes cc = Clientes.SelectedItem as Clientes;
             Parcelas pp = numero_plaza_alta.SelectedItem as Parcelas;
-            if(pp!=null)
-            if (luz.Content.Equals("ON"))
-            {
+            
                     luz.Content = "Comprobando...";
 
-                    onoffparcela.IsEnabled = false;
+                   // onoffparcela.IsEnabled = false;
                     actu.IsEnabled = false;
 
                     luzPanel.UpdateLayout();
                     oLog.Add("Mirar accion ficha ON" + mirarDeNuevo);
-                if (mirarDeNuevo)
+                cc.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " Encendiendo Parcela " + pp.nom);
+                logs.Items.Refresh();
+            if (mirarDeNuevo)
                 {
                     string[] ss = pp.Descripción.Split('/');
 
@@ -54807,115 +55006,119 @@ namespace SGC
 
                         }
                     }
-                }
-
+                }                   
+            
                     
-            }
-            else if (luz.Content.Equals("OFF"))
-            {
-                    luz.Content = "Comprobando...";
-
-                    onoffparcela.IsEnabled = false;
-                    actu.IsEnabled = false;
-
-                    luzPanel.UpdateLayout();
-                    oLog.Add("Mirar accion ficha OFF ");
-                    oLog.Add("Mirar accion");
-                if (mirarDeNuevo)
-                {
-                    string[] ss = pp.Descripción.Split('/');
-
-                    oLog.Add("Mirar accion " + pp.Descripción);
-                    Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
-                    Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
-                    ddd.asignada = ddd2.asignada;
-                    ddd.imagee = ddd2.imagee;
-                    ddd.mostrar = ddd2.mostrar;
-                    ddd.onIsSelected = ddd2.onIsSelected;
-
-
-                    oLog.Add("Mirar accion " + ddd);
-                    oLog.Add("Mirar accion 3" + ddd);
-                    if (ddd != null)
-                    {
-                        ddd.Descripcion += "/true";
-                        ss = ddd.Descripcion.Split('/');
-                        if (direcciones2.Count > 0)
-                        {
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
-
-                            oLog.Add("Mirar accion en 3 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Insert(1, ddd);
-
-                        }
-                        else
-                        {
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]; ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
-
-                            oLog.Add("Mirar accion en 4 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Add(ddd);
-
-                            cargarBus2();
-                        }
-                    }
-
-                }
-                else
-                {
-                        Thread.Sleep(1000);
-                    string[] ss = pp.direccion.Split('/');
-
-                    oLog.Add("Mirar accion " + pp.direccion);
-                    Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
-                    Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
-                    ddd.asignada = ddd2.asignada;
-                    ddd.imagee = ddd2.imagee;
-                    ddd.mostrar = ddd2.mostrar;
-                    ddd.onIsSelected = ddd2.onIsSelected;
-
-
-                    oLog.Add("Mirar accion " + ddd);
-
-
-                    oLog.Add("Mirar accion 2" + ddd);
-                    if (ddd != null)
-                    {
-                        ddd.Descripcion += "/true";
-                        ss = ddd.Descripcion.Split('/');
-                        oLog.Add("direcciones2 " + direcciones2.Count);
-                        if (direcciones2.Count > 0)
-                        {
-
-                            oLog.Add("ddd");
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
-                            oLog.Add("ddd2");
-                            oLog.Add("Mirar accion en 5 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Insert(1, ddd);
-
-                            oLog.Add("ddd3");
-                        }
-                        else
-                        {
-                            oLog.Add("ddd4");
-                            ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
-                            oLog.Add("ddd5");
-                            oLog.Add("Mirar accion en 6 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
-                            direcciones2.Add(ddd);
-
-                            oLog.Add("ddd6");
-                        }
-                    }
-                        
-                }
-                    
-            }
+            
             Thread.Sleep(200);
 
             comprobar = false;
+     }
+private void offparcela_Click(object sender, RoutedEventArgs e)
+    {
+            string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-        }
+            Log oLog = new Log(path2);
+            //comprobar = true;
+            int a = -1;
+            Button b = sender as Button;
+            Grid g = b.Parent as Grid;
+            if (!conectado)
+                _connection.Connect();
+            Thread.Sleep(1000);
+            Clientes cc = Clientes.SelectedItem as Clientes;
+            Parcelas pp = numero_plaza_alta.SelectedItem as Parcelas;
 
-        private void Button_Click_25(object sender, RoutedEventArgs e)
+            luz.Content = "Comprobando...";
+
+            // onoffparcela.IsEnabled = false;
+            actu.IsEnabled = false;
+
+            luzPanel.UpdateLayout();
+            oLog.Add("Mirar accion ficha ON" + mirarDeNuevo);
+            cc.lstring.Add(DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " Apagando Parcela " + pp.nom);
+            logs.Items.Refresh();
+            if (mirarDeNuevo)
+            {
+                string[] ss = pp.Descripción.Split('/');
+
+                oLog.Add("Mirar accion " + pp.Descripción);
+                Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
+                Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
+                ddd.asignada = ddd2.asignada;
+                ddd.imagee = ddd2.imagee;
+                ddd.mostrar = ddd2.mostrar;
+                ddd.onIsSelected = ddd2.onIsSelected;
+
+
+                oLog.Add("Mirar accion " + ddd.Descripcion);
+
+                if (ddd != null)
+                {
+                    if (direcciones2.Count > 0)
+                    {
+                        ddd.Descripcion += "/false";
+                        ss = ddd.Descripcion.Split('/');
+                        ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+                        direcciones2.Insert(1, ddd);
+
+                    }
+                    else
+                    {
+                        ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+                        direcciones2.Add(ddd);
+
+                        cargarBus2();
+                    }
+                }
+
+            }
+            else
+            {
+                string[] ss = pp.Descripción.Split('/');
+
+                oLog.Add("Mirar accion " + pp.Descripción);
+                Direcciones ddd2 = ldir.Find(x => x.Descripcion.Equals("1/" + ss[1] + "/" + ss[2]));
+                Direcciones ddd = new Direcciones(ddd2.Id, ddd2.Descripcion, ddd2.Nombre, ddd2.Longitud, ddd2.Asignada);
+                ddd.asignada = ddd2.asignada;
+                ddd.imagee = ddd2.imagee;
+                ddd.mostrar = ddd2.mostrar;
+                ddd.onIsSelected = ddd2.onIsSelected;
+
+
+                oLog.Add("Mirar accion " + ddd.Descripcion);
+                if (ddd != null)
+                {
+                    ddd.Descripcion += "/false";
+                    ss = ddd.Descripcion.Split('/');
+                    oLog.Add("Mirar accion " + ddd.Descripcion);
+                    if (direcciones2.Count > 0)
+                    {
+                        ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+
+                        oLog.Add("Mirar accion en 1 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
+                        direcciones2.Insert(1, ddd);
+
+                    }
+                    else
+                    {
+                        ddd.Descripcion = "0/" + ss[1] + "/" + ss[2] + "/" + ss[3];
+                        oLog.Add("Mirar accion en 2 " + "0/" + ss[1] + "/" + ss[2] + "/" + ss[3]);
+                        direcciones2.Add(ddd);
+
+                    }
+                }
+            }
+
+
+        
+        Thread.Sleep(200);
+
+            comprobar = false;
+        
+    }
+
+    private void Button_Click_25(object sender, RoutedEventArgs e)
         {
             string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
@@ -54933,7 +55136,7 @@ namespace SGC
             if (pp != null)
             {
                 luz.Content = "Comprobando...";
-                onoffparcela.IsEnabled = false;
+               // onoffparcela.IsEnabled = false;
                 actu.IsEnabled = false;
 
 
@@ -54972,6 +55175,11 @@ namespace SGC
 
                 comprobar = false;
             }
+        }
+
+        private void offparcela_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
 
         ///////////////////////////////////////////////////////////////////////////

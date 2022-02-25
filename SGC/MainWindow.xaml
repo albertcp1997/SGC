@@ -4354,7 +4354,7 @@
                                                                                                                     <DataTemplate>
                                                                                                                         <StackPanel Orientation="Horizontal">
 
-                                                                                                                            <Label Content="{Binding nom}"></Label>
+                                                                                                                            <TextBlock Text="{Binding nom}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
 
 
                                                                                                                         </StackPanel>
@@ -4617,12 +4617,12 @@
 
                                                                                                     <Label Foreground="#838d99" Content="Potencia"></Label>
                                                                                                     <Border BorderBrush="Transparent" BorderThickness="5" x:Name="border_potencia">
-                                                                                                        <ComboBox Margin="0,0,0,10" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height}" BorderBrush="#e2e6ee" BorderThickness="1" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=FontSize_Text}" Foreground="#92959c" x:Name="Potencia" SelectionChanged="Potencia_SelectionChanged">
+                                                                                                        <ComboBox Margin="0,0,0,10" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height}" BorderBrush="#e2e6ee" BorderThickness="1" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=FontSize_Text}" Foreground="#92959c" x:Name="Potencia" SelectionChanged="Potencia_SelectionChanged" >
                                                                                                             <ComboBox.ItemTemplate>
                                                                                                                 <DataTemplate>
                                                                                                                     <StackPanel Orientation="Horizontal">
 
-                                                                                                                        <Label Content="{Binding Nombre}"></Label>
+                                                                                                                        <TextBlock Text="{Binding Nombre}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
 
                                                                                                                     </StackPanel>
                                                                                                                 </DataTemplate>
@@ -4696,10 +4696,10 @@
                                                                                                                             <Setter Property="IsEnabled" Value="true"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ERROR">
-                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                            <Setter Property="IsEnabled" Value="true"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="NA">
-                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                            <Setter Property="IsEnabled" Value="true"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="">
                                                                                                                             <Setter Property="IsEnabled" Value="false"/>
@@ -4729,10 +4729,10 @@
                                                                                                                             <Setter Property="IsEnabled" Value="true"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ERROR">
-                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                            <Setter Property="IsEnabled" Value="True"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="NA">
-                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                            <Setter Property="IsEnabled" Value="True"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="">
                                                                                                                             <Setter Property="IsEnabled" Value="false"/>
@@ -4756,16 +4756,16 @@
                                                                                                                     <Setter Property="CornerRadius" Value="5"></Setter>
                                                                                                                     <Style.Triggers>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ON">
-                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                            <Setter Property="IsEnabled" Value="True"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="OFF">
-                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                            <Setter Property="IsEnabled" Value="True"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ERROR">
                                                                                                                             <Setter Property="IsEnabled" Value="true"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="NA">
-                                                                                                                            <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                            <Setter Property="IsEnabled" Value="True"/>
                                                                                                                         </DataTrigger>
                                                                                                                         <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="">
                                                                                                                             <Setter Property="IsEnabled" Value="false"/>
@@ -4789,14 +4789,14 @@
                                                                                                         </Border>
                                                                                                     </StackPanel>
                                                                                                     <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                                                                                                        <Grid Height="200">
+                                                                                                        <Grid>
                                                                                                             <Grid.RowDefinitions>
                                                                                                                 <RowDefinition Height="25"></RowDefinition>
                                                                                                                 <RowDefinition Height="157*"></RowDefinition>
                                                                                                             </Grid.RowDefinitions>
                                                                                                             <Label Foreground="#838d99" Content="Aviso"></Label>
-                                                                                                            <ScrollViewer Margin="10,0,10,10" VerticalScrollBarVisibility="Auto" Grid.Row="1">
-                                                                                                                <ListView x:Name="logs"></ListView>
+                                                                                                            <ScrollViewer Margin="10,0,10,10" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1">
+                                                                                                                <ListView x:Name="logs" FontSize="12" Height="200"/>
                                                                                                             </ScrollViewer>
                                                                                                         </Grid>
                                                                                                     </Border>
@@ -7567,6 +7567,7 @@
 
                                                                             <Label VerticalContentAlignment="Center" FontSize="16" FontFamily="helvetica neue">Volver a revisar en:</Label>
                                                                             <ComboBox x:Name="timerNumber" Width="100" Height="30" Background="Transparent" BorderBrush="Transparent" SelectionChanged="timerNumber_SelectionChanged">
+                                                                                <ComboBoxItem>1</ComboBoxItem>
                                                                                 <ComboBoxItem>5</ComboBoxItem>
                                                                                 <ComboBoxItem>10</ComboBoxItem>
                                                                                 <ComboBoxItem>15</ComboBoxItem>

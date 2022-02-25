@@ -381,6 +381,14 @@ namespace SGC
                 return false;
             }
         }
+
+        internal SQLiteDataReader CargarLog(int id, DateTime now)
+        {
+            string sql_Text = "SELECT * FROM Log WHERE IdCliente=" + id+" AND Fecha LIKE '%"+now.ToString("dd/MM/yyyy")+ "%' ORDER BY Id DESC";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            return rdr;
+        }
     }
 
 }

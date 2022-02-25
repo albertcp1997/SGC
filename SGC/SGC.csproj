@@ -32,7 +32,7 @@
     <ErrorReportUrl>https://adex-media.com/ca/</ErrorReportUrl>
     <ProductName>SGC</ProductName>
     <PublisherName>Adex Media</PublisherName>
-    <ApplicationRevision>219</ApplicationRevision>
+    <ApplicationRevision>277</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -195,6 +195,7 @@
     <Compile Include="Clases\Facturas.cs" />
     <Compile Include="Clases\IVAs.cs" />
     <Compile Include="Clases\Log.cs" />
+    <Compile Include="Clases\LogsCliente.cs" />
     <Compile Include="Clases\Parcelas.cs" />
     <Compile Include="Clases\PDF.cs" />
     <Compile Include="Clases\Potencia.cs" />

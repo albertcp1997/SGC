@@ -460,9 +460,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\app.manifest" />
-    <None Include="SGC_1_TemporaryKey.pfx" />
-    <None Include="SGC_2_TemporaryKey.pfx" />
-    <None Include="SGC_TemporaryKey.pfx" />
+    <None Include="SGC_1_TemporaryKey.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SGC_2_TemporaryKey.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SGC_TemporaryKey.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Resource Include="Fonts\DINPro-Light.otf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

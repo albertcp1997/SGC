@@ -86,13 +86,25 @@ namespace SGC
                     textBox.Select(textBox.Text.Length, 0);
                 });
             }
-            if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+            if (Clientes_FechaEntrada_alta.SelectedDate <= Clientes_FechaPeriodo_alta.SelectedDate)
             {
-                addall2.IsEnabled = true;
+
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                {
+                    addall2.IsEnabled = true;
+                }
+                else
+                {
+                    addall2.IsEnabled = false;
+                }
             }
             else
             {
                 addall2.IsEnabled = false;
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Red;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Red;
             }
         } private void Vehiculo1_alta_KeyDown1(object sender, KeyEventArgs e)
         {
@@ -105,13 +117,25 @@ namespace SGC
                     textBox.Select(textBox.Text.Length, 0);
                 });
             }
-            if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+            if (Clientes_FechaEntrada_alta.SelectedDate <= Clientes_FechaPeriodo_alta.SelectedDate)
             {
-                addall2.IsEnabled = true;
+
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                {
+                    addall2.IsEnabled = true;
+                }
+                else
+                {
+                    addall2.IsEnabled = false;
+                }
             }
             else
             {
                 addall2.IsEnabled = false;
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Red;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Red;
             }
         }
         private void TextBox_TextChanged4(object sender, TextChangedEventArgs e)
@@ -130,26 +154,50 @@ namespace SGC
         {
             var cmbx = sender as ComboBox;
             cmbx.IsDropDownOpen = true;
-            if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+            if (Clientes_FechaEntrada_alta.SelectedDate <= Clientes_FechaPeriodo_alta.SelectedDate)
             {
-                addall2.IsEnabled = true;
+
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                {
+                    addall2.IsEnabled = true;
+                }
+                else
+                {
+                    addall2.IsEnabled = false;
+                }
             }
             else
             {
                 addall2.IsEnabled = false;
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Red;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Red;
             }
         }
         private void TextBox_TextChanged1(object sender, TextChangedEventArgs e)
         {
             var cmbx = sender as ComboBox;
             cmbx.IsDropDownOpen = true;
-            if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+            if (Clientes_FechaEntrada_alta.SelectedDate <= Clientes_FechaPeriodo_alta.SelectedDate)
             {
-                addall2.IsEnabled = true;
+
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                {
+                    addall2.IsEnabled = true;
+                }
+                else
+                {
+                    addall2.IsEnabled = false;
+                }
             }
             else
             {
                 addall2.IsEnabled = false;
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Red;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Red;
             }
         }
         private void Vehiculo1_alta_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -163,13 +211,25 @@ namespace SGC
                     textBox.Select(textBox.Text.Length, 0);
                 });
             }
-            if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+            if (Clientes_FechaEntrada_alta.SelectedDate <= Clientes_FechaPeriodo_alta.SelectedDate)
             {
-                addall2.IsEnabled = true;
+
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                {
+                    addall2.IsEnabled = true;
+                }
+                else
+                {
+                    addall2.IsEnabled = false;
+                }
             }
             else
             {
                 addall2.IsEnabled = false;
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Red;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Red;
             }
         }
         private void Vehiculo2_alta_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -183,13 +243,25 @@ namespace SGC
                     textBox.Select(textBox.Text.Length, 0);
                 });
             }
-            if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+            if (Clientes_FechaEntrada_alta.SelectedDate <= Clientes_FechaPeriodo_alta.SelectedDate)
             {
-                addall2.IsEnabled = true;
+
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                {
+                    addall2.IsEnabled = true;
+                }
+                else
+                {
+                    addall2.IsEnabled = false;
+                }
             }
             else
             {
                 addall2.IsEnabled = false;
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Red;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Red;
             }
         }
         private void Vehiculo3_alta_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -314,13 +386,25 @@ namespace SGC
 
         private void MirarFicha(object sender, TextChangedEventArgs e)
         {
-            if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate!=null&& Clientes_HoraPeriodo_alta.Value!=null&&Vehiculo1_alta.Text.Length>0&&bastidor1_alta.Text.Length> 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+            if (Clientes_FechaEntrada_alta.SelectedDate <= Clientes_FechaPeriodo_alta.SelectedDate)
             {
-                addall2.IsEnabled = true;
+
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                {
+                    addall2.IsEnabled = true;
+                }
+                else
+                {
+                    addall2.IsEnabled = false;
+                }
             }
             else
             {
                 addall2.IsEnabled = false;
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Red;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Red;
             }
             try
             {
@@ -361,13 +445,25 @@ namespace SGC
 
         private void MirarFicha3(object sender, SelectionChangedEventArgs e)
         {
-            if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+            if (Clientes_FechaEntrada_alta.SelectedDate <= Clientes_FechaPeriodo_alta.SelectedDate)
             {
-                addall2.IsEnabled = true;
+
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                {
+                    addall2.IsEnabled = true;
+                }
+                else
+                {
+                    addall2.IsEnabled = false;
+                }
             }
             else
             {
                 addall2.IsEnabled = false;
+                Clientes_FechaEntrada_alta.Foreground = Brushes.Red;
+                Clientes_FechaPeriodo_alta.Foreground = Brushes.Red;
             }
         }
 

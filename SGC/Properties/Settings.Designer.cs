@@ -574,5 +574,17 @@ namespace SGC.Properties {
                 this["valorPotencia"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string hex {
+            get {
+                return ((string)(this["hex"]));
+            }
+            set {
+                this["hex"] = value;
+            }
+        }
     }
 }

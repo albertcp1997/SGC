@@ -12,10 +12,10 @@ namespace SGC.Clases
         public int Id { get; set; }
         public string Nombre { get; set; }
         public int Amperios { get; set; }
-        public int Amperios_Max { get; set; }
+        public double Amperios_Max { get; set; }
         public List<Alarma> Lista_Alarmas;
 
-        public Potencia(int id, string nombre, int amperios, int amperios_Max, List<Alarma> L)
+        public Potencia(int id, string nombre, int amperios, double amperios_Max, List<Alarma> L)
         {
             Id = id;
             Nombre = nombre;
@@ -24,7 +24,7 @@ namespace SGC.Clases
             Lista_Alarmas = L;
         }
 
-        public Potencia(string nombre, int amperios, int amperios_Max)
+        public Potencia(string nombre, int amperios, double amperios_Max)
         {
             Nombre = nombre;
             Amperios = amperios;
@@ -36,7 +36,7 @@ namespace SGC.Clases
             Id = (int)p["Id"];
             Nombre = (string)p["Nombre"];
             Amperios = (int)p["Amperios"];
-            Amperios_Max = (int)p["Amperios_Max"];
+            Amperios_Max = (double)p["Amperios_Max"];
         }
     }
 }

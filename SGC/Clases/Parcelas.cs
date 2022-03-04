@@ -64,6 +64,8 @@ namespace SGC.Clases
 
 
             Medidas = medidas;
+
+            imagee = "NA";
         }
 
         public Parcelas(int id, string nom, int ocupada, string parcelas, int n_cliente, string descripción, string distrito, string orientacion, string nota, int d, string medidas)
@@ -89,6 +91,7 @@ namespace SGC.Clases
             }
 
             Medidas = medidas;
+            imagee = "NA";
         }
 
         public int? id { get; set; }
@@ -114,6 +117,7 @@ namespace SGC.Clases
         public string direccion { get; set; }
 
         public string Medidas { get; set; }
+        public string imagee { get; set; }
 
         public bool ParcelaIsSelected
         {

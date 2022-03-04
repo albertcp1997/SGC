@@ -91,9 +91,389 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
-        internal SQLiteDataReader CargarCliente()
+        internal SQLiteDataReader CargarCliente(int posicionficha, int contadorfiltroficha)
         {
             string sql_Text = "SELECT * FROM CLIENTE";
+            switch (posicionficha)
+            {
+                case 0:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY N_Cliente";
+                        else
+                            sql_Text += " ORDER BY N_Cliente DESC";
+
+                    }
+                    break;
+                case 1:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY lower(Nombre)";
+                        else
+                            sql_Text += " ORDER BY lower(Nombre) DESC";
+
+                    }
+                    break;
+                case 2:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY lower(Apellidos)";
+                        else
+                            sql_Text += " ORDER BY lower(Apellidos) DESC";
+
+                    }
+                    break;
+                case 3:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY DNI";
+                        else
+                            sql_Text += " ORDER BY DNI DESC";
+
+                    }
+                    break;
+                case 4:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY direccion";
+                        else
+                            sql_Text += " ORDER BY direccion DESC";
+
+                    }
+                    break;
+                case 5:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY poblacion";
+                        else
+                            sql_Text += " ORDER BY poblacion DESC";
+
+                    }
+                    break;
+                case 6:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY CP";
+                        else
+                            sql_Text += " ORDER BY CP DESC";
+
+                    }
+                    break;
+                case 7:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Provincia";
+                        else
+                            sql_Text += " ORDER BY Provincia DESC";
+
+                    }
+                    break;
+                case 8:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Pais";
+                        else
+                            sql_Text += " ORDER BY Pais DESC";
+
+                    }
+                    break;
+                case 9:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Telefono1";
+                        else
+                            sql_Text += " ORDER BY Telefono1 DESC";
+
+                    }
+                    break;
+                case 10:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Telefono2";
+                        else
+                            sql_Text += " ORDER BY Telefono2 DESC";
+
+                    }
+                    break;
+                case 11:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Mail1";
+                        else
+                            sql_Text += " ORDER BY Mail1 DESC";
+
+                    }
+                    break;
+                case 12:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Mail2";
+                        else
+                            sql_Text += " ORDER BY Mail2 DESC";
+
+                    }
+                    break;
+                case 13:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY N_Tarjeta";
+                        else
+                            sql_Text += " ORDER BY N_Tarjeta DESC";
+
+
+                    }
+                    break;
+                case 14:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY N_Plaza";
+                        else
+                            sql_Text += " ORDER BY N_Plaza DESC";
+
+
+                    }
+                    break;
+                case 15:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Potencia";
+                        else
+                            sql_Text += " ORDER BY Potencia DESC";
+
+                    }
+                    break;
+                case 16:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Fecha_In";
+                        else
+                            sql_Text += " ORDER BY Fecha_In DESC";
+
+
+                    }
+                    break;
+                case 17:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Hora_entrada";
+                        else
+                            sql_Text += " ORDER BY Hora_entrada DESC";
+
+
+                    }
+                    break;
+                case 18:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Fecha_Entrada";
+                        else
+                            sql_Text += " ORDER BY Fecha_Entrada DESC";
+
+
+                    }
+                    break;
+                case 19:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Hora_salida";
+                        else
+                            sql_Text += " ORDER BY Hora_salida DESC";
+
+
+                    }
+                    break;
+                case 20:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Fecha_Out";
+                        else
+                            sql_Text += " ORDER BY Fecha_Out DESC";
+
+
+                    }
+                    break;
+                case 21:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Fecha_Pega";
+                        else
+                            sql_Text += " ORDER BY Fecha_Pega DESC";
+
+
+                    }
+                    break;
+                case 22:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Importe";
+                        else
+                            sql_Text += " ORDER BY Importe DESC";
+
+
+                    }
+                    break;
+                case 23:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Vehiculo1";
+                        else
+                            sql_Text += " ORDER BY Vehiculo1 DESC";
+
+
+                    }
+                    break;
+                case 24:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Marticula1";
+                        else
+                            sql_Text += " ORDER BY Marticula1 DESC";
+
+
+                    }
+                    break;
+                case 25:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Vehiculo2";
+                        else
+                            sql_Text += " ORDER BY Vehiculo2 DESC";
+
+
+                    }
+                    break;
+                case 26:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Marticula2";
+                        else
+                            sql_Text += " ORDER BY Marticula2 DESC";
+
+
+                    }
+                    break;
+                case 27:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Vehiculo3";
+                        else
+                            sql_Text += " ORDER BY Vehiculo3 DESC";
+
+
+                    }
+                    break;
+                case 28:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Marticula3";
+                        else
+                            sql_Text += " ORDER BY Marticula3 DESC";
+
+
+                    }
+                    break;
+                case 29:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Vehiculo4";
+                        else
+                            sql_Text += " ORDER BY Vehiculo4 DESC";
+
+
+                    }
+                    break;
+                case 30:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Marticula4";
+                        else
+                            sql_Text += " ORDER BY Marticula4 DESC";
+
+
+
+                    }
+                    break;
+                case 31:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Medidas_Vehiculo1";
+                        else
+                            sql_Text += " ORDER BY Medidas_Vehiculo1 DESC";
+
+
+                    }
+                    break;
+                case 32:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Medidas_Vehiculo2";
+                        else
+                            sql_Text += " ORDER BY Medidas_Vehiculo2 DESC";
+
+
+                    }
+                    break;
+                case 33:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Numero_Bastidor3";
+                        else
+                            sql_Text += " ORDER BY Numero_Bastidor1 DESC";
+
+
+                    }
+                    break;
+                case 34:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Medidas_Vehiculo3";
+                        else
+                            sql_Text += " ORDER BY Medidas_Vehiculo3 DESC";
+
+
+                    }
+                    break;
+                case 35:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Medidas_Vehiculo4";
+                        else
+                            sql_Text += " ORDER BY Medidas_Vehiculo4 DESC";
+
+
+                    }
+                    break;
+                case 36:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Numero_Bastidor1";
+                        else
+                            sql_Text += " ORDER BY Numero_Bastidor1 DESC";
+
+
+                    }
+                    break;
+                case 37:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Numero_Bastidor2";
+                        else
+                            sql_Text += " ORDER BY Numero_Bastidor2 DESC";
+
+
+                    }
+                    break;
+                case 38:
+                    {
+                        if (contadorfiltroficha == 0)
+                            sql_Text += " ORDER BY Numero_Bastidor4";
+                        else
+                            sql_Text += " ORDER BY Numero_Bastidor4 DESC";
+
+
+                    }
+                    break;
+            }
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;

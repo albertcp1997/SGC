@@ -46,7 +46,7 @@ namespace SGC
 
         private void addall2_Click(object sender, RoutedEventArgs e)
         {
-            Potencia p = new Potencia(Nombre_Contrato.Text, int.Parse(Potencia.Text), int.Parse(Potencia_Maxima.Text));
+            Potencia p = new Potencia(Nombre_Contrato.Text, int.Parse(Potencia.Text), double.Parse(Potencia_Maxima.Text));
             le.refresh(p);
         }
 
@@ -57,7 +57,7 @@ namespace SGC
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new Regex("[^0-9,]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 

@@ -3172,6 +3172,7 @@
 
                                                                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1" Height="22" Margin="0,4">
                                                                                                         <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
+                                                                                                        
                                                                                                         <Button BorderThickness="0" Background="Transparent"  VerticalAlignment="Center" Foreground="#838d99" Content="N. Parcela" FontFamily="Helvetica neue" FontSize="9" Grid.Row="3" x:Name="filtrar_parcela" Click="filtrar_parcela_Click"/>
                                                                                                     </StackPanel>
                                                                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Height="22" Margin="0,4">
@@ -3209,8 +3210,12 @@
 
                                                                                                     <TextBox Margin="0,2,25,2" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="Black" TextChanged="MirarFicha" x:Name="tarjeta_alta" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch"></TextBox>
 
-                                                                                                    <StackPanel Margin="0,2,0,2" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
-                                                                                                        <ComboBox IsEnabled="False" Margin="0,0,0,0" Height="25"  Width="{Binding Path=ActualWidth, ElementName=numero_cliente_alta}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"  SelectionChanged="MirarFicha2" x:Name="numero_plaza_alta"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                                                                    <Grid Margin="0,2,0,2" Grid.Column="1" Grid.Row="1" >
+                                                                                                        <Grid.ColumnDefinitions>
+                                                                                                            <ColumnDefinition></ColumnDefinition>
+                                                                                                            <ColumnDefinition></ColumnDefinition>
+                                                                                                        </Grid.ColumnDefinitions>
+                                                                                                        <ComboBox Grid.Column="0" IsEnabled="False" Margin="0,0,0,0" Height="25"   BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"  SelectionChanged="MirarFicha2" x:Name="numero_plaza_alta"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                                                                                             <ComboBox.ItemTemplate>
                                                                                                                 <DataTemplate>
                                                                                                                     <StackPanel Orientation="Horizontal">
@@ -3221,6 +3226,98 @@
                                                                                                                 </DataTemplate>
                                                                                                             </ComboBox.ItemTemplate>
                                                                                                         </ComboBox>
+                                                                                                        <Grid Grid.Column="1" VerticalAlignment="Center" Margin="5,0,0,0">
+                                                                                                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" x:Name="luzPanelFicha" Margin="0,0,0,0">
+                                                                                                               
+                                                                                                                <Label FontSize="10" VerticalContentAlignment="Center" x:Name="luzFicha" Margin="0,0,5,0">NA
+                                                                                                                    <Label.Style>
+                                                                                                                        <Style TargetType="Label">
+                                                                                                                            <Style.Triggers>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ON">
+                                                                                                                                    <Setter Property="Foreground" Value="green"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="OFF">
+                                                                                                                                    <Setter Property="Foreground" Value="red"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ERROR">
+                                                                                                                                    <Setter Property="Foreground" Value="black"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="NA">
+                                                                                                                                    <Setter Property="Foreground" Value="black"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                            </Style.Triggers>
+                                                                                                                        </Style>
+                                                                                                                    </Label.Style>
+                                                                                                                </Label>
+                                                                                                                <Button HorizontalAlignment="Right" x:Name="onparcelaFicha" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="Button_Click_24"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
+                                                                                                                    <Button.Content>
+                                                                                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                                                                                                            <TextBlock FontSize="9" Text="ON" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,0"></TextBlock>
+                                                                                                                        </StackPanel>
+                                                                                                                    </Button.Content>
+                                                                                                                    <Button.Resources>
+                                                                                                                        <Style TargetType="Border">
+                                                                                                                            <Setter Property="CornerRadius" Value="5"></Setter>
+                                                                                                                            <Style.Triggers>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ON">
+                                                                                                                                    <Setter Property="IsEnabled" Value="true"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="OFF">
+                                                                                                                                    <Setter Property="IsEnabled" Value="true"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ERROR">
+                                                                                                                                    <Setter Property="IsEnabled" Value="true"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="NA">
+                                                                                                                                    <Setter Property="IsEnabled" Value="true"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="">
+                                                                                                                                    <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="Comprobando...">
+                                                                                                                                    <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                            </Style.Triggers>
+                                                                                                                        </Style>
+                                                                                                                    </Button.Resources>
+
+                                                                                                                </Button>
+                                                                                                                <Button HorizontalAlignment="Right" x:Name="offparcelaFicha" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="offparcela_Click"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
+                                                                                                                    <Button.Content>
+                                                                                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                                                                                                            <TextBlock FontSize="9" Text="OFF" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                                                                                                                        </StackPanel>
+                                                                                                                    </Button.Content>
+                                                                                                                    <Button.Resources>
+                                                                                                                        <Style TargetType="Border">
+                                                                                                                            <Setter Property="CornerRadius" Value="5"></Setter>
+                                                                                                                            <Style.Triggers>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ON">
+                                                                                                                                    <Setter Property="IsEnabled" Value="true"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="OFF">
+                                                                                                                                    <Setter Property="IsEnabled" Value="true"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ERROR">
+                                                                                                                                    <Setter Property="IsEnabled" Value="True"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="NA">
+                                                                                                                                    <Setter Property="IsEnabled" Value="True"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="">
+                                                                                                                                    <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                                <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="Comprobando...">
+                                                                                                                                    <Setter Property="IsEnabled" Value="false"/>
+                                                                                                                                </DataTrigger>
+                                                                                                                            </Style.Triggers>
+                                                                                                                        </Style>
+                                                                                                                    </Button.Resources>
+
+                                                                                                                </Button>
+
+                                                                                                            </StackPanel>
+                                                                                                        </Grid>
 
                                                                                                         <Button Visibility="Collapsed"  Margin="2,0,0,0" Width="22" Height="22" Background="red" Click="Button_Click_11">
                                                                                                             <Button.Resources>
@@ -3230,7 +3327,7 @@
                                                                                                             </Button.Resources>
                                                                                                             <Image Source="/iconos/cruz.png"></Image>
                                                                                                         </Button>
-                                                                                                    </StackPanel>
+                                                                                                    </Grid>
 
                                                                                                 </Grid>
                                                                                             </Grid>
@@ -4745,7 +4842,7 @@
                                                                                                             </Button.Resources>
 
                                                                                                         </Button>
-                                                                                                        <Button x:Name="actu" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="Button_Click_25"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
+                                                                                                        <Button Visibility="Collapsed" x:Name="actu" Margin="5,0,0,0" Width="{Binding Source={x:Static properties:Settings.Default}, Path=Botonwidht}" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Botonheight}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="Button_Click_25"  Background="#e2e5ee" BorderBrush="Transparent" Foreground="#535458"  FontWeight="Bold">
                                                                                                             <Button.Content>
                                                                                                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                                                                                                                     <TextBlock FontSize="7" Text="Actualizar" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1,0,0,0"></TextBlock>
@@ -4795,6 +4892,13 @@
                                                                                                                 <RowDefinition Height="157*"></RowDefinition>
                                                                                                             </Grid.RowDefinitions>
                                                                                                             <Label Foreground="#838d99" Content="Aviso"></Label>
+                                                                                                            <Button HorizontalAlignment="Right" Width="55" Foreground="#838d99" Content="Limpiar" Margin="0,0,10,0" Click="borrarLog">
+                                                                                                                <Button.Resources>
+                                                                                                                    <Style TargetType="Border">
+                                                                                                                        <Setter Property="CornerRadius" Value="2"></Setter>
+                                                                                                                    </Style>
+                                                                                                                </Button.Resources>
+                                                                                                            </Button>
                                                                                                             <ScrollViewer Margin="10,0,10,10" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1">
                                                                                                                 <ListView x:Name="logs" FontSize="12" Height="200"/>
                                                                                                             </ScrollViewer>
@@ -7964,7 +8068,7 @@
                                                                     </Grid.RowDefinitions>
 
                                                                     <Border Background="White" Margin="0,0,0,0" BorderBrush="Transparent" CornerRadius="15" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1">
-                                                                        <Grid Margin="30,0,50,0">
+                                                                        <Grid Margin="30,0,0,0">
                                                                             <Grid.RowDefinitions>
                                                                                 <RowDefinition Height="50"></RowDefinition>
                                                                                 <RowDefinition Height="876*"></RowDefinition>
@@ -8109,6 +8213,7 @@
                                                                                                             <Grid.ColumnDefinitions>
                                                                                                                 <ColumnDefinition Width="72*"></ColumnDefinition>
                                                                                                                 <ColumnDefinition Width="30*"></ColumnDefinition>
+                                                                                                                <ColumnDefinition Width="30*"></ColumnDefinition>
 
                                                                                                             </Grid.ColumnDefinitions>
 
@@ -8126,6 +8231,7 @@
                                                                                                                                     <Grid.ColumnDefinitions>
                                                                                                                                         <ColumnDefinition Width="72*"></ColumnDefinition>
                                                                                                                                         <ColumnDefinition Width="30*"></ColumnDefinition>
+                                                                                                                                        <ColumnDefinition Width="30*"></ColumnDefinition>
 
 
                                                                                                                                     </Grid.ColumnDefinitions>
@@ -8142,6 +8248,26 @@
                                                                                                                                     </Grid>
 
                                                                                                                                     <Label Content="{Binding Disponibilidad}" VerticalContentAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center"></Label>
+                                                                                                                                    <Label Content="{Binding imagee}" VerticalContentAlignment="Center" Grid.Column="2" HorizontalContentAlignment="Center">
+                                                                                                                                        <Label.Style>
+                                                                                                                                            <Style TargetType="Label">
+                                                                                                                                                <Style.Triggers>
+                                                                                                                                                    <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ON">
+                                                                                                                                                        <Setter Property="Foreground" Value="green"/>
+                                                                                                                                                    </DataTrigger>
+                                                                                                                                                    <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="OFF">
+                                                                                                                                                        <Setter Property="Foreground" Value="red"/>
+                                                                                                                                                    </DataTrigger>
+                                                                                                                                                    <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="ERROR">
+                                                                                                                                                        <Setter Property="Foreground" Value="black"/>
+                                                                                                                                                    </DataTrigger>
+                                                                                                                                                    <DataTrigger Binding="{Binding ElementName=luz, Path=Content}" Value="NA">
+                                                                                                                                                        <Setter Property="Foreground" Value="black"/>
+                                                                                                                                                    </DataTrigger>
+                                                                                                                                                </Style.Triggers>
+                                                                                                                                            </Style>
+                                                                                                                                        </Label.Style>
+                                                                                                                                    </Label>
 
 
 
@@ -8167,6 +8293,7 @@
                                                                                                             </ScrollViewer>
                                                                                                             <Button Background="White" BorderBrush="LightGray" Content="Parcela" Foreground="#62ba94" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" Click="Ordenar_parcelas_plaza" BorderThickness="0,0,0,1"></Button>
                                                                                                             <Button Background="White" BorderBrush="LightGray" Content="Ocupada" Foreground="#62ba94" Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" Click="Ordenar_parcelas_ocupada" BorderThickness="0,0,0,1"></Button>
+                                                                                                            <Button Background="White" BorderBrush="LightGray" Content="Estado" Foreground="#62ba94" Grid.Column="2" Grid.Row="0" HorizontalContentAlignment="Center" Click="Ordenar_parcelas_ocupada" BorderThickness="0,0,0,1"></Button>
                                                                                                             <!--<Label Content="Correo &#xa; Electronico" LightGray="#62ba94" Grid.Column="8" Grid.Row="0" HorizontalContentAlignment="Center">
                                                         <Label.Resources>
                                                             <Style TargetType="TextBlock">
@@ -8175,6 +8302,9 @@
                                                         </Label.Resources>
                                                     </Label>-->
                                                                                                             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderThickness="1,1,1,1" BorderBrush="#e2e5ee">
+
+                                                                                                            </Border>
+                                                                                                            <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" BorderThickness="0,1,1,1" BorderBrush="#e2e5ee">
 
                                                                                                             </Border>
                                                                                                             <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" BorderThickness="0,1,1,1" BorderBrush="#e2e5ee">

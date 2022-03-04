@@ -54,7 +54,7 @@ namespace SGC
         List<Button> listabotones = new List<Button>();
 
         bool seguir = true;
-        bool holass = false;
+        bool cargaclientes = true;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.ComponentModel.BackgroundWorker backgroundWorkercorriente;
         private System.ComponentModel.BackgroundWorker backgroundWorkertiempo;
@@ -399,7 +399,7 @@ namespace SGC
                 nomirarcolor = false;
                 //pdf_name.Content = pdf.name;
                 login = l;
-                //console.writeline(System.Windows.Forms.Screen.PrimaryScreen.Bounds);
+                ////Console.writeLine(System.Windows.Forms.Screen.PrimaryScreen.Bounds);
                 oLog.Add("P6");
                 if (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height > 900)
                 {
@@ -681,12 +681,12 @@ namespace SGC
                         oLog.Add("7");
                         backgroundWorker1.RunWorkerAsync(0);
                         buss.IsEnabled = true;
-
+                        infobuss.Visibility = Visibility.Visible;
                         timerbox.Visibility = Visibility.Visible;
                         oLog.Add("8");
                         oLog.Add(Properties.Settings.Default.timer);
-                        Console.WriteLine(timerNumber.Items.Count);
-                        Console.WriteLine((int.Parse(Properties.Settings.Default.timer) / 5)+"");
+                        //Console.writeLine(timerNumber.Items.Count);
+                        //Console.writeLine((int.Parse(Properties.Settings.Default.timer) / 5)+"");
                         if (int.Parse(Properties.Settings.Default.timer) > 0)
                             timerNumber.SelectedIndex = int.Parse(Properties.Settings.Default.timer) / 5;
                         else
@@ -800,7 +800,7 @@ namespace SGC
 
                                 }
                             timerqueobserva.Content = t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00");
-                            Console.WriteLine(t.Minutes + ":" + t.Seconds);
+                            //Console.writeLine(t.Minutes + ":" + t.Seconds);
                         };
 
                         timerObs.Start();
@@ -812,6 +812,7 @@ namespace SGC
                         oLog.Add("6");
 
                         assa = false;
+                        infobuss.Visibility = Visibility.Collapsed;
                         bdr4.HorizontalAlignment = HorizontalAlignment.Left;
                         manualknx.Visibility = Visibility.Visible;
                         automaticoknx.Visibility = Visibility.Collapsed;
@@ -851,7 +852,7 @@ namespace SGC
                 orden = new char[6] { '1', '2', '3', '4', '5', '6' };
                 //permisosorden = new char[7];
                 string perm = new string(permisos);
-                //console.writeline(perm.Length);
+                ////Console.writeLine(perm.Length);
                 permisosorden = perm.ToCharArray(18, 6);
                 try
                 {
@@ -997,14 +998,14 @@ namespace SGC
                         try
                         {
                             oLog.Add("Mirando cada 5 segundos");
-                            Console.WriteLine(c.Fecha_In);
+                            //Console.writeLine(c.Fecha_In);
                             if (!c.n_plaza.Equals("0"))
                             {
-                                Console.WriteLine(lprc.Count);
+                                //Console.writeLine(lprc.Count);
                                 Parcelas p = null;
                                 foreach (Parcelas pp in lprc)
                                 {
-                                    //Console.WriteLine(pp.id.ToString()+" "+ c.n_plaza);
+                                    ////Console.writeLine(pp.id.ToString()+" "+ c.n_plaza);
                                     if (pp.id.ToString().Equals(c.n_plaza))
                                     {
                                         p = pp;
@@ -1017,7 +1018,7 @@ namespace SGC
                                 if (c.Fecha_In != null)
                                 {
                                     oLog.Add("Fecha entrada");
-                                    //Console.WriteLine("dentro");
+                                    ////Console.writeLine("dentro");
                                     if (c.fecha_entrada_estado != null)
                                     {
                                         oLog.Add("Fecha salida");
@@ -1421,14 +1422,16 @@ namespace SGC
                                         this.Dispatcher.Invoke(() =>
                                         {
                                             Clientes cc = Clientes.SelectedItem as Clientes;
-                                            Parcelas pp = null;
+                                            Parcelas pp2 = null;
                                             if (cc != null)
                                                 if (cc.n_plaza != null)
-                                                    pp = lprc.Find(x => x.id == int.Parse(cc.n_plaza)) as Parcelas;
-                                            if (pp != null)
-                                                if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
+                                                    pp2 = lprc.Find(x => x.id == int.Parse(cc.n_plaza)) as Parcelas;
+                                            if (pp2 != null)
+                                                if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp2.Direccion).Descripcion))
                                                 {
                                                     luz.Content = "ON";
+                                                    luzFicha.Content = "ON";
+                                                    
                                                     luzPanel.IsEnabled = true;
                                                     //onoffparcela.IsEnabled = true;
                                                     actu.IsEnabled = false;
@@ -1436,18 +1439,21 @@ namespace SGC
                                                 }
 
                                         });
+                                        Clientes cc2 = comprobarCliente(d);
+                                        Parcelas pp = null;
+                                        if (cc2 != null)
+                                        {
 
+                                            pp = lprc.Find(x => x.id == int.Parse(cc2.n_plaza)) as Parcelas;
+                                            List<Parcelas> list = lista_parcelas.Items.Cast<Parcelas>()
+                                               .Select(item => item)
+                                               .ToList();
+                                            list.Find(x => x.id == pp.id).imagee = "ON";
+                                        }
 
 
                                         //sidirecciones.Add(d);
-                                        this.Dispatcher.Invoke(() =>
-                                        {
-                                            buss.Items.Refresh();
-                                            Clientes.Items.Refresh();
-                                            barrabuss.Value++;
-                                            num1.Text = int.Parse(num1.Text) + 1 + "";
-                                        });
-                                        Clientes cc2 = comprobarCliente(d);
+                                        // cc2 = comprobarCliente(d);
                                         if (cc2 != null)
                                         {
                                             int aCorr = comprobarcorriente1(cc2);
@@ -1464,6 +1470,7 @@ namespace SGC
                                                 direcciones2.Insert(0, dd2);
                                                 this.Dispatcher.Invoke(() =>
                                                 {
+                                                    logs.Items.Insert(0, DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " El cliente " + cc2.nombre_completo + " contrato hasta " + ((DateTime)cc2.fecha_entrada_estado).ToString("yyyyy/MM/dd") + " " + cc2.Hora_salida);
                                                     logs.Items.Refresh();
                                                 });
                                             }
@@ -1472,6 +1479,10 @@ namespace SGC
                                                 oLog.Add("Añadiendo: 2 / " + desc[1] + " / " + desc[2]);
                                                 dd2.Descripcion = "2/" + desc[1] + "/" + desc[2];
                                                 dd2.Id = d.Id;
+
+                                                Properties.Settings.Default.hex = "";
+                                                Properties.Settings.Default.Save();
+                                                
                                                 direcciones2.Insert(0, dd2);
                                             }
                                         }
@@ -1493,6 +1504,15 @@ namespace SGC
                                                 actualizarbuss.IsEnabled = true;
                                             });
                                         }
+
+                                        this.Dispatcher.Invoke(() =>
+                                        {
+                                            buss.Items.Refresh();
+                                            Clientes.Items.Refresh();
+                                            lista_parcelas.Items.Refresh();
+                                            barrabuss.Value++;
+                                            num1.Text = int.Parse(num1.Text) + 1 + "";
+                                        });
                                     }
                                     else if (a == -2)
                                     {
@@ -1519,6 +1539,12 @@ namespace SGC
                                                 if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                                                 {
                                                     luz.Content = "OFF";
+                                                    luzFicha.Content = "OFF";
+                                                    List<Parcelas> list = lista_parcelas.Items.Cast<Parcelas>()
+                                                    .Select(item => item)
+                                                    .ToList();
+                                                    list.Find(x => x.id == pp.id).imagee = "OFF";
+                                                    pp.imagee = "OFF";
                                                     luzPanel.IsEnabled = true;
 
                                                     //onoffparcela.IsEnabled = true;
@@ -1527,13 +1553,6 @@ namespace SGC
                                                 }
                                         });
                                         //sidirecciones.Add(d);
-                                        this.Dispatcher.Invoke(() =>
-                                        {
-                                            buss.Items.Refresh();
-                                            Clientes.Items.Refresh();
-                                            barrabuss.Value++;
-                                            num1.Text = int.Parse(num1.Text) + 1 + "";
-                                        });
 
                                         if (direcciones2.Count > 0)
                                         {
@@ -1554,6 +1573,26 @@ namespace SGC
                                                 actualizarbuss.IsEnabled = true;
                                             });
                                         }
+                                        Clientes cc2 = comprobarCliente(d);
+                                         Parcelas pp2 = null;
+                                        if (cc2 != null)
+                                        {
+
+                                            pp2 = lprc.Find(x => x.id == int.Parse(cc2.n_plaza)) as Parcelas;
+                                            List<Parcelas> list = lista_parcelas.Items.Cast<Parcelas>()
+                                               .Select(item => item)
+                                               .ToList();
+                                            list.Find(x => x.id == pp2.id).imagee = "OFF";
+                                        }
+
+                                        this.Dispatcher.Invoke(() =>
+                                        {
+                                            buss.Items.Refresh();
+                                            Clientes.Items.Refresh();
+                                            lista_parcelas.Items.Refresh();
+                                            barrabuss.Value++;
+                                            num1.Text = int.Parse(num1.Text) + 1 + "";
+                                        });
                                     }
                                 }
                                 break;
@@ -1632,7 +1671,7 @@ namespace SGC
 
 
 
-                        Console.WriteLine(index);
+                        //Console.writeLine(index);
                         
 
                         this.Dispatcher.Invoke(() =>
@@ -1657,7 +1696,7 @@ namespace SGC
                     }
 
 
-                    Console.WriteLine("Bye " + Thread.CurrentThread.ManagedThreadId);
+                    //Console.writeLine("Bye " + Thread.CurrentThread.ManagedThreadId);
                 }
                 else
                 {
@@ -1715,6 +1754,7 @@ namespace SGC
                         if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion)|| ("0/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                         {
                             luz.Content = "ON";
+                            luzFicha.Content = "ON";
                             luzPanel.IsEnabled = true;
                             //onoffparcela.IsEnabled = true;
                             actu.IsEnabled = false;
@@ -1774,6 +1814,7 @@ namespace SGC
                         if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion) || ("0/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                         {
                             luz.Content = "OFF";
+                            luzFicha.Content = "OFF";
                             luzPanel.IsEnabled = true;
                             //onoffparcela.IsEnabled = true;
                             actu.IsEnabled = false;
@@ -1855,7 +1896,7 @@ namespace SGC
 
 
 
-                    Console.WriteLine(index);
+                    //Console.writeLine(index);
                     if (index == 0)
                         a = double.Parse(Properties.Settings.Default.valor);
 
@@ -1874,7 +1915,7 @@ namespace SGC
                 }
 
                 return -2;
-                Console.WriteLine("Bye " + Thread.CurrentThread.ManagedThreadId);
+                //Console.writeLine("Bye " + Thread.CurrentThread.ManagedThreadId);
             }
             else
             {
@@ -2003,7 +2044,9 @@ namespace SGC
                                             if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                                             {
                                                 luz.Content = "ON";
-
+                                                luzFicha.Content = "ON";
+                                               
+                                                pp.imagee = "ON";
                                                 //onoffparcela.IsEnabled = true;
                                                 actu.IsEnabled = false;
                                                 luzPanel.IsEnabled = true;
@@ -2011,16 +2054,14 @@ namespace SGC
                                             }
                                     });
                                     //sidirecciones.Add(d);
-                                    this.Dispatcher.Invoke(() =>
-                                    {
-                                        buss.Items.Refresh();
-                                        Clientes.Items.Refresh();
-                                        barrabuss.Value++;
-                                        num1.Text = int.Parse(num1.Text) + 1 + "";
-                                    });
+                                   
                                     Clientes cc2 = comprobarCliente(d);
                                     if (cc2 != null)
                                     {
+                                        List<Parcelas> list = lista_parcelas.Items.Cast<Parcelas>()
+                                                      .Select(item => item)
+                                                      .ToList();
+                                        list.Find(x => x.id == int.Parse(cc2.n_plaza)).imagee = "ON";
                                         int aCorr = comprobarcorriente1(cc2);
                                         Direcciones dd2 = new Direcciones();
                                         if (aCorr == 1)
@@ -2054,6 +2095,14 @@ namespace SGC
                                             actualizarbuss.IsEnabled = true;
                                         });
                                     }
+                                    this.Dispatcher.Invoke(() =>
+                                    {
+                                        buss.Items.Refresh();
+                                        Clientes.Items.Refresh();
+                                        lista_parcelas.Items.Refresh();
+                                        barrabuss.Value++;
+                                        num1.Text = int.Parse(num1.Text) + 1 + "";
+                                    });
                                 }
                                 else if (a == -2)
                                 {
@@ -2075,7 +2124,10 @@ namespace SGC
                                                
                                                 pp = lprc.Find(x => x.id == int.Parse(cc2.n_plaza)) as Parcelas;
                                                 s.EjecutarQuery("INSERT INTO Log(Descripcion, Fecha, IdCliente) VALUES('" + DateTime.Now.ToString("yyyyy/MM/dd hh:mm:ss") + " No se ha establecido conexión con la parcela " + pp.nom + "','" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'," + cc2.id + ")");
-
+                                                List<Parcelas> list = lista_parcelas.Items.Cast<Parcelas>()
+                                                   .Select(item => item)
+                                                   .ToList();
+                                                list.Find(x => x.id == pp.id).imagee = "ERROR";
                                             }
                                             if (cc != null)
                                             {
@@ -2085,7 +2137,9 @@ namespace SGC
                                                     if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                                                     {
                                                         luz.Content = "ERROR";
-
+                                                        luzFicha.Content = "ERROR";
+                                                       
+                                                        pp.imagee = "ERROR";
 
 
                                                         // onoffparcela.IsEnabled = false;
@@ -2107,6 +2161,7 @@ namespace SGC
                                         {
                                             buss.Items.Refresh();
                                             Clientes.Items.Refresh();
+                                            lista_parcelas.Items.Refresh();
                                             barrabuss.Value++;
                                             num1.Text = int.Parse(num1.Text) + 1 + "";
                                         });
@@ -2151,17 +2206,31 @@ namespace SGC
                                             if (("1/" + desc[1] + "/" + desc[2]).Equals(ldir.Find(z => z.Id == pp.Direccion).Descripcion))
                                             {
                                                 luz.Content = "OFF";
-
+                                                luzFicha.Content = "OFF";
+                                                
+                                                pp.imagee = "OFF";
                                                 //onoffparcela.IsEnabled = true;
                                                 actu.IsEnabled = false;
                                                 luzPanel.UpdateLayout();
                                             }
+                                        Clientes cc2 = comprobarCliente(d);
+                                         pp = null;
+                                        if (cc2 != null)
+                                        {
+
+                                            pp = lprc.Find(x => x.id == int.Parse(cc2.n_plaza)) as Parcelas;
+                                            List<Parcelas> list = lista_parcelas.Items.Cast<Parcelas>()
+                                               .Select(item => item)
+                                               .ToList();
+                                            list.Find(x => x.id == pp.id).imagee = "ERROR";
+                                        }
                                     });
                                     //sidirecciones.Add(d);
                                     this.Dispatcher.Invoke(() =>
                                     {
                                         buss.Items.Refresh();
                                         Clientes.Items.Refresh();
+                                        lista_parcelas.Items.Refresh();
                                         barrabuss.Value++;
                                         num1.Text = int.Parse(num1.Text) + 1 + "";
                                     });
@@ -2293,7 +2362,7 @@ namespace SGC
 
 
 
-                    Console.WriteLine(index);
+                    //Console.writeLine(index);
 
 
                     this.Dispatcher.Invoke(() =>
@@ -2363,10 +2432,10 @@ namespace SGC
         private async Task<int> esperar()
         {
             //t.Inlines.Add("Esperando Task 2 5 segundos..." + "\n");
-            Console.WriteLine("esperando... " + Thread.CurrentThread.ManagedThreadId);
+            //Console.writeLine("esperando... " + Thread.CurrentThread.ManagedThreadId);
             Thread.Sleep(800);
             int resultado = -2;
-            Console.WriteLine("saliendo... " + Thread.CurrentThread.ManagedThreadId);
+            //Console.writeLine("saliendo... " + Thread.CurrentThread.ManagedThreadId);
 
             return resultado;
         }
@@ -2374,20 +2443,20 @@ namespace SGC
         private async Task<int> esperar2()
         {
             //t.Inlines.Add("Esperando Task 2 5 segundos..." + "\n");
-            Console.WriteLine("esperando... " + Thread.CurrentThread.ManagedThreadId);
+            //Console.writeLine("esperando... " + Thread.CurrentThread.ManagedThreadId);
             Thread.Sleep(800);
             int resultado = -2;
-            Console.WriteLine("saliendo... " + Thread.CurrentThread.ManagedThreadId);
+            //Console.writeLine("saliendo... " + Thread.CurrentThread.ManagedThreadId);
 
             return resultado;
         }
         private async Task<int> esperar3()
         {
             //t.Inlines.Add("Esperando Task 2 5 segundos..." + "\n");
-            Console.WriteLine("esperando... " + Thread.CurrentThread.ManagedThreadId);
+            //Console.writeLine("esperando... " + Thread.CurrentThread.ManagedThreadId);
             Thread.Sleep(1000);
             int resultado = -2;
-            Console.WriteLine("saliendo... " + Thread.CurrentThread.ManagedThreadId);
+            //Console.writeLine("saliendo... " + Thread.CurrentThread.ManagedThreadId);
 
             return resultado;
         }
@@ -2403,7 +2472,7 @@ namespace SGC
                 
 
             }
-            Console.WriteLine("Got Cancelled");
+            //Console.writeLine("Got Cancelled");
             Properties.Settings.Default.resultado= a;
             Properties.Settings.Default.Save();
         }
@@ -2572,7 +2641,7 @@ namespace SGC
                     {
                         string mycontent = await content.ReadAsStringAsync();
                         HttpContentHeaders hch = content.Headers;
-                        Console.WriteLine(mycontent);
+                        //Console.writeLine(mycontent);
                         //v = new Version(mycontent);
                         lista_tiempos.Clear();
                         foreach (string s in mycontent.Split('*'))
@@ -2610,7 +2679,7 @@ namespace SGC
             if (num[posicion] == '0')
                 tirar0atras(num, posicion);
 
-            //Console.WriteLine(num);
+            ////Console.writeLine(num);
             ordenar(num, posicion - 1);
         }
 
@@ -2727,12 +2796,12 @@ namespace SGC
                 Border b5 = Factura_button.Parent as Border;
                 Border b6 = Boton_Camara.Parent as Border;
 
-                //Console.WriteLine(b1.GetValue(Grid.ColumnProperty));
-                //Console.WriteLine(b2.GetValue(Grid.ColumnProperty));
-                //Console.WriteLine(b3.GetValue(Grid.ColumnProperty));
-                //Console.WriteLine(b4.GetValue(Grid.ColumnProperty));
-                //Console.WriteLine(b5.GetValue(Grid.ColumnProperty));
-                //Console.WriteLine(b6.GetValue(Grid.ColumnProperty));
+                ////Console.writeLine(b1.GetValue(Grid.ColumnProperty));
+                ////Console.writeLine(b2.GetValue(Grid.ColumnProperty));
+                ////Console.writeLine(b3.GetValue(Grid.ColumnProperty));
+                ////Console.writeLine(b4.GetValue(Grid.ColumnProperty));
+                ////Console.writeLine(b5.GetValue(Grid.ColumnProperty));
+                ////Console.writeLine(b6.GetValue(Grid.ColumnProperty));
 
 
             }
@@ -2742,7 +2811,7 @@ namespace SGC
         private void ObservarTodo(object state)
         {
 
-            //Console.WriteLine("holaa");
+            ////Console.writeLine("holaa");
 
             this.Dispatcher.Invoke(() =>
             {
@@ -2875,7 +2944,7 @@ namespace SGC
 
                                         ss = query;
                                     }
-                                    Console.WriteLine(ss);
+                                    //Console.writeLine(ss);
                                     /*foreach(string s in c.Parametros)
                                     {
                                         ss += s;
@@ -2899,7 +2968,7 @@ namespace SGC
                                             {
                                                 string mycontent = await content.ReadAsStringAsync();
                                                 HttpContentHeaders hch = content.Headers;
-                                                Console.WriteLine(mycontent);
+                                                //Console.writeLine(mycontent);
                                                 queries = new List<KeyValuePair<string, string>>()
                                 {
                                     new KeyValuePair<string, string>("tabla", "Version"),
@@ -2915,7 +2984,7 @@ namespace SGC
                                                         {
                                                             string mycontent2 = await content2.ReadAsStringAsync();
                                                             HttpContentHeaders hch2 = content2.Headers;
-                                                            Console.WriteLine(mycontent2);
+                                                            //Console.writeLine(mycontent2);
                                                         }
                                                     }
                                                 }
@@ -2958,7 +3027,7 @@ namespace SGC
                                     var st = new StackTrace(e, true); // Get the top stack frame var frame = st.GetFrame(0); // Get the line number from the stack frame   var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                     var frame = st.GetFrame(0);
                                       var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                                    Console.WriteLine(line + ": " + e.Message);
+                                    //Console.writeLine(line + ": " + e.Message);
                                 }
 
 
@@ -2999,7 +3068,7 @@ namespace SGC
                                         });
                                         string mycontent = await content.ReadAsStringAsync();
                                         HttpContentHeaders hch = content.Headers;
-                                        //Console.WriteLine(mycontent);
+                                        ////Console.writeLine(mycontent);
                                         v = new Version(mycontent);
                                     }
                                 }
@@ -3018,7 +3087,7 @@ namespace SGC
                         if (v != null && !safe2)
                         {
                             CargarVersion();
-                            Console.WriteLine("Version: " + (DateTime.Compare(v.version, version.version) == 1) + " - " + v.version + " - " + version.version);
+                            //Console.writeLine("Version: " + (DateTime.Compare(v.version, version.version) == 1) + " - " + v.version + " - " + version.version);
                             if (v.version > version.version)
                                 if (safe)
                                 {
@@ -3045,7 +3114,7 @@ namespace SGC
                                                 {
                                                     string mycontent = await content.ReadAsStringAsync();
                                                     HttpContentHeaders hch = content.Headers;
-                                                    Console.WriteLine(mycontent);
+                                                    //Console.writeLine(mycontent);
                                                     //v = new Version(mycontent);
                                                     lista_tiempos.Clear();
                                                     foreach (string s in mycontent.Split('*'))
@@ -3167,7 +3236,7 @@ namespace SGC
                                             {
                                                 string mycontent = await content.ReadAsStringAsync();
                                                 HttpContentHeaders hch = content.Headers;
-                                                Console.WriteLine(mycontent);
+                                                //Console.writeLine(mycontent);
                                                 //v = new Version(mycontent);
                                                 lista_tiempos.Clear();
                                                 foreach (string s in mycontent.Split('*'))
@@ -3245,7 +3314,7 @@ namespace SGC
                     }
 */
 
-                    //Console.WriteLine("holaa");
+                    ////Console.writeLine("holaa");
 
 
 
@@ -3300,7 +3369,7 @@ namespace SGC
         private void ComprobarRoles()
         {
 
-
+            DateTime timerStart = DateTime.Now;
             if (permisos[0] == '1')
             {
 
@@ -3601,6 +3670,7 @@ namespace SGC
 
             }
 
+            Console.WriteLine("tiempo transcurrido ComprobarRoles: " + (DateTime.Now - timerStart).ToString(@"ss\s\ fff\ms\ "));
         }
 
         private async void CargarEmpresa()
@@ -3642,8 +3712,8 @@ namespace SGC
             DateTime? b = null;
             while (rdr2.Read())
             {
-                Console.WriteLine("Camping");
-                Console.WriteLine(rdr2.GetString(1));
+                //Console.writeLine("Camping");
+                //Console.writeLine(rdr2.GetString(1));
                 DateTime d = DateTime.Parse(rdr2.GetString(1));
                 b = d;
             }
@@ -3813,7 +3883,7 @@ namespace SGC
             
             return;
 
-            //Console.WriteLine("New Event: device " + address + " has status (" + state + ") --> " + data);
+            ////Console.writeLine("New Event: device " + address + " has status (" + state + ") --> " + data);
 
         }
 
@@ -3890,12 +3960,18 @@ namespace SGC
             else if (d[0].Equals("2"))
             {
                 Log oLog2 = new Log(path2 + "\\CORRIENTE");
-                oLog2.Add("Estado evento  9.021: " );
+                oLog2.Add("Estado evento  9.001: " );
                 oLog2.Add("valorPotencia: "+Properties.Settings.Default.valorPotencia+" "+address );
-                Double dob = double.Parse(_connection.FromDataPoint("9.001", state).ToString());
+                oLog2.Add("valorPotencia: "+ (decimal)_connection.FromDataPoint("9.001", state) +" "+address );
+                oLog2.Add("valorPotencia HEX: "+ Properties.Settings.Default.hex + " "+address );
+                int dd= Convert.ToInt32(Properties.Settings.Default.hex.Replace("-", ""), 16);
+                double ddd = Double.Parse(dd + "");
 
-                oLog2.Add("Estado evento  9.021 1: " + dob);
-                valores = Math.Round(dob / 1000, 2).ToString();
+                
+
+                oLog2.Add("Estado evento  9.021 1: " + dd);
+                valores = Math.Round((double)(ddd / 1000), 2).ToString();
+
 
                 oLog2.Add("Estado evento  9.021 2: " + valores);
                 Properties.Settings.Default.valorPotencia = valores;
@@ -3905,7 +3981,9 @@ namespace SGC
                 oLog2.Add("valorPotencia: " + Properties.Settings.Default.valorPotencia);
                 Dispatcher.InvokeAsync(() =>
                 {
-                    busstext.Inlines.Add("Estado evento  9.001: " + valores + "\n");
+                    busstext.Inlines.Add("Estado evento  9.001: " +Properties.Settings.Default.hex.Replace("-", " ")+" \n");
+                    busstext.Inlines.Add("Estado evento  9.001: " + Convert.ToInt32(Properties.Settings.Default.hex.Replace("-", ""), 16) + "mA \n");
+                    busstext.Inlines.Add("Estado evento  9.001: " + valores + "A \n");
 
                     bussluzmanual.IsEnabled = true;
                 });
@@ -3952,7 +4030,7 @@ namespace SGC
         }
         private void Connected()
         {
-            Console.WriteLine("Connected!");
+            //Console.writeLine("Connected!");
             string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             Log oLog = new Log(path2);
             oLog.Add("Conectado!");
@@ -3971,7 +4049,7 @@ namespace SGC
             Properties.Settings.Default.Save();
 
             
-            Console.WriteLine("Disconnected!");
+            //Console.writeLine("Disconnected!");
 
             modulo_ele.Content = "Desconectado";
 
@@ -4008,8 +4086,8 @@ namespace SGC
                 DateTime? b = null;
                 while (rdr2.Read())
                 {
-                    Console.WriteLine("Direcciones");
-                    Console.WriteLine(rdr2.GetString(1));
+                    //Console.writeLine("Direcciones");
+                    //Console.writeLine(rdr2.GetString(1));
                     DateTime d2 = DateTime.Parse(rdr2.GetString(1));
                     b = d2;
                 }
@@ -4085,7 +4163,7 @@ namespace SGC
 
                             if (p.Y - p2.Y < 0)
                             {
-                                //Console.WriteLine("Mover -");
+                                ////Console.writeLine("Mover -");
                                 scrollMapa.ScrollToVerticalOffset(scrollMapa.VerticalOffset + 6);
                                 foreach (Border b in lbtn)
                                 {
@@ -4103,8 +4181,8 @@ namespace SGC
                             }
                             else
                             {
-                                ////console.writeline("Mover +");
-                                //console.writeline("Y: " + (p.Y - p2.Y));
+                                //////Console.writeLine("Mover +");
+                                ////Console.writeLine("Y: " + (p.Y - p2.Y));
                                 scrollMapa.ScrollToVerticalOffset(scrollMapa.VerticalOffset - 6);
                                 foreach (Border b in lbtn)
                                 {
@@ -4124,10 +4202,10 @@ namespace SGC
                         }
                         if (p.X - p2.X != 0)
                         {
-                            //console.writeline("X: " + (p.X - p2.X) + "");
+                            ////Console.writeLine("X: " + (p.X - p2.X) + "");
                             if (p.X - p2.X < 0)
                             {
-                                //console.writeline("Mover -");
+                                ////Console.writeLine("Mover -");
                                 scrollMapa.ScrollToHorizontalOffset(scrollMapa.HorizontalOffset + 6);
                                 foreach (Border b in lbtn)
                                 {
@@ -4145,7 +4223,7 @@ namespace SGC
                             }
                             else
                             {
-                                //console.writeline("Mover +");
+                                ////Console.writeLine("Mover +");
                                 scrollMapa.ScrollToHorizontalOffset(scrollMapa.HorizontalOffset - 6);
                                 foreach (Border b in lbtn)
                                 {
@@ -4659,6 +4737,9 @@ namespace SGC
                         CargarParcela();
                         CargarVehiculos();
                         clientebool = true;
+                        posicionficha = 0;
+                        cargaclientes = true;
+                        contadorfiltroficha = 0;
                         cargarClientes();
                         
                         //cargarRegistros();
@@ -4742,6 +4823,10 @@ namespace SGC
                     CargarParcela();
                     CargarVehiculos();
                     clientebool = true;
+
+                    posicionficha = 0;
+                    cargaclientes = true;
+                    contadorfiltroficha = 0;
                     cargarClientes();
                    
                     
@@ -5287,7 +5372,7 @@ namespace SGC
                 if (dia_actual == null)
                 {
                     dia_actual = (Border)sender;
-                    //console.writeline(dia_actual.Child);
+                    ////Console.writeLine(dia_actual.Child);
                 }
 
 
@@ -5327,7 +5412,7 @@ namespace SGC
 
                     Eventos evento_actual = (Eventos)levn.Select(sublist => sublist).Where(item => item.id.Equals(la2.Content)).First();
 
-                    //Console.WriteLine((Application.Current.Windows.OfType<ListadodeEventos>().Count()));
+                    ////Console.writeLine((Application.Current.Windows.OfType<ListadodeEventos>().Count()));
 
                     if (ve is null)
                     {
@@ -5406,13 +5491,13 @@ namespace SGC
 
                         if (dia_actual.Child is Border)
                         {
-                            //console.writeline(dia_actual.Parent);
+                            ////Console.writeLine(dia_actual.Parent);
                             Border b22 = dia_actual as Border;
-                            //console.writeline(b22.Child);
+                            ////Console.writeLine(b22.Child);
                             Border bb = b22.Child as Border;
-                            //console.writeline(dia_actual.BorderBrush);
-                            //console.writeline(b22.BorderBrush);
-                            //console.writeline(bb.BorderBrush);
+                            ////Console.writeLine(dia_actual.BorderBrush);
+                            ////Console.writeLine(b22.BorderBrush);
+                            ////Console.writeLine(bb.BorderBrush);
                             dia_actual.BorderThickness = new Thickness(2);
                             dia_actual.BorderBrush = System.Windows.Media.Brushes.Red;
                         }
@@ -5440,13 +5525,13 @@ namespace SGC
 
                 if (dia_actual.Child is Border)
                 {
-                    //console.writeline(dia_actual.Parent);
+                    ////Console.writeLine(dia_actual.Parent);
                     Border b22 = dia_actual as Border;
-                    //console.writeline(b22.Child);
+                    ////Console.writeLine(b22.Child);
                     Border bb = b22.Child as Border;
-                    //console.writeline(dia_actual.BorderBrush);
-                    //console.writeline(b22.BorderBrush);
-                    //console.writeline(bb.BorderBrush);
+                    ////Console.writeLine(dia_actual.BorderBrush);
+                    ////Console.writeLine(b22.BorderBrush);
+                    ////Console.writeLine(bb.BorderBrush);
                     dia_actual.BorderThickness = new Thickness(2);
                     dia_actual.BorderBrush = System.Windows.Media.Brushes.Red;
                 }
@@ -7462,7 +7547,7 @@ namespace SGC
             if (evento_borrado.Child != null)
             {
                 Border b = evento_borrado as Border;
-                //console.writeline(b.Child);
+                ////Console.writeLine(b.Child);
                 Border bb = b.Child as Border;
                 b.BorderThickness = new Thickness(0);
                 b.BorderBrush = System.Windows.Media.Brushes.LightGray;
@@ -7474,9 +7559,9 @@ namespace SGC
             }
             if (dia_actual.Child is Border)
             {
-                //console.writeline(dia_actual.Parent);
+                ////Console.writeLine(dia_actual.Parent);
                 Border b = dia_actual as Border;
-                //console.writeline(b.Child);
+                ////Console.writeLine(b.Child);
                 Border bb = b.Child as Border;
                 b.BorderThickness = new Thickness(0);
                 b.BorderBrush = System.Windows.Media.Brushes.LightGray;
@@ -7638,7 +7723,7 @@ namespace SGC
                 if (dia_actual == null)
                 {
                     dia_actual = (Border)sender;
-                    //console.writeline(dia_actual.Child);
+                    ////Console.writeLine(dia_actual.Child);
                 }
 
 
@@ -7678,7 +7763,7 @@ namespace SGC
 
                     Eventos evento_actual = (Eventos)levn.Select(sublist => sublist).Where(item => item.id.Equals(la2.Content)).First();
 
-                    //Console.WriteLine((Application.Current.Windows.OfType<ListadodeEventos>().Count()));
+                    ////Console.writeLine((Application.Current.Windows.OfType<ListadodeEventos>().Count()));
 
                     if (ve is null)
                     {
@@ -8043,7 +8128,7 @@ namespace SGC
                     boton5_Cientes.BorderBrush = (Brush)new BrushConverter().ConvertFrom("#343434");
                     tarjeta.Focus();
 
-                    Console.WriteLine(vehiculo1.IsDropDownOpen);
+                    //Console.writeLine(vehiculo1.IsDropDownOpen);
                     vehiculo1_Click(vehiculo1,new RoutedEventArgs());
                     vehiculo1_Click(vehiculo2,new RoutedEventArgs());
                     vehiculo1_Click(vehiculo3,new RoutedEventArgs());
@@ -8166,7 +8251,7 @@ namespace SGC
         }
 
         private void boton5_Cientes_Click(object sender, RoutedEventArgs e)
-        {
+        {DateTime timerStart = DateTime.Now;
             botones.Visibility = Visibility.Visible;
             if (cliente_menu.SelectedIndex != 1)
             {
@@ -8251,6 +8336,7 @@ namespace SGC
 
                 }
             }
+            Console.WriteLine("tiempo transcurrido boton5_Cientes_Click: " + (DateTime.Now - timerStart).ToString(@"ss\s\ fff\ms\ "));
         }
 
         private void MirarFicha()
@@ -8272,8 +8358,30 @@ namespace SGC
                 ficha3.IsEnabled = true;
                 ficha4.IsEnabled = true;
                 ficha5.IsEnabled = true;
-                Clientes.SelectedItem = null;
-                Clientes.SelectedItem = lista_clientes_ficha[lista_clientes_ficha.Count()-1];
+                
+                    
+                if (posicionficha == 0)
+                {
+                    Clientes.SelectedItem = null;
+                    if (cargaclientes)
+                    {
+                        
+                        Clientes.SelectedItem = lista_clientes_ficha[lista_clientes_ficha.Count() - 1];
+                    }
+                    else
+                    {
+                        if(posicion>= lista_clientes_ficha.Count())
+                            Clientes.SelectedItem = lista_clientes_ficha[posicion-1];
+                        else
+                            Clientes.SelectedItem = lista_clientes_ficha[posicion];
+                        
+                    }
+                }
+                else
+                {
+                    Clientes.SelectedItem = null;
+                    Clientes.SelectedItem = lista_clientes_ficha[posicion];
+                }
                 //posicion = 0;
                 contador.Text = posicion+1+"";
                 total.Content = "de " + lista_clientes_ficha.Count;                
@@ -8521,7 +8629,7 @@ namespace SGC
                     numero_plaza_alta.Items.Add(parcela);
 
                     Clientes c = Clientes.SelectedItem as Clientes;
-                    Console.WriteLine(c.n_plaza.Equals("") + " " + (c.n_plaza != null));
+                    //Console.writeLine(c.n_plaza.Equals("") + " " + (c.n_plaza != null));
                     if (!(c.n_plaza.Equals("")) && c.n_plaza != null)
                     {
                         vreg.Close();
@@ -8756,7 +8864,7 @@ namespace SGC
                 //Uri = new Uri(uri);
                 
                            
-                            //console.writeline(mycontent);
+                            ////Console.writeLine(mycontent);
                             //v = new Version(mycontent);
                             //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -8956,7 +9064,7 @@ namespace SGC
                                         {
                                             if (!(c.caducidad.Equals(caducidad.Text + "/" + caducidad1.Text)))
                                             {
-                                                //console.writeline(c.caducidad.Equals(caducidad + "/" + caducidad1));
+                                                ////Console.writeLine(c.caducidad.Equals(caducidad + "/" + caducidad1));
                                                 a = true;
                                                 sql_query += "caducidad='" + caducidad.Text + "/" + caducidad1.Text + "', ";
                                                 parametros.Add("caducidad:" + caducidad + "/" + caducidad1);
@@ -8967,7 +9075,7 @@ namespace SGC
                                         {
                                             if (c.caducidad.Length > 0)
                                             {
-                                                //console.writeline(c.caducidad.Equals(caducidad + "/" + caducidad1));
+                                                ////Console.writeLine(c.caducidad.Equals(caducidad + "/" + caducidad1));
                                                 a = true;
                                                 sql_query += "caducidad=' ', ";
                                                 parametros.Add("caducidad: ");
@@ -10183,8 +10291,8 @@ namespace SGC
                         Thread.Sleep(1000);
                         CargarParcela();
                         cargarClientes();
-                        
-                        
+                        //Clientes.ItemsSource= lista_clientes_ficha;
+
                         //sql_cmd2.ExecuteNonQuery();
                     }
                     else
@@ -10251,17 +10359,17 @@ namespace SGC
                     {
 
                     }
-                    ////console.writeline(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
-                    //console.writeline(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
-                    ////console.writeline(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
-                    //console.writeline((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
+                    //////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
+                    ////Console.writeLine(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
+                    //////Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
+                    ////Console.writeLine((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
 
                     if (p.id == null)
                         p.id = 0;
                     bool pos = false;
                     if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                         pos = true;
-                    //console.writeline(p.id + " " + cc.n_plaza);
+                    ////Console.writeLine(p.id + " " + cc.n_plaza);
 
 
 
@@ -10273,37 +10381,37 @@ namespace SGC
                         cd2 = cc.caducidad.Split('/')[1];
                     }
 
-                    Console.WriteLine(email_cliente.Text.Equals(cc.mail));
-                    Console.WriteLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
-                    Console.WriteLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
-                    Console.WriteLine(pais_cliente_alta.Text.Equals(cc.Pais));
-                    Console.WriteLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
-                    Console.WriteLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
-                    Console.WriteLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
-                    Console.WriteLine(direccion_cliente_alta.Text.Equals(cc.direccion));
-                    Console.WriteLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
-                    Console.WriteLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
+                    //Console.writeLine(email_cliente.Text.Equals(cc.mail));
+                    //Console.writeLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
+                    //Console.writeLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
+                    //Console.writeLine(pais_cliente_alta.Text.Equals(cc.Pais));
+                    //Console.writeLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
+                    //Console.writeLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
+                    //Console.writeLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
+                    //Console.writeLine(direccion_cliente_alta.Text.Equals(cc.direccion));
+                    //Console.writeLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
+                    //Console.writeLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
                     string aa = Clientes_FechaEntrada_alta.SelectedDate.ToString();
                     string aa2 = cc.Fecha_In.ToString();
 
                   
-                    Console.WriteLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
-                    Console.WriteLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
-                    Console.WriteLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
-                    Console.WriteLine((nota1_alta.Text.Equals(cc.Nota1))); //
-                    //Console.WriteLine((b == cc.Switch)); //
-                    Console.WriteLine((p.id == int.Parse(cc.n_plaza))); //
-                    Console.WriteLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
-                    Console.WriteLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
-                    Console.WriteLine((email_cliente2.Text.Equals(cc.mail2))); //
-                    Console.WriteLine((pos == cc.DeBaja)); //
-                    Console.WriteLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
-                    Console.WriteLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
-                    Console.WriteLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
+                    //Console.writeLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
+                    //Console.writeLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
+                    //Console.writeLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
+                    //Console.writeLine((nota1_alta.Text.Equals(cc.Nota1))); //
+                    ////Console.writeLine((b == cc.Switch)); //
+                    //Console.writeLine((p.id == int.Parse(cc.n_plaza))); //
+                    //Console.writeLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
+                    //Console.writeLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
+                    //Console.writeLine((email_cliente2.Text.Equals(cc.mail2))); //
+                    //Console.writeLine((pos == cc.DeBaja)); //
+                    //Console.writeLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
+                    //Console.writeLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
+                    //Console.writeLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
 
                     if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1) && bastidor.Text.Equals(cc.Numero_Bastidor1) && nbastidor2.Text.Equals(cc.Numero_Bastidor2) && nbastidor3.Text.Equals(cc.Numero_Bastidor3) && nbastidor4.Text.Equals(cc.Numero_Bastidor4)&& medidas2.Text.Equals(cc.Medidas_Vehiculo2) && medidas3.Text.Equals(cc.Medidas_Vehiculo3) && medidas4.Text.Equals(cc.Medidas_Vehiculo4)&& nota.Text.Equals(cc.Nota1)&&tarjeta.Text.Equals(cc.N_tarjeta)&&nota1_alta2.Text.Equals(cc.Nota2))
                     {
-                        Console.WriteLine("10069");
+                        //Console.writeLine("10069");
                         change_client.IsEnabled = false;
 
                         change_client.IsEnabled = false;
@@ -10312,7 +10420,7 @@ namespace SGC
                     }
                     else
                     {
-                        Console.WriteLine("!10069");
+                        //Console.writeLine("!10069");
                         change_client.IsEnabled = true;
 
                         change_client.IsEnabled = true;
@@ -11129,12 +11237,24 @@ namespace SGC
                     cargarRegistros();
                     Clientes c = (Clientes)Clientes.SelectedItem;
                     clienteapli.SelectedItem = null;
+                    if (posicionficha == 14)
+                    {
+                        List<Clientes> cero = new List<Clientes>();
+                        cero = lista_clientes_ficha.Select(x => x).Where(x => x.n_plaza.Equals("0")).OrderBy(x => x.n_plaza).ToList();
+                        if (contadorfiltroficha == 0)
+                            lista_clientes_ficha = lista_clientes_ficha.Select(x => x).Where(x => !x.n_plaza.Equals("0")).OrderBy(x => int.Parse(x.n_plaza)).ToList();
+                        else
+                            lista_clientes_ficha = lista_clientes_ficha.Select(x => x).Where(x => !x.n_plaza.Equals("0")).OrderByDescending(x => int.Parse(x.n_plaza)).ToList();
+                        lista_clientes_ficha.AddRange(cero);
+                    }
+
                     for (int i=0;i<lista_clientes_ficha.Count;i++)
                     {
                         if (lista_clientes_ficha[i].id == c.id)
                         {
                             posicion = i;
                             contador.Text = i + 1+"";
+                            break;
                         }
                     }
                     try
@@ -11146,7 +11266,7 @@ namespace SGC
                     catch { }
                     try
                     {
-                        //console.writeline(c.n_cliemte.ToString());
+                        ////Console.writeLine(c.n_cliemte.ToString());
                         string s = c.n_cliemte.ToString();
                         numero_cliente.Text = "";
                         numero_cliente.Text = s;
@@ -11157,7 +11277,7 @@ namespace SGC
                     }
                     catch (Exception ee)
                     {
-                        //console.writeline(ee.Message);
+                        ////Console.writeLine(ee.Message);
                     }
                     
 
@@ -11200,14 +11320,14 @@ namespace SGC
 
                     try
                     {
-                        //console.writeline(c.n_tarjeta.ToString());
+                        ////Console.writeLine(c.n_tarjeta.ToString());
                         string s = c.n_tarjeta.ToString();
                         numero_tarjeta.Text = c.n_tarjeta.ToString();
 
                     }
                     catch (Exception ee)
                     {
-                        Console.WriteLine(ee.Message);
+                        //Console.writeLine(ee.Message);
                     }
                     logs.ItemsSource = c.lstring;
                     
@@ -11215,24 +11335,24 @@ namespace SGC
 
                     try
                     {
-                        //console.writeline(c.nombre_cliente.ToString());
+                        ////Console.writeLine(c.nombre_cliente.ToString());
                         string s = c.nombre_cliente.ToString();
                         nombre_cliente.Text = c.nombre_cliente;
                     }
                     catch (Exception ee)
                     {
-                        Console.WriteLine(ee.Message);
+                        //Console.writeLine(ee.Message);
                     }
 
                     try
                     {
-                        //console.writeline(c.apellidos_cliente.ToString());
+                        ////Console.writeLine(c.apellidos_cliente.ToString());
                         string s = c.apellidos_cliente.ToString();
                         apellidos_cliente.Text = c.apellidos_cliente;
                     }
                     catch (Exception ee)
                     {
-                        Console.WriteLine(ee.Message);
+                        //Console.writeLine(ee.Message);
                     }
 
                     try
@@ -11241,7 +11361,7 @@ namespace SGC
                     }
                     catch (Exception ee)
                     {
-                        Console.WriteLine(ee.Message);
+                        //Console.writeLine(ee.Message);
                     }
 
                     try
@@ -11250,7 +11370,7 @@ namespace SGC
                     }
                     catch (Exception ee)
                     {
-                        Console.WriteLine(ee.Message);
+                        //Console.writeLine(ee.Message);
                     }
 
                     try
@@ -11349,7 +11469,7 @@ namespace SGC
                      n_client.IsEnabled = false;
                      candado.Visibility = Visibility.Visible;
 
-                     Console.WriteLine(i);*/
+                     //Console.writeLine(i);*/
                     //Metodo_pago.SelectedIndex = clientee.Metodo_Pago;
                     try
                     {
@@ -11640,6 +11760,12 @@ namespace SGC
                     }
                     else
                     {
+                        if (bdr2.HorizontalAlignment == HorizontalAlignment.Right)
+                        {
+                            MouseButtonEventArgs m = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left);
+
+                            debaja_MouseLeftButtonDown(debaja, m);
+                        }
                         gotoRecibo.IsEnabled = false;
                         gotoPDF.IsEnabled = false;
                         numero_plaza.IsEnabled = false;
@@ -11699,6 +11825,8 @@ namespace SGC
                                 numero_plaza_alta.Items.Add(lprc.Find(x => x.id == int.Parse(c.n_plaza)));
                                 string[] ss = lprc.Find(z => z.id == int.Parse(c.n_plaza)).direccion.Split('/');
                                 Direcciones d = ldir.Find(x=>x.Descripcion.Equals("1/"+ss[1]+"/"+ss[2]));
+                                if(d==null)
+                                    d = ldir.Find(x => x.Descripcion.Equals("0/" + ss[1] + "/" + ss[2]));
                                 foreach (Parcelas ppp in lnprc)
                                 {
                                     numero_plaza_alta.Items.Add(ppp);
@@ -11707,6 +11835,7 @@ namespace SGC
                                     if (d.imagee.Length > 0)
                                     {
                                         luz.Content = d.imagee;
+                                        luzFicha.Content = d.imagee;
 
                                         luzPanel.UpdateLayout();
                                     }
@@ -11714,6 +11843,7 @@ namespace SGC
                                     {
 
                                         luz.Content = "NA";
+                                        luzFicha.Content = "NA";
                                        // onoffparcela.IsEnabled = false;
                                         actu.IsEnabled = false;
 
@@ -11723,6 +11853,7 @@ namespace SGC
                                 {
 
                                     luz.Content = "NA";
+                                    luzFicha.Content = "NA";
 
                                    // onoffparcela.IsEnabled = false;
                                     actu.IsEnabled = false;
@@ -11749,6 +11880,7 @@ namespace SGC
                                 }
 
                                 luz.Content = "NA";
+                                luzFicha.Content = "NA";
 
                                // onoffparcela.IsEnabled = false;
                                 actu.IsEnabled = false;
@@ -12495,6 +12627,7 @@ namespace SGC
                     nombre_cliente_alta.Focus();
                     tarjeta.Focus();
                     bastidor.Focus();
+                    boton5_Cientes_Click(boton5_Cientes, RoutedEventArgs);
 
                 }
             }
@@ -14870,7 +15003,7 @@ namespace SGC
                         //byteArray = Encoding.UTF8.GetBytes("tabla = Version");
                         //Uri = new Uri(uri);
                        
-                                    //console.writeline(mycontent);
+                                    ////Console.writeLine(mycontent);
                                     //v = new Version(mycontent);
                                     //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -15070,7 +15203,7 @@ namespace SGC
                         //Uri = new Uri(uri);
                         
                                    
-                                    //console.writeline(mycontent);
+                                    ////Console.writeLine(mycontent);
                                     //v = new Version(mycontent);
                                     //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -15653,7 +15786,7 @@ namespace SGC
                                                 l.Add("Nombre:" + Potencia_Nombre.Text);
                                             }
                                             ComboBoxItem p2 = Potencia_Iluminacion.SelectedItem as ComboBoxItem;
-                                            //console.writeline(p2.Content);
+                                            ////Console.writeLine(p2.Content);
                                             if (!p2.Content.Equals(p.Amperios + ""))
                                             {
                                                 sql_query += "Amperios=" + p2.Content + ", ";
@@ -15662,7 +15795,7 @@ namespace SGC
 
                                             if (!Potencia_Maxima.Text.Equals(p.Amperios_Max + ""))
                                             {
-                                                sql_query += "Amperios_Max=" + Potencia_Maxima.Text + ", ";
+                                                sql_query += "Amperios_Max='" + Potencia_Maxima.Text + "', ";
                                                 l.Add("Amperios_Max:" + Potencia_Maxima.Text);
                                             }
 
@@ -15852,7 +15985,7 @@ namespace SGC
                                     {
                                         string mycontent = await content22.ReadAsStringAsync();
                                         HttpContentHeaders hch = content22.Headers;
-                                        //console.writeline(mycontent);
+                                        ////Console.writeLine(mycontent);
                                         //v = new Version(mycontent);
                                         //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -16518,7 +16651,7 @@ namespace SGC
         private void boton1_Mapa_Click(object sender, RoutedEventArgs e)
         {
             DateTime dtt = DateTime.Now;
-            Console.WriteLine("Empezamos ahora " + dtt.ToString());
+            //Console.writeLine("Empezamos ahora " + dtt.ToString());
             if (safe)
             {
                 MessageBoxResult result = MessageBox.Show("No se han guardado los datos ¿Desea continuar?", "Alerta!", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
@@ -16584,7 +16717,7 @@ namespace SGC
                 scrollMapa.ScrollToHorizontalOffset(Properties.Settings.Default.hoff);
                 ComprobarRoles();
             }
-            Console.WriteLine("Acabamos ahora " + (DateTime.Now- dtt ).TotalSeconds);
+            //Console.writeLine("Acabamos ahora " + (DateTime.Now- dtt ).TotalSeconds);
         }
 
         private void boton2_Mapa_Click(object sender, RoutedEventArgs e)
@@ -16872,7 +17005,7 @@ namespace SGC
                     {
                         if (botonMapa.Background.ToString().Equals(SGC.Properties.Settings.Default.colorselec))
                         {
-                            Console.WriteLine(botonMapa.Background.ToString() + " dentro");
+                            //Console.writeLine(botonMapa.Background.ToString() + " dentro");
                             ok = true;
                             MouseButtonEventArgs doubleClickEvent = new MouseButtonEventArgs(Mouse.PrimaryDevice, (int)DateTime.Now.Ticks, MouseButton.Left);
                             doubleClickEvent.RoutedEvent = Control.MouseDoubleClickEvent;
@@ -16881,7 +17014,7 @@ namespace SGC
                         }
 
                     }
-                    Console.WriteLine(botonMapa.Background.ToString() +" "+ e.ClickCount);
+                    //Console.writeLine(botonMapa.Background.ToString() +" "+ e.ClickCount);
                 }
             }
         }
@@ -17003,26 +17136,26 @@ namespace SGC
 
                         scrollMapa.ScrollToHorizontalOffset(scrollMapa.HorizontalOffset - 0.5);
                         p.X = e.GetPosition(camping).X;
-                        //console.writeline("x-10");
+                        ////Console.writeLine("x-10");
                     }
                     else if (x - p.X > 0)
                     {
                         scrollMapa.ScrollToHorizontalOffset(scrollMapa.HorizontalOffset + 0.5);
                         p.X = e.GetPosition(camping).X;
-                        ////console.writeline("x+10");
+                        //////Console.writeLine("x+10");
                     }
 
                     if (y - p.Y < 0)
                     {
                         scrollMapa.ScrollToVerticalOffset(scrollMapa.VerticalOffset - 0.5);
                         p.Y = e.GetPosition(camping).Y;
-                        //console.writeline("y-10");
+                        ////Console.writeLine("y-10");
                     }
                     else if (y - p.Y > 0)
                     {
                         scrollMapa.ScrollToVerticalOffset(scrollMapa.VerticalOffset + 0.5);
                         p.Y = e.GetPosition(camping).Y;
-                        //console.writeline("y+10");
+                        ////Console.writeLine("y+10");
                     }
 
 
@@ -17056,18 +17189,18 @@ namespace SGC
 
                 if (p == null)
                     p = new Parcelas();
-                //console.writeline(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
-                //console.writeline(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
-                //console.writeline(numero_cliente.Text.Equals(cc.n_cliemte) + " " + Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) + " " + Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) + " " + vehiculo1.Text.Equals(cc.Vehiculo1) + " " + matricula1.Text.Equals(cc.matricula1) + " " + numero_bastidor.Text.Equals(cc.Numero_Bastidor1) + " " + vehiculo2.Text.Equals(cc.Vehiculo2) + " " + matricula2.Text.Equals(cc.matricula2) + " " + numero_bastidor2.Text.Equals(cc.Numero_Bastidor2) + " " + nota1.Text.Equals(cc.Nota1) + " " + Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) + " " + Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
-                //console.writeline((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
+                ////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
+                ////Console.writeLine(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
+                ////Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte) + " " + Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) + " " + Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) + " " + vehiculo1.Text.Equals(cc.Vehiculo1) + " " + matricula1.Text.Equals(cc.matricula1) + " " + numero_bastidor.Text.Equals(cc.Numero_Bastidor1) + " " + vehiculo2.Text.Equals(cc.Vehiculo2) + " " + matricula2.Text.Equals(cc.matricula2) + " " + numero_bastidor2.Text.Equals(cc.Numero_Bastidor2) + " " + nota1.Text.Equals(cc.Nota1) + " " + Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) + " " + Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
+                ////Console.writeLine((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
 
                 if (p.id == null)
                     p.id = 0;
 
-                //console.writeline(p.id + " " + cc.n_plaza);
+                ////Console.writeLine(p.id + " " + cc.n_plaza);
                 if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cc.caducidad.Split('/')[0]) && caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte) && Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) && Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida))
                 {
-                    Console.WriteLine("17680");
+                    //Console.writeLine("17680");
                     change_client.IsEnabled = false;
 
                     change_client.IsEnabled = false;
@@ -17076,7 +17209,7 @@ namespace SGC
                 }
                 else
                 {
-                    Console.WriteLine("!17680");
+                    //Console.writeLine("!17680");
                     change_client.IsEnabled = true;
 
                     change_client.IsEnabled = true;
@@ -17139,10 +17272,10 @@ namespace SGC
                         Potencia.IsEnabled = true;
                     }
 
-                    //console.writeline(p.id + " " + cc.n_plaza);
+                    ////Console.writeLine(p.id + " " + cc.n_plaza);
                     if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                     {
-                        Console.WriteLine("17224");
+                        //Console.writeLine("17224");
                         change_client.IsEnabled = false;
 
                         change_client.IsEnabled = false;
@@ -17151,7 +17284,7 @@ namespace SGC
                     }
                     else
                     {
-                        Console.WriteLine("!17224");
+                        //Console.writeLine("!17224");
                         change_client.IsEnabled = true;
 
                         change_client.IsEnabled = true;
@@ -17908,7 +18041,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Nombre_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("1 "+ a);
+                //Console.writeLine("1 "+ a);
 
                 if (!DNI_Cliente_Factura.Text.Equals(f.DNI_CIF))
                 {
@@ -17921,7 +18054,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     DNI_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("2 " + a);
+                //Console.writeLine("2 " + a);
                 if (!Direccion_Camping_Factura.Text.Equals(f.Direccion_Facturacion))
                 {
                     a = true;
@@ -17932,7 +18065,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Direccion_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("3 " + a);
+                //Console.writeLine("3 " + a);
                 if (!Poblacion_Camping_Factura.Text.Equals(f.Poblecion_Facturacion))
                 {
                     a = true;
@@ -17943,7 +18076,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Poblacion_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("4 " + a);
+                //Console.writeLine("4 " + a);
 
                 if (!Codigo_Postal_Camping_Factura.Text.Equals(f.CP_Facturacion.ToString()))
                 {
@@ -17956,7 +18089,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Codigo_Postal_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("5 " + a);
+                //Console.writeLine("5 " + a);
                 if (!Provincia_Camping_Factura.Text.Equals(f.Provincia_Facturacion))
 
                 {
@@ -17970,7 +18103,7 @@ namespace SGC
                     Provincia_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
 
-                Console.WriteLine("6 " + a);
+                //Console.writeLine("6 " + a);
                 if (!Fecha_Factura.SelectedDate.Equals(f.fecha))
                 {
                     a = true;
@@ -17981,7 +18114,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Fecha_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("7 " + a);
+                //Console.writeLine("7 " + a);
                 if (!Fecha_Factura_ven.SelectedDate.Equals(f.fecha_ven))
                 {
                     a = true;
@@ -17992,7 +18125,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Fecha_Factura_ven.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("8 " + a);
+                //Console.writeLine("8 " + a);
                 if (!Importe_Factura.Text.Equals(f.Importe.ToString("0.00") + " €"))
                 {
                     a = true;
@@ -18003,7 +18136,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Base_Imponible.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("9 " + a);
+                //Console.writeLine("9 " + a);
 
                 if (!Direccion_Cliente_Factura.Text.Equals(f.Direccion_Cliente))
                 {
@@ -18015,7 +18148,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Direccion_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("10 " + a);
+                //Console.writeLine("10 " + a);
                 if (!Poblacion_Cliente_Factura.Text.Equals(f.Poblacio_Cliente))
                 {
                     a = true;
@@ -18026,7 +18159,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Poblacion_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("11 " + a);
+                //Console.writeLine("11 " + a);
                 if (!Codigo_Postal_Cliente_Facturacion.Text.Equals(f.CP_Cliente.ToString()))
                 {
                     a = true;
@@ -18037,7 +18170,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Codigo_Postal_Cliente_Facturacion.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("12 " + a);
+                //Console.writeLine("12 " + a);
                 if (!Provincia_Cliente_Factura.Text.Equals(f.Provincia_Cliente))
                 {
                     a = true;
@@ -18048,7 +18181,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Provincia_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("13 " + a);
+                //Console.writeLine("13 " + a);
 
 
 
@@ -18062,7 +18195,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Pais_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("14 " + a);
+                //Console.writeLine("14 " + a);
 
                 if (!Pais_Camping_Factura.Text.Equals(f.Pais_Facturacion))
                 {
@@ -18074,7 +18207,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Pais_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("15 " + a);
+                //Console.writeLine("15 " + a);
 
                 if (!Empresa.Text.Equals(f.Empresa))
                 {
@@ -18086,7 +18219,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Empresa.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("16 " + a);
+                //Console.writeLine("16 " + a);
 
 
                 if (!Telefono_cliente.Text.Equals(f.Telefono))
@@ -18099,7 +18232,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Telefono_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("17 " + a);
+                //Console.writeLine("17 " + a);
                 if (!Telefono_Camping_Factura.Text.Equals(f.Telefono_Camping))
                 {
                     a = true;
@@ -18110,7 +18243,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Telefono_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("18 " + a);
+                //Console.writeLine("18 " + a);
 
                 if (Metodo_Pago.SelectedIndex != f.Metodo_Pago)
                 {
@@ -18122,7 +18255,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Metodo_Pago.Foreground = Brushes.Black;
                 }
-                Console.WriteLine("19 " + a);
+                //Console.writeLine("19 " + a);
                 if (!Descuento.Text.Equals(f.Descuento))
                 {
                     a = true;
@@ -18133,7 +18266,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Descuento.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("20 " + a);
+                //Console.writeLine("20 " + a);
                 int[] pr = new int[f.Lista_productos.Count()];
                 for (int i = 0; i < pr.Count(); i++)
                 {
@@ -18163,7 +18296,7 @@ namespace SGC
                     a = true;
 
                 foreach (int i in pr)
-                    Console.WriteLine(i + " ");
+                    //Console.writeLine(i + " ");
                 if (pr.Contains(0))
                 {
                     a = true;
@@ -18174,7 +18307,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Productos.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("21 " + a);
+                //Console.writeLine("21 " + a);
 
                 if (a)
                 {
@@ -18460,7 +18593,7 @@ namespace SGC
                     a = true;
 
                 foreach (int i in pr)
-                    Console.WriteLine(i + " ");
+                    //Console.writeLine(i + " ");
                 if (pr.Contains(0))
                 {
                     a = true;
@@ -18471,7 +18604,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Productos2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("21 " + a);
+                //Console.writeLine("21 " + a);
 
                 if (a)
                 {
@@ -19005,7 +19138,7 @@ namespace SGC
                                     {
                                         string mycontent = await content22.ReadAsStringAsync();
                                         //hch = content2.Headers;
-                                        //console.writeline(mycontent);
+                                        ////Console.writeLine(mycontent);
                                         //v = new Version(mycontent);
                                         //Debug.WriteLine("IsSuccessStatusCode");
                                         JArray jay = new JArray();
@@ -19149,7 +19282,7 @@ namespace SGC
                         List<Eventos> levv = new List<Eventos>();
                         foreach (Eventos ee in ev)
                         {
-                            //console.writeline(levv.Contains(ee, new EventosComparer()));
+                            ////Console.writeLine(levv.Contains(ee, new EventosComparer()));
 
                             if (!levv.Contains(ee, new EventosComparer()))
                             {
@@ -19358,14 +19491,14 @@ namespace SGC
         {
             mirar_dia_rojo();
             numero_eventos.Text = levn.Count+"";
-            //console.writeline(dia_actual.BorderBrush);
+            ////Console.writeLine(dia_actual.BorderBrush);
             if (dia_actual.Child is Border)
             {
                 Border d = dia_actual.Child as Border;
 
                 dia_actual.BorderBrush = Brushes.Red;
                 dia_actual.BorderThickness = new Thickness(2);
-                //console.writeline(d.BorderBrush);
+                ////Console.writeLine(d.BorderBrush);
             }
 
         }
@@ -19437,8 +19570,8 @@ namespace SGC
                     DateTime? b = null;
                     while (rdr2.Read())
                     {
-                        Console.WriteLine("Rol");
-                        Console.WriteLine(rdr2.GetString(1));
+                        //Console.writeLine("Rol");
+                        //Console.writeLine(rdr2.GetString(1));
                         DateTime d = DateTime.Parse(rdr2.GetString(1));
                         b = d;
                     }
@@ -19468,7 +19601,7 @@ namespace SGC
                                         {
                                             string mycontent = await content22.ReadAsStringAsync();
                                             HttpContentHeaders hch = content22.Headers;
-                                            Console.WriteLine(mycontent);
+                                            //Console.writeLine(mycontent);
                                             //v = new Version(mycontent);
                                             //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -19625,8 +19758,10 @@ namespace SGC
         }
         private async void cargarClientes()
         {
+            DateTime timerStart = DateTime.Now;
             try
             {
+
                 if (clientebool)
                 {
                     int cc = -1;
@@ -19639,6 +19774,7 @@ namespace SGC
                     lcln = new List<Clientes>();
                     lista_clientes_ficha = new List<Clientes>();
                     clienteapli.Items.Clear();
+                    List<Clientes> cero = new List<Clientes>();
                     CargarContratos();
                     cargarAcompañantes();
                     int pos = 0;
@@ -19648,7 +19784,7 @@ namespace SGC
                         pos = posicion;
                     }
                     Clientes c = new Clientes();
-                    SQLiteDataReader rdr = s.CargarCliente();
+                    SQLiteDataReader rdr = s.CargarCliente(posicionficha, contadorfiltroficha);
                     while (rdr.Read())
                     {
                         bool b = rdr.GetBoolean(13);
@@ -19736,7 +19872,13 @@ namespace SGC
 
                         clienteapli.Items.Add(c);
                         lista_clientes_ficha.Add(c);
-                        lcln.Add(c);
+                        if (posicionficha == 14)
+                        {if (c.n_plaza.Equals("0"))
+                                cero.Add(c);
+                            else
+                                lcln.Add(c);                            
+                        }else
+                            lcln.Add(c);
                         if (c.asignado == false)
                         {
                             //Cliente_Parcela.Items.Add(c);
@@ -19757,11 +19899,15 @@ namespace SGC
                                     c.nplaza = p.id+"";
                                 }
 
-
-
-
-
                     }
+                    if (posicionficha==14)
+                    {   if(contadorfiltroficha==0)
+                            lcln = lista_clientes_ficha.Select(x => x).Where(x => !x.n_plaza.Equals("0")).OrderBy(x => int.Parse(x.n_plaza)).ToList();
+                        else
+                            lcln = lista_clientes_ficha.Select(x => x).Where(x => !x.n_plaza.Equals("0")).OrderByDescending(x => int.Parse(x.n_plaza)).ToList();
+                        //lista_clientes_ficha.AddRange(cero);
+                    }
+                        lcln.AddRange(cero);
                     if (lcln.Count == 0)
                     {
                         grid1.IsEnabled = false;
@@ -19777,11 +19923,11 @@ namespace SGC
 
                     }
                     Clientes.ItemsSource = lcln;
-                    MirarFicha();
+                   
                     if (lista_clientes_ficha.Count() - 1 >= poss)
                         if (cli != null)
                     {
-                        Clientes.SelectedItem = cli;
+                        Clientes.SelectedIndex = cc;
                         posicion = pos;
                     }
                     mirar2 = true;
@@ -19799,7 +19945,9 @@ namespace SGC
 
                     vehiculo1.IsDropDownOpen = false;
                     clientesCorriente = lcln.Select(x => x).Where(x => x.DeBaja == false).ToList();
+                    MirarFicha();
 
+                    cargaclientes = false;
                 }
             }catch(Exception ee)
             {
@@ -19807,6 +19955,9 @@ namespace SGC
                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                 Peta(ee, line + "");
             }
+            //timerStart = (DateTime)(DateTime.Now - timerStart);
+            
+            Console.WriteLine("tiempo transcorrido: " + (DateTime.Now - timerStart).ToString(@"ss\s\ fff\ms\ "));
         }
 
         private void cargarLogs(Clientes c)
@@ -19857,8 +20008,8 @@ namespace SGC
                             if (c.Lista_Parcelas.Count > 0)
                             {
 
-
-                                Direcciones d = ldrc2.Find(x => x.Id == p.Direccion);
+                                //if(p!=null)                     
+                                    //Direcciones d = ldrc2.Find(x => x.Id == p.Direccion);
 
                                 /*_connection.Connect();
                                 Thread.Sleep(1000);
@@ -20078,7 +20229,7 @@ namespace SGC
                 DateTime dtt = DateTime.Now;
                 int par = lista_parcelas.SelectedIndex;
                 editando_parcela = true;
-                Console.WriteLine(parcela_carga.AddSeconds(1)+" - "+ DateTime.Now);
+                //Console.writeLine(parcela_carga.AddSeconds(1)+" - "+ DateTime.Now);
                 if(!editando_cliente)
                
                 parcela_carga = DateTime.Now;
@@ -20100,8 +20251,8 @@ namespace SGC
                     DateTime? b = null;
                     while (rdr2.Read())
                     {
-                        Console.WriteLine("Parcelas");
-                        Console.WriteLine(rdr2.GetString(1));
+                        //Console.writeLine("Parcelas");
+                        //Console.writeLine(rdr2.GetString(1));
                         DateTime d = DateTime.Parse(rdr2.GetString(1));
                         b = d;
                     }
@@ -20156,7 +20307,7 @@ namespace SGC
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine(e.Message);
+                                //Console.writeLine(e.Message);
                             };
                         }
                     }
@@ -20175,14 +20326,14 @@ namespace SGC
                     //lb =(ListBox)lista_mapa.Children[1];
                     lprc = new List<Parcelas>();
                     lnprc = new List<Parcelas>();
-                    Console.WriteLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                    //Console.writeLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
                     lb.Items.Clear();
                     foreach (Border b in botonesMapa.Select(x => x).Where(x => x.Background != Brushes.Transparent))
                     {
                         b.Background = Brushes.Transparent;
                     }
 
-                    Console.WriteLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                    //Console.writeLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
                     string sql_connection = conexiondb;
 
                     SQLiteConnection cn = new SQLiteConnection(conexiondb);
@@ -20196,21 +20347,22 @@ namespace SGC
 
                     while (rdr.Read())
                     {
-                        //console.writeline(rdr.GetInt32(0));
-                        //console.writeline(rdr.GetString(1));
-                        //console.writeline(rdr.GetInt32(2));
-                        //console.writeline(rdr.GetString(3));
-                        //console.writeline(rdr.GetInt32(4));
-                        //console.writeline(rdr.GetString(5));
-                        //console.writeline(rdr.GetString(6));
-                        //console.writeline(rdr.GetString(7));
-                        //console.writeline(rdr.GetString(8));
+                        ////Console.writeLine(rdr.GetInt32(0));
+                        ////Console.writeLine(rdr.GetString(1));
+                        ////Console.writeLine(rdr.GetInt32(2));
+                        ////Console.writeLine(rdr.GetString(3));
+                        ////Console.writeLine(rdr.GetInt32(4));
+                        ////Console.writeLine(rdr.GetString(5));
+                        ////Console.writeLine(rdr.GetString(6));
+                        ////Console.writeLine(rdr.GetString(7));
+                        ////Console.writeLine(rdr.GetString(8));
 
                         Parcelas parcela = new Parcelas(rdr.GetInt32(0), rdr.GetString(1), rdr.GetInt32(2), rdr.GetString(3), rdr.GetInt32(4), rdr.GetString(5), rdr.GetString(6), rdr.GetString(7), rdr.GetString(8), rdr.GetInt32(9), rdr.GetString(10));
                         
                         if (ldir != null)
                         {   Direcciones d = ldir.Find(x=>x.Id==parcela.Direccion);
                             parcela.direccion = d.Descripcion;
+                            parcela.imagee = d.imagee;
                         }
                         lprc.Add(parcela);
                         lista_parcelas.Items.Add(parcela);
@@ -20230,7 +20382,7 @@ namespace SGC
                     }
 
 
-                    Console.WriteLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                    //Console.writeLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
 
                     for (int x = 0; x < lprc.Count; x++)
                     {
@@ -20244,10 +20396,11 @@ namespace SGC
 
                     }
 
-                    Console.WriteLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                    //Console.writeLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                    if(!backgroundParcelas.IsBusy)
                     backgroundParcelas.RunWorkerAsync();
 
-                    Console.WriteLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                    //Console.writeLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
                     if (lprc.Capacity > 0 && !editarMapa && !editando)
                     {
                         editarMapa = false;
@@ -20277,7 +20430,7 @@ namespace SGC
 
                             for (int i = 0; i < casillas.Length; i++)
                             {
-                                Console.WriteLine(casillas[i]);
+                                //Console.writeLine(casillas[i]);
                                 foreach (Object o in camping.Children)
                                 {
                                     if (o is Button)
@@ -20305,15 +20458,15 @@ namespace SGC
 
                 }
 
-                Console.WriteLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                //Console.writeLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
                 limpiarParcela();
 
-                Console.WriteLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                //Console.writeLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
                 lista_parcelas.SelectedIndex = par;
 
-                Console.WriteLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
+                //Console.writeLine((DateTime.Now - dtt).TotalSeconds + "." + (DateTime.Now - dtt).Milliseconds);
                 editando_parcela = false;
-                Console.WriteLine("FIN");
+                //Console.writeLine("FIN");
             }
 
         }
@@ -20368,7 +20521,7 @@ namespace SGC
                                 f = true;
                                 string mycontent = await content22.ReadAsStringAsync();
                                 HttpContentHeaders hch = content22.Headers;
-                                //console.writeline(mycontent);
+                                ////Console.writeLine(mycontent);
                                 //v = new Version(mycontent);
                                 //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -20416,7 +20569,7 @@ namespace SGC
                             {
                                 string mycontent = await content22.ReadAsStringAsync();
                                 HttpContentHeaders hch = content22.Headers;
-                                //console.writeline(mycontent);
+                                ////Console.writeLine(mycontent);
                                 //v = new Version(mycontent);
                                 //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -20436,7 +20589,7 @@ namespace SGC
                                 //lst.Remove(lst[0]);
                                 foreach (JObject s in jay)
                                 {
-                                    Console.WriteLine(s);
+                                    //Console.writeLine(s);
                                     Clientes c = new Clases.Clientes(s);
                                     DateTime dt = new DateTime();
                                     string dtt = "";
@@ -20470,7 +20623,7 @@ namespace SGC
                                     }
                                     try
                                     {
-                                        Console.WriteLine(c.fecha_pago);
+                                        //Console.writeLine(c.fecha_pago);
                                         dd3 = (DateTime)c.fecha_entrada_estado;
                                         dtt3 = dd3.ToString("dd/MM/yyyy");
 
@@ -20481,7 +20634,7 @@ namespace SGC
                                     }
                                     try
                                     {
-                                        Console.WriteLine(c.fecha_pago);
+                                        //Console.writeLine(c.fecha_pago);
                                         dd4 = (DateTime)c.fecha_pago;
                                         dtt4 = dd4.ToString("dd/MM/yyyy");
                                         
@@ -20508,7 +20661,7 @@ namespace SGC
                         break;
                 }
             }
-            catch (Exception e){ Console.WriteLine(e.Message); }*/
+            catch (Exception e){ //Console.writeLine(e.Message); }*/
             
             //escondes la pantalla de cargando, tu imagen o barra de progreso.
             return f;
@@ -20589,7 +20742,7 @@ namespace SGC
 
                 IVAs i = liva.Find(x => x.Id == rdr.GetInt32(4)) as IVAs;
                 Producto p = new Producto(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3) + " €", rdr.GetInt32(4) + "", rdr.GetString(5) + " €", rdr.GetString(6) + " €", rdr.GetInt32(7), i.Tipo, rdr.GetString(8));
-                Console.WriteLine(p.Id + " " + p.Descuento);
+                //Console.writeLine(p.Id + " " + p.Descuento);
                 lpdr.Add(p);
                 Productos.Items.Add(p);
                 
@@ -20670,7 +20823,10 @@ namespace SGC
             CargarAlarmas();
             while (rdr.Read())
             {
-                Potencia p = new Potencia(rdr.GetInt32(0), rdr.GetString(1), rdr.GetInt32(2), rdr.GetInt32(3), lalr.Select(x => x).Where(x => x.Potencia == rdr.GetInt32(0)).ToList());
+                //Console.writeLine(rdr.GetString(1));
+                //Console.writeLine(rdr.GetInt32(2));
+                //Console.writeLine(rdr.GetString(3));
+                Potencia p = new Potencia(rdr.GetInt32(0), rdr.GetString(1), rdr.GetInt32(2), Double.Parse(rdr.GetString(3)), lalr.Select(x => x).Where(x => x.Potencia == rdr.GetInt32(0)).ToList());
                 if (lcnt.Find(x => x.Id == rdr.GetInt32(0)) == null)
                 {
                     lcnt.Add(p);
@@ -20737,7 +20893,7 @@ namespace SGC
             //Execute the query. This might write out a lot of files!  
             foreach (System.IO.FileInfo fi in fileQuery)
             {
-                //console.writeline(fi.FullName);
+                ////Console.writeLine(fi.FullName);
                 sf = fi;
                 conexiondb = sf.FullName;
             }
@@ -20958,7 +21114,7 @@ namespace SGC
                     var st = new StackTrace(ee, true); // Get the top stack frame var frame = st.GetFrame(0); // Get the line number from the stack frame   var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                     var frame = st.GetFrame(0);
                     var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                    Console.WriteLine(line + ": " + ee.Message);
+                    //Console.writeLine(line + ": " + ee.Message);
                     string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                     
 
@@ -20989,7 +21145,7 @@ namespace SGC
                             {
                                 string mycontent = await content22.ReadAsStringAsync();
                                 HttpContentHeaders hch = content22.Headers;
-                                //console.writeline(mycontent);
+                                ////Console.writeLine(mycontent);
                                 //v = new Version(mycontent);
                                 //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -21073,7 +21229,7 @@ namespace SGC
                                             var st = new StackTrace(ee, true); // Get the top stack frame var frame = st.GetFrame(0); // Get the line number from the stack frame   var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                             var frame = st.GetFrame(0);
                                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                                            Console.WriteLine(line + ": " + ee.Message); 
+                                            //Console.writeLine(line + ": " + ee.Message); 
                                             Peta(ee, line + "");
                                         }
                                     }
@@ -21148,7 +21304,7 @@ namespace SGC
                                         var st = new StackTrace(ee, true); // Get the top stack frame var frame = st.GetFrame(0); // Get the line number from the stack frame   var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                         var frame = st.GetFrame(0);
                                         var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                                        Console.WriteLine(line + ": " + ee.Message); 
+                                        //Console.writeLine(line + ": " + ee.Message); 
                                         Peta(ee, line + "");
                                     }
                                 }
@@ -21217,7 +21373,7 @@ namespace SGC
                 var st = new StackTrace(ee, true); // Get the top stack frame var frame = st.GetFrame(0); // Get the line number from the stack frame   var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                 var frame = st.GetFrame(0);
                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                Console.WriteLine(line + ": " + ee.Message); 
+                //Console.writeLine(line + ": " + ee.Message); 
                 Peta(ee, line + "");
             }
         }
@@ -21336,7 +21492,7 @@ namespace SGC
                                 {
                                     string mycontent = await content22.ReadAsStringAsync();
                                     HttpContentHeaders hch = content22.Headers;
-                                    //console.writeline(mycontent);
+                                    ////Console.writeLine(mycontent);
                                     //v = new Version(mycontent);
                                     //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -21529,7 +21685,7 @@ namespace SGC
                 var frame = st.GetFrame(0);
                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                 Peta(ee, line + "");
-                Console.WriteLine(line + ": " + ee.Message);
+                //Console.writeLine(line + ": " + ee.Message);
             }
         }
 
@@ -21667,7 +21823,7 @@ namespace SGC
                             float dd = float.Parse(d) / 100;
                             total = total * (1 - dd);
                             string a2 = Math.Round(precio, 2).ToString("0.00") + " €";
-                            Console.WriteLine(a2);
+                            //Console.writeLine(a2);
                             Base_Imponible.Text = a2;
                             Cuota_IVA.Text = Math.Round(impuesto, 2).ToString("0.00") + " €";
                             Importe_Factura.Text = Math.Round(total, 2).ToString("0.00") + " €";
@@ -21690,7 +21846,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Nombre_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("1 " + a);
+                            //Console.writeLine("1 " + a);
 
                             if (!DNI_Cliente_Factura.Text.Equals(f.DNI_CIF))
                             {
@@ -21703,7 +21859,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 DNI_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("2 " + a);
+                            //Console.writeLine("2 " + a);
                             if (!Direccion_Camping_Factura.Text.Equals(f.Direccion_Facturacion))
                             {
                                 a = true;
@@ -21714,7 +21870,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Direccion_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("3 " + a);
+                            //Console.writeLine("3 " + a);
                             if (!Poblacion_Camping_Factura.Text.Equals(f.Poblecion_Facturacion))
                             {
                                 a = true;
@@ -21725,7 +21881,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Poblacion_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("4 " + a);
+                            //Console.writeLine("4 " + a);
 
                             if (!Codigo_Postal_Camping_Factura.Text.Equals(f.CP_Facturacion.ToString()))
                             {
@@ -21738,7 +21894,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Codigo_Postal_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("5 " + a);
+                            //Console.writeLine("5 " + a);
                             if (!Provincia_Camping_Factura.Text.Equals(f.Provincia_Facturacion))
 
                             {
@@ -21752,7 +21908,7 @@ namespace SGC
                                 Provincia_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
 
-                            Console.WriteLine("6 " + a);
+                            //Console.writeLine("6 " + a);
                             if (!Fecha_Factura.SelectedDate.Equals(f.fecha))
                             {
                                 a = true;
@@ -21763,7 +21919,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Fecha_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("7 " + a);
+                            //Console.writeLine("7 " + a);
                             if (!Fecha_Factura_ven.SelectedDate.Equals(f.fecha_ven))
                             {
                                 a = true;
@@ -21774,7 +21930,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Fecha_Factura_ven.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("8 " + a);
+                            //Console.writeLine("8 " + a);
                             if (!Importe_Factura.Text.Equals(f.Importe.ToString("0.00") + " €"))
                             {
                                 a = true;
@@ -21785,7 +21941,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Base_Imponible.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("9 " + a);
+                            //Console.writeLine("9 " + a);
 
                             if (!Direccion_Cliente_Factura.Text.Equals(f.Direccion_Cliente))
                             {
@@ -21797,7 +21953,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Direccion_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("10 " + a);
+                            //Console.writeLine("10 " + a);
                             if (!Poblacion_Cliente_Factura.Text.Equals(f.Poblacio_Cliente))
                             {
                                 a = true;
@@ -21808,7 +21964,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Poblacion_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("11 " + a);
+                            //Console.writeLine("11 " + a);
                             if (!Codigo_Postal_Cliente_Facturacion.Text.Equals(f.CP_Cliente.ToString()))
                             {
                                 a = true;
@@ -21819,7 +21975,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Codigo_Postal_Cliente_Facturacion.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("12 " + a);
+                            //Console.writeLine("12 " + a);
                             if (!Provincia_Cliente_Factura.Text.Equals(f.Provincia_Cliente))
                             {
                                 a = true;
@@ -21830,7 +21986,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Provincia_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("13 " + a);
+                            //Console.writeLine("13 " + a);
 
 
 
@@ -21844,7 +22000,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Pais_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("14 " + a);
+                            //Console.writeLine("14 " + a);
 
                             if (!Pais_Camping_Factura.Text.Equals(f.Pais_Facturacion))
                             {
@@ -21856,7 +22012,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Pais_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("15 " + a);
+                            //Console.writeLine("15 " + a);
 
                             if (!Empresa.Text.Equals(f.Empresa))
                             {
@@ -21868,7 +22024,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Empresa.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("16 " + a);
+                            //Console.writeLine("16 " + a);
 
 
                             if (!Telefono_cliente.Text.Equals(f.Telefono))
@@ -21881,7 +22037,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Telefono_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("17 " + a);
+                            //Console.writeLine("17 " + a);
                             if (!Telefono_Camping_Factura.Text.Equals(f.Telefono_Camping))
                             {
                                 a = true;
@@ -21892,7 +22048,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Telefono_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("18 " + a);
+                            //Console.writeLine("18 " + a);
 
                             if (Metodo_Pago.SelectedIndex != f.Metodo_Pago)
                             {
@@ -21904,7 +22060,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Metodo_Pago.Foreground = Brushes.Black;
                             }
-                            Console.WriteLine("19 " + a);
+                            //Console.writeLine("19 " + a);
                             if (!Descuento.Text.Equals(f.Descuento))
                             {
                                 a = true;
@@ -21915,7 +22071,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Descuento.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("20 " + a);
+                            //Console.writeLine("20 " + a);
                             int[] pr = new int[f.Lista_productos.Count()];
                             for (int i = 0; i < pr.Count(); i++)
                             {
@@ -21947,7 +22103,7 @@ namespace SGC
                                 a = true;
 
                             foreach (int i in pr)
-                                Console.WriteLine(i + " ");
+                                //Console.writeLine(i + " ");
                             if (pr.Contains(0))
                             {
                                 a = true;
@@ -21958,7 +22114,7 @@ namespace SGC
                                 BrushConverter bc = new BrushConverter();
                                 Productos.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             }
-                            Console.WriteLine("21 " + a);
+                            //Console.writeLine("21 " + a);
 
                             if (a)
                             {
@@ -22096,7 +22252,7 @@ namespace SGC
                             float dd = float.Parse(d) / 100;
                             total = total * (1 - dd);
                             string a2 = Math.Round(precio, 2).ToString("0.00") + " €";
-                            Console.WriteLine(a2);
+                            //Console.writeLine(a2);
                             Base_Imponible2.Text = a2;
                             Cuota_IVA2.Text = Math.Round(impuesto, 2).ToString("0.00") + " €";
                             Importe_Factura2.Text = Math.Round(total, 2).ToString("0.00") + " €";
@@ -22119,7 +22275,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Nombre_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("1 " + a);
+                        //Console.writeLine("1 " + a);
 
                         if (!DNI_Cliente_Factura2.Text.Equals(f.DNI_CIF))
                         {
@@ -22132,7 +22288,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             DNI_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("2 " + a);
+                        //Console.writeLine("2 " + a);
                         if (!Direccion_Camping_Factura2.Text.Equals(f.Direccion_Facturacion))
                         {
                             a = true;
@@ -22143,7 +22299,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Direccion_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("3 " + a);
+                        //Console.writeLine("3 " + a);
                         if (!Poblacion_Camping_Factura2.Text.Equals(f.Poblecion_Facturacion))
                         {
                             a = true;
@@ -22154,7 +22310,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Poblacion_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("4 " + a);
+                        //Console.writeLine("4 " + a);
 
                         if (!Codigo_Postal_Camping_Factura2.Text.Equals(f.CP_Facturacion.ToString()))
                         {
@@ -22167,7 +22323,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Codigo_Postal_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("5 " + a);
+                        //Console.writeLine("5 " + a);
                         if (!Provincia_Camping_Factura2.Text.Equals(f.Provincia_Facturacion))
 
                         {
@@ -22181,7 +22337,7 @@ namespace SGC
                             Provincia_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
 
-                        Console.WriteLine("6 " + a);
+                        //Console.writeLine("6 " + a);
                         if (!Fecha_Factura2.SelectedDate.Equals(f.fecha))
                         {
                             a = true;
@@ -22192,7 +22348,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Fecha_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("7 " + a);
+                        //Console.writeLine("7 " + a);
                         if (!Fecha_Factura_ven2.SelectedDate.Equals(f.fecha_ven))
                         {
                             a = true;
@@ -22203,7 +22359,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Fecha_Factura_ven2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("8 " + a);
+                        //Console.writeLine("8 " + a);
                         if (!Importe_Factura2.Text.Equals(f.Importe.ToString("0.00") + " €"))
                         {
                             a = true;
@@ -22214,7 +22370,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Base_Imponible2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("9 " + a);
+                        //Console.writeLine("9 " + a);
 
                         if (!Direccion_Cliente_Factura2.Text.Equals(f.Direccion_Cliente))
                         {
@@ -22226,7 +22382,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Direccion_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("10 " + a);
+                        //Console.writeLine("10 " + a);
                         if (!Poblacion_Cliente_Factura2.Text.Equals(f.Poblacio_Cliente))
                         {
                             a = true;
@@ -22237,7 +22393,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Poblacion_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("11 " + a);
+                        //Console.writeLine("11 " + a);
                         if (!Codigo_Postal_Cliente_Facturacion2.Text.Equals(f.CP_Cliente.ToString()))
                         {
                             a = true;
@@ -22248,7 +22404,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Codigo_Postal_Cliente_Facturacion2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("12 " + a);
+                        //Console.writeLine("12 " + a);
                         if (!Provincia_Cliente_Factura2.Text.Equals(f.Provincia_Cliente))
                         {
                             a = true;
@@ -22259,7 +22415,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Provincia_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("13 " + a);
+                        //Console.writeLine("13 " + a);
 
 
 
@@ -22273,7 +22429,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Pais_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("14 " + a);
+                        //Console.writeLine("14 " + a);
 
                         if (!Pais_Camping_Factura2.Text.Equals(f.Pais_Facturacion))
                         {
@@ -22285,7 +22441,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Pais_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("15 " + a);
+                        //Console.writeLine("15 " + a);
 
                         if (!Empresa2.Text.Equals(f.Empresa))
                         {
@@ -22297,7 +22453,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Empresa2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("16 " + a);
+                        //Console.writeLine("16 " + a);
 
 
                         if (!Telefono_cliente2.Text.Equals(f.Telefono))
@@ -22310,7 +22466,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Telefono_cliente2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("17 " + a);
+                        //Console.writeLine("17 " + a);
                         if (!Telefono_Camping_Factura2.Text.Equals(f.Telefono_Camping))
                         {
                             a = true;
@@ -22321,7 +22477,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Telefono_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("18 " + a);
+                        //Console.writeLine("18 " + a);
 
                         if (Metodo_Pago2.SelectedIndex != f.Metodo_Pago)
                         {
@@ -22333,7 +22489,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Metodo_Pago2.Foreground = Brushes.Black;
                         }
-                        Console.WriteLine("19 " + a);
+                        //Console.writeLine("19 " + a);
                         if (!Descuento2.Text.Equals(f.Descuento))
                         {
                             a = true;
@@ -22344,7 +22500,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Descuento2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("20 " + a);
+                        //Console.writeLine("20 " + a);
                         int[] pr = new int[f.Lista_productos.Count()];
                         for (int i = 0; i < pr.Count(); i++)
                         {
@@ -22376,7 +22532,7 @@ namespace SGC
                             a = true;
 
                         foreach (int i in pr)
-                            Console.WriteLine(i + " ");
+                            //Console.writeLine(i + " ");
                         if (pr.Contains(0))
                         {
                             a = true;
@@ -22387,7 +22543,7 @@ namespace SGC
                             BrushConverter bc = new BrushConverter();
                             Productos2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
-                        Console.WriteLine("21 " + a);
+                        //Console.writeLine("21 " + a);
 
                         if (a)
                         {
@@ -24803,7 +24959,7 @@ namespace SGC
 
         private void Buscar_imagen(string path)
         {
-            //console.writeline(path);
+            ////Console.writeLine(path);
             //img.Source = new BitmapImage(path, UriKind.Relative);
         }
 
@@ -25914,7 +26070,7 @@ namespace SGC
                 l.Add("Amperios_Max:" + c.Amperios_Max);
                 SQLiteConnection cn = new SQLiteConnection(sql_connection);
                 if (cn.State != ConnectionState.Open) cn.Open();
-                string sql_query = "INSERT INTO Contratos([Nombre], [Amperios], [Amperios_Max]) VALUES ('" + c.Nombre + "'," + c.Amperios + "," + c.Amperios_Max + ")";
+                string sql_query = "INSERT INTO Contratos([Nombre], [Amperios], [Amperios_Max]) VALUES ('" + c.Nombre + "'," + c.Amperios + ",'" + c.Amperios_Max + "')";
                 SQLiteCommand sql_cmd = new SQLiteCommand(sql_query, cn);
 
                 sql_cmd.ExecuteNonQuery();
@@ -27311,7 +27467,7 @@ namespace SGC
                     if (Roles.SelectedItem != null)
                     {
                         Roles rr = Roles.SelectedItem as Roles;
-                        //console.writeline(rol_log.Id + " " + rr.Id);
+                        ////Console.writeLine(rol_log.Id + " " + rr.Id);
 
                         if (rol_log.Id != rr.Id)
                         {
@@ -27439,13 +27595,13 @@ namespace SGC
                         Importe_Factura.Text = f.Importe.ToString("0.00") + " €";
                     else
                         Importe_Factura.Text = f.Importe.ToString("0.00") + " €";
-                    //console.writeline(f.fecha_ven);
+                    ////Console.writeLine(f.fecha_ven);
                     DateTime dt = f.fecha_ven;
                     Fecha_Factura_ven.SelectedDate = dt;
                     List<Producto> lp = new List<Producto>();
                     foreach (Producto p in f.Lista_productos)
                     {
-                        Console.WriteLine(p.Id + " "+p.Descuento);
+                        //Console.writeLine(p.Id + " "+p.Descuento);
                         p.des = ((float.Parse(p.Cantidad) * float.Parse(p.Precio.Replace(" €", "")) + float.Parse(p.Impuesto.Replace(" €", ""))) - float.Parse(p.Total.Replace(" €", ""))) + " €";
                         if (float.Parse(p.Descuento.Replace(" €", "")) < 0)
                         {
@@ -28430,7 +28586,7 @@ namespace SGC
 
                                     }
                                     if(lista_parcelas.Items.Count>0)
-                                    lista_parcelas.SelectedItem = lista_parcelas.Items[lista_parcelas.Items.Count - 1];
+                                        lista_parcelas.SelectedItem = lista_parcelas.Items[lista_parcelas.Items.Count - 1];
                                     MouseButtonEventArgs mbea = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left);
                                     Border_MouseLeftButtonDown_9(checpoint, mbea);
 
@@ -28764,7 +28920,7 @@ namespace SGC
             }
             catch { }
 
-            Console.WriteLine((dtt - DateTime.Now).TotalSeconds + "." + (dtt - DateTime.Now).TotalMilliseconds);
+            //Console.writeLine((dtt - DateTime.Now).TotalSeconds + "." + (dtt - DateTime.Now).TotalMilliseconds);
         }
 
         private void deletemapa_Click(object sender, RoutedEventArgs e)
@@ -29218,7 +29374,7 @@ namespace SGC
               {
                   if (p.check == true)
                   {
-                      Console.WriteLine("Mirando Potencia de la parcela "+p.id);
+                      //Console.writeLine("Mirando Potencia de la parcela "+p.id);
                   }
               }*/
         }
@@ -29319,7 +29475,7 @@ namespace SGC
                 if (p.id == null)
                     p.id = 0;
 
-                //console.writeline(p.id + " " + cc.n_plaza);
+                ////Console.writeLine(p.id + " " + cc.n_plaza);
                 bool pos = false;
                 if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                     pos = true;
@@ -29331,10 +29487,10 @@ namespace SGC
                     cd = cc.caducidad.Split('/')[0];
                     cd2 = cc.caducidad.Split('/')[1];
                 }
-                //console.writeline(p.id + " " + cc.n_plaza);
+                ////Console.writeLine(p.id + " " + cc.n_plaza);
                 if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                 {
-                    Console.WriteLine("27479");
+                    //Console.writeLine("27479");
                     change_client.IsEnabled = false;
 
                     change_client.IsEnabled = false;
@@ -29343,7 +29499,7 @@ namespace SGC
                 }
                 else
                 {
-                    Console.WriteLine("!27479");
+                    //Console.writeLine("!27479");
                     change_client.IsEnabled = true;
 
                     change_client.IsEnabled = true;
@@ -29428,7 +29584,7 @@ namespace SGC
                 bool pos = false;
                 if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                     pos = true;
-                //console.writeline(p.id + " " + cc.n_plaza);
+                ////Console.writeLine(p.id + " " + cc.n_plaza);
 
                 string cd = "";
                 string cd2 = "";
@@ -29437,24 +29593,24 @@ namespace SGC
                     cd = cc.caducidad.Split('/')[0];
                     cd2 = cc.caducidad.Split('/')[1];
                 }
-                Console.WriteLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()));
-                Console.WriteLine(caducidad.Text.Equals(cd));
-                Console.WriteLine(caducidad1.Text.Equals(cd2));
-                Console.WriteLine(titular_tarjeta.Text.Equals(cc.titular));
-                Console.WriteLine(numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()));
-                Console.WriteLine(mail_cliente.Text.Equals(cc.mail));
-                Console.WriteLine(telefonos_cliente2.Text.Equals(cc.telefon2));
-                Console.WriteLine(telefonos_cliente.Text.Equals(cc.telefon1));
-                Console.WriteLine(pais.Text.Equals(cc.Pais));
-                Console.WriteLine(provincia.Text.Equals(cc.Provincia)); Console.WriteLine(poblacion_cliente.Text.Equals(cc.poblacio)); Console.WriteLine(CP.Text.Equals(cc.codigo_postal)); Console.WriteLine(puerta.Text.Equals(cc.Puerta)); Console.WriteLine(piso.Text.Equals(cc.Piso)); Console.WriteLine(numero.Text.Equals(cc.Numero)); Console.WriteLine(direccion_cliente.Text.Equals(cc.direccion)); Console.WriteLine(dni.Text.Equals(cc.dni)); Console.WriteLine(apellidos_cliente.Text.Equals(cc.apellidos_cliente)); Console.WriteLine(nombre_cliente.Text.Equals(cc.nombre_cliente)); 
-                Console.WriteLine(numero_cliente.Text.Equals(cc.n_cliemte+"")); 
-               //Console.WriteLine(b.Equals(cc.Switch+"")); 
-                Console.WriteLine(p.id.ToString().Equals(cc.n_plaza+"")); Console.WriteLine(Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada)); Console.WriteLine(Clientes_HoraSalida.Text.Equals(cc.Hora_salida)); Console.WriteLine(Iban.Text.Equals(cc.iban)); Console.WriteLine(Swift.Text.Equals(cc.swift)); Console.WriteLine(entidad_bancaria.Text.Equals(cc.entidad_bacnaria)); Console.WriteLine(Iban2.Text.Equals(cc.iban2)); Console.WriteLine(Swift2.Text.Equals(cc.swift2)); Console.WriteLine(entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2)); Console.WriteLine(mail_cliente2.Text.Equals(cc.mail2)); 
-                Console.WriteLine((pos == cc.DeBaja)); Console.WriteLine(Fecha_Entrada_Estado.SelectedDate==cc.fecha_entrada_estado); Console.WriteLine(Fecha_Contrato.SelectedDate==cc.fecha_contrato); Console.WriteLine(Fecha_Pago.SelectedDate==cc.fecha_pago); Console.WriteLine(medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1));
+                //Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()));
+                //Console.writeLine(caducidad.Text.Equals(cd));
+                //Console.writeLine(caducidad1.Text.Equals(cd2));
+                //Console.writeLine(titular_tarjeta.Text.Equals(cc.titular));
+                //Console.writeLine(numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()));
+                //Console.writeLine(mail_cliente.Text.Equals(cc.mail));
+                //Console.writeLine(telefonos_cliente2.Text.Equals(cc.telefon2));
+                //Console.writeLine(telefonos_cliente.Text.Equals(cc.telefon1));
+                //Console.writeLine(pais.Text.Equals(cc.Pais));
+                //Console.writeLine(provincia.Text.Equals(cc.Provincia)); //Console.writeLine(poblacion_cliente.Text.Equals(cc.poblacio)); //Console.writeLine(CP.Text.Equals(cc.codigo_postal)); //Console.writeLine(puerta.Text.Equals(cc.Puerta)); //Console.writeLine(piso.Text.Equals(cc.Piso)); //Console.writeLine(numero.Text.Equals(cc.Numero)); //Console.writeLine(direccion_cliente.Text.Equals(cc.direccion)); //Console.writeLine(dni.Text.Equals(cc.dni)); //Console.writeLine(apellidos_cliente.Text.Equals(cc.apellidos_cliente)); //Console.writeLine(nombre_cliente.Text.Equals(cc.nombre_cliente)); 
+                //Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte+"")); 
+               ////Console.writeLine(b.Equals(cc.Switch+"")); 
+                //Console.writeLine(p.id.ToString().Equals(cc.n_plaza+"")); //Console.writeLine(Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada)); //Console.writeLine(Clientes_HoraSalida.Text.Equals(cc.Hora_salida)); //Console.writeLine(Iban.Text.Equals(cc.iban)); //Console.writeLine(Swift.Text.Equals(cc.swift)); //Console.writeLine(entidad_bancaria.Text.Equals(cc.entidad_bacnaria)); //Console.writeLine(Iban2.Text.Equals(cc.iban2)); //Console.writeLine(Swift2.Text.Equals(cc.swift2)); //Console.writeLine(entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2)); //Console.writeLine(mail_cliente2.Text.Equals(cc.mail2)); 
+                //Console.writeLine((pos == cc.DeBaja)); //Console.writeLine(Fecha_Entrada_Estado.SelectedDate==cc.fecha_entrada_estado); //Console.writeLine(Fecha_Contrato.SelectedDate==cc.fecha_contrato); //Console.writeLine(Fecha_Pago.SelectedDate==cc.fecha_pago); //Console.writeLine(medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1));
 
                 if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                 {
-                    Console.WriteLine("27584");
+                    //Console.writeLine("27584");
                     change_client.IsEnabled = false;
 
                     change_client.IsEnabled = false;
@@ -29463,7 +29619,7 @@ namespace SGC
                 }
                 else
                 {
-                    Console.WriteLine("!27584");
+                    //Console.writeLine("!27584");
                     change_client.IsEnabled = true;
 
                     change_client.IsEnabled = true;
@@ -30545,7 +30701,7 @@ namespace SGC
                 {
 
                 }
-                //Console.WriteLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
+                ////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
 
                 if (p.id == null)
                     p.id = 0;
@@ -30557,14 +30713,14 @@ namespace SGC
                     cd2 = cc.caducidad.Split('/')[1];
                 }
 
-                //console.writeline(p.id + " " + cc.n_plaza);
+                ////Console.writeLine(p.id + " " + cc.n_plaza);
                 bool pos = false;
                 if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                     pos = true;
-                //console.writeline(p.id + " " + cc.n_plaza);
+                ////Console.writeLine(p.id + " " + cc.n_plaza);
                 if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                 {
-                    Console.WriteLine("28681");
+                    //Console.writeLine("28681");
                     change_client.IsEnabled = false;
 
                     change_client.IsEnabled = false;
@@ -30573,7 +30729,7 @@ namespace SGC
                 }
                 else
                 {
-                    Console.WriteLine("!28681");
+                    //Console.writeLine("!28681");
                     change_client.IsEnabled = true;
 
                     change_client.IsEnabled = true;
@@ -30587,7 +30743,7 @@ namespace SGC
         {
             if (lvw != null)
                 lvw.SelectedItem = null;
-            //console.writeline("fas");
+            ////Console.writeLine("fas");
             Grid g = sender as Grid;
 
             ScrollViewer sv = (ScrollViewer)g.Parent;
@@ -31016,7 +31172,7 @@ namespace SGC
                     
                         Importe_Factura2.Text = r.Importe.ToString("0.00") + " €";
                    
-                    //console.writeline(r.fecha_ven);
+                    ////Console.writeLine(r.fecha_ven);
                     DateTime dt = r.fecha_ven;
                     Fecha_Factura_ven2.SelectedDate = dt;
                     List<Producto> lp = new List<Producto>();
@@ -31300,8 +31456,8 @@ namespace SGC
                 titleFont = FontFactory.GetFont("Calibri", 10, 1, BaseColor.BLACK);
                 
                 docTitle = new iTextSharp.text.Paragraph("FACTURA PARA", titleFont);
-                foreach(Producto p in f.Lista_productos)
-                Console.WriteLine(p.Id+" "+p.Descuento);
+                //foreach(Producto p in f.Lista_productos)
+                //Console.writeLine(p.Id+" "+p.Descuento);
                 Font titleFont2 = FontFactory.GetFont("Calibri", 10, new BaseColor(123, 123, 122));
                 iTextSharp.text.Paragraph docTitle2 = new iTextSharp.text.Paragraph(f.Nombre_Cliente, titleFont2);
 
@@ -32343,7 +32499,7 @@ namespace SGC
                         float dd = float.Parse(d) / 100;
                         total = total * (1 - dd);
                         string a2 = Math.Round(precio, 2).ToString("0.00") + " €";
-                        Console.WriteLine(a2);
+                        //Console.writeLine(a2);
                         Base_Imponible2.Text = a2;
                         Cuota_IVA2.Text = Math.Round(impuesto, 2).ToString("0.00") + " €";
                         Importe_Factura2.Text = Math.Round(total, 2).ToString("0.00") + " €";
@@ -32366,7 +32522,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Nombre_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("1 " + a);
+                    //Console.writeLine("1 " + a);
 
                     if (!DNI_Cliente_Factura2.Text.Equals(f.DNI_CIF))
                     {
@@ -32379,7 +32535,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         DNI_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("2 " + a);
+                    //Console.writeLine("2 " + a);
                     if (!Direccion_Camping_Factura2.Text.Equals(f.Direccion_Facturacion))
                     {
                         a = true;
@@ -32390,7 +32546,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Direccion_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("3 " + a);
+                    //Console.writeLine("3 " + a);
                     if (!Poblacion_Camping_Factura2.Text.Equals(f.Poblecion_Facturacion))
                     {
                         a = true;
@@ -32401,7 +32557,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Poblacion_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("4 " + a);
+                    //Console.writeLine("4 " + a);
 
                     if (!Codigo_Postal_Camping_Factura2.Text.Equals(f.CP_Facturacion.ToString()))
                     {
@@ -32414,7 +32570,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Codigo_Postal_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("5 " + a);
+                    //Console.writeLine("5 " + a);
                     if (!Provincia_Camping_Factura2.Text.Equals(f.Provincia_Facturacion))
 
                     {
@@ -32428,7 +32584,7 @@ namespace SGC
                         Provincia_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
 
-                    Console.WriteLine("6 " + a);
+                    //Console.writeLine("6 " + a);
                     if (!Fecha_Factura2.SelectedDate.Equals(f.fecha))
                     {
                         a = true;
@@ -32439,7 +32595,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Fecha_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("7 " + a);
+                    //Console.writeLine("7 " + a);
                     if (!Fecha_Factura_ven2.SelectedDate.Equals(f.fecha_ven))
                     {
                         a = true;
@@ -32450,7 +32606,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Fecha_Factura_ven2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("8 " + a);
+                    //Console.writeLine("8 " + a);
                     if (!Importe_Factura2.Text.Equals(f.Importe.ToString("0.00") + " €"))
                     {
                         a = true;
@@ -32461,7 +32617,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Base_Imponible2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("9 " + a);
+                    //Console.writeLine("9 " + a);
 
                     if (!Direccion_Cliente_Factura2.Text.Equals(f.Direccion_Cliente))
                     {
@@ -32473,7 +32629,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Direccion_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("10 " + a);
+                    //Console.writeLine("10 " + a);
                     if (!Poblacion_Cliente_Factura2.Text.Equals(f.Poblacio_Cliente))
                     {
                         a = true;
@@ -32484,7 +32640,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Poblacion_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("11 " + a);
+                    //Console.writeLine("11 " + a);
                     if (!Codigo_Postal_Cliente_Facturacion2.Text.Equals(f.CP_Cliente.ToString()))
                     {
                         a = true;
@@ -32495,7 +32651,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Codigo_Postal_Cliente_Facturacion2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("12 " + a);
+                    //Console.writeLine("12 " + a);
                     if (!Provincia_Cliente_Factura2.Text.Equals(f.Provincia_Cliente))
                     {
                         a = true;
@@ -32506,7 +32662,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Provincia_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("13 " + a);
+                    //Console.writeLine("13 " + a);
 
 
 
@@ -32520,7 +32676,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Pais_Cliente_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("14 " + a);
+                    //Console.writeLine("14 " + a);
 
                     if (!Pais_Camping_Factura2.Text.Equals(f.Pais_Facturacion))
                     {
@@ -32532,7 +32688,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Pais_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("15 " + a);
+                    //Console.writeLine("15 " + a);
 
                     if (!Empresa2.Text.Equals(f.Empresa))
                     {
@@ -32544,7 +32700,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Empresa2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("16 " + a);
+                    //Console.writeLine("16 " + a);
 
 
                     if (!Telefono_cliente2.Text.Equals(f.Telefono))
@@ -32557,7 +32713,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Telefono_cliente2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("17 " + a);
+                    //Console.writeLine("17 " + a);
                     if (!Telefono_Camping_Factura2.Text.Equals(f.Telefono_Camping))
                     {
                         a = true;
@@ -32568,7 +32724,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Telefono_Camping_Factura2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("18 " + a);
+                    //Console.writeLine("18 " + a);
 
                     if (Metodo_Pago2.SelectedIndex != f.Metodo_Pago)
                     {
@@ -32580,7 +32736,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Metodo_Pago2.Foreground = Brushes.Black;
                     }
-                    Console.WriteLine("19 " + a);
+                    //Console.writeLine("19 " + a);
                     if (!Descuento2.Text.Equals(f.Descuento))
                     {
                         a = true;
@@ -32591,7 +32747,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Descuento2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("20 " + a);
+                    //Console.writeLine("20 " + a);
                     int[] pr = new int[f.Lista_productos.Count()];
                     for (int i = 0; i < pr.Count(); i++)
                     {
@@ -32623,7 +32779,7 @@ namespace SGC
                         a = true;
 
                     foreach (int i in pr)
-                        Console.WriteLine(i + " ");
+                        //Console.writeLine(i + " ");
                     if (pr.Contains(0))
                     {
                         a = true;
@@ -32634,7 +32790,7 @@ namespace SGC
                         BrushConverter bc = new BrushConverter();
                         Productos2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                     }
-                    Console.WriteLine("21 " + a);
+                    //Console.writeLine("21 " + a);
 
                     if (a)
                     {
@@ -32715,7 +32871,7 @@ namespace SGC
                         float dd = float.Parse(d) / 100;
                         total = total * (1 - dd);
                         string a2 = Math.Round(precio, 2).ToString("0.00") + " €";
-                        Console.WriteLine(a2);
+                        //Console.writeLine(a2);
                         Base_Imponible.Text = a2;
                         Cuota_IVA.Text = Math.Round(impuesto, 2).ToString("0.00") + " €";
                         Importe_Factura.Text = Math.Round(total, 2).ToString("0.00") + " €";
@@ -32830,7 +32986,7 @@ namespace SGC
                         a = true;
 
                     foreach (int i in pr)
-                        Console.WriteLine(i + " ");
+                        //Console.writeLine(i + " ");
                     if (pr.Contains(0))
                     {
                         a = true;
@@ -32873,7 +33029,7 @@ namespace SGC
             {
                 Roles r = Roles.SelectedItem as Roles;
                 char[] c = r.Permisos_bin.ToArray<char>();
-                //console.writeline(Convert.ToBoolean(Convert.ToInt32(c[3].ToString())) + " " + Convert.ToBoolean(Convert.ToInt32(c[4].ToString())) + Convert.ToBoolean(Convert.ToInt32(c[4].ToString())));
+                ////Console.writeLine(Convert.ToBoolean(Convert.ToInt32(c[3].ToString())) + " " + Convert.ToBoolean(Convert.ToInt32(c[4].ToString())) + Convert.ToBoolean(Convert.ToInt32(c[4].ToString())));
                 if (rol_log != r)
                     if (Nombre_Rol.Text.Equals(r.Nom) && upd_Agenda.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[0])) && dlt_Agenda.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[1].ToString())) && ins_Agenda.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[2].ToString())) && upd_Sistema.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[3].ToString())) && dlt_Sistema.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[4].ToString())) && ins_Sistema.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[5].ToString())) && upd_Clientes.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[6].ToString())) && dlt_Clientes.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[7].ToString())) && ins_Clientes.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[8])) && upd_Mapa.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[9].ToString())) && dlt_Mapa.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[10].ToString())) && ins_Mapa.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[11].ToString())) && upd_Factura.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[12].ToString())) && dlt_Factura.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[13].ToString())) && ins_Factura.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[14].ToString())) && upd_Camara.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[15].ToString())) && dlt_Camara.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[16].ToString())) && ins_Camara.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[17].ToString())) && pestana_cliente1.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[24].ToString()))&& pestana_cliente2.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[25].ToString())) && pestana_cliente3.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[26].ToString())) && pestana_cliente4.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[27].ToString())) && pestana_cliente5.IsChecked == Convert.ToBoolean(Convert.ToInt32(c[25].ToString())))
                     {
@@ -33223,40 +33379,40 @@ namespace SGC
             Fct.IsChecked = Todos.IsChecked;
             Cmr.IsChecked = Todos.IsChecked;
 
-            //console.writeline(upd_Agenda.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[0])));
-            //console.writeline(dlt_Agenda.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[1].ToString())));
-            //console.writeline(ins_Agenda.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[2].ToString())));
+            ////Console.writeLine(upd_Agenda.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[0])));
+            ////Console.writeLine(dlt_Agenda.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[1].ToString())));
+            ////Console.writeLine(ins_Agenda.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[2].ToString())));
             
-            //console.writeline(upd_Sistema.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[3].ToString())));
-            //console.writeline(dlt_Sistema.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[4].ToString())));
-            //console.writeline(ins_Sistema.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[5].ToString())));
+            ////Console.writeLine(upd_Sistema.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[3].ToString())));
+            ////Console.writeLine(dlt_Sistema.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[4].ToString())));
+            ////Console.writeLine(ins_Sistema.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[5].ToString())));
 
 
-            //console.writeline(upd_Clientes.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[6].ToString())));
-            //console.writeline(dlt_Clientes.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[7].ToString())));
-            //console.writeline(ins_Clientes.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[8])));
+            ////Console.writeLine(upd_Clientes.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[6].ToString())));
+            ////Console.writeLine(dlt_Clientes.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[7].ToString())));
+            ////Console.writeLine(ins_Clientes.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[8])));
 
 
-            //console.writeline(upd_Mapa.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[9].ToString())));
-            //console.writeline(Convert.ToInt32(c[9].ToString()) + " "+Convert.ToBoolean(Convert.ToInt32(c[9]+"")));
-            //console.writeline(dlt_Mapa.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[10].ToString())));
-            //console.writeline(ins_Mapa.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[11].ToString())));
+            ////Console.writeLine(upd_Mapa.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[9].ToString())));
+            ////Console.writeLine(Convert.ToInt32(c[9].ToString()) + " "+Convert.ToBoolean(Convert.ToInt32(c[9]+"")));
+            ////Console.writeLine(dlt_Mapa.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[10].ToString())));
+            ////Console.writeLine(ins_Mapa.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[11].ToString())));
 
-            //console.writeline(upd_Factura.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[12].ToString())));
-            //console.writeline(dlt_Factura.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[13].ToString())));
-            //console.writeline(ins_Factura.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[14].ToString())));
+            ////Console.writeLine(upd_Factura.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[12].ToString())));
+            ////Console.writeLine(dlt_Factura.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[13].ToString())));
+            ////Console.writeLine(ins_Factura.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[14].ToString())));
 
-            //console.writeline(upd_Camara.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[15].ToString())));
-            //console.writeline(dlt_Camara.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[16].ToString())));
-            //console.writeline(ins_Camara.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[17].ToString())));
+            ////Console.writeLine(upd_Camara.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[15].ToString())));
+            ////Console.writeLine(dlt_Camara.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[16].ToString())));
+            ////Console.writeLine(ins_Camara.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[17].ToString())));
 
 
-            //console.writeline(Agn.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[18].ToString())));
-            //console.writeline(Sst.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[19].ToString())));
-            //console.writeline(Cln.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[20].ToString())));
-            //console.writeline(Map.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[21].ToString())));
-            //console.writeline(Fct.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[22].ToString())));
-            //console.writeline(Cmr.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[23].ToString())));
+            ////Console.writeLine(Agn.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[18].ToString())));
+            ////Console.writeLine(Sst.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[19].ToString())));
+            ////Console.writeLine(Cln.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[20].ToString())));
+            ////Console.writeLine(Map.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[21].ToString())));
+            ////Console.writeLine(Fct.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[22].ToString())));
+            ////Console.writeLine(Cmr.IsChecked+" "+Convert.ToBoolean(Convert.ToInt32(c[23].ToString())));
 
 
             if (rol_log != r)
@@ -33363,9 +33519,9 @@ namespace SGC
             
                 ins_Sistema.IsChecked = true;
             
-            //console.writeline(Convert.ToBoolean(Convert.ToInt32(c[3].ToString()))+" "+ Convert.ToInt32(c[3].ToString()));
-            //console.writeline(Convert.ToBoolean(Convert.ToInt32(c[4].ToString())) + " " + c[4]);
-            //console.writeline(Convert.ToBoolean(Convert.ToInt32(c[5].ToString())) + " " + c[5]);
+            ////Console.writeLine(Convert.ToBoolean(Convert.ToInt32(c[3].ToString()))+" "+ Convert.ToInt32(c[3].ToString()));
+            ////Console.writeLine(Convert.ToBoolean(Convert.ToInt32(c[4].ToString())) + " " + c[4]);
+            ////Console.writeLine(Convert.ToBoolean(Convert.ToInt32(c[5].ToString())) + " " + c[5]);
           
 
         }
@@ -33794,7 +33950,7 @@ namespace SGC
                     bool pos = false;
                     if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                         pos = true;
-                    //console.writeline(p.id + " " + cc.n_plaza);
+                    ////Console.writeLine(p.id + " " + cc.n_plaza);
                     string cd = "";
                     string cd2 = "";
                     if (cc.caducidad.Contains("/"))
@@ -33805,7 +33961,7 @@ namespace SGC
 
                     if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                     {
-                        Console.WriteLine("31596");
+                        //Console.writeLine("31596");
                         change_client.IsEnabled = false;
 
                         change_client.IsEnabled = false;
@@ -33814,7 +33970,7 @@ namespace SGC
                     }
                     else
                     {
-                        Console.WriteLine("!31596");
+                        //Console.writeLine("!31596");
                         change_client.IsEnabled = true;
 
                         change_client.IsEnabled = true;
@@ -33825,11 +33981,11 @@ namespace SGC
                     {
 
 
-                        //console.writeline(DateTime.Compare((DateTime)Clientes_FechaEntrada.SelectedDate, (DateTime)Clientes_FechaSalida.SelectedDate));
+                        ////Console.writeLine(DateTime.Compare((DateTime)Clientes_FechaEntrada.SelectedDate, (DateTime)Clientes_FechaSalida.SelectedDate));
 
                         if (DateTime.Compare((DateTime)Clientes_FechaEntrada.SelectedDate, (DateTime)Clientes_FechaSalida.SelectedDate) > 0)
                         {
-                            Console.WriteLine("32007");
+                            //Console.writeLine("32007");
                             Clientes_FechaEntrada.BorderBrush = Brushes.Red;
                             Clientes_FechaSalida.BorderBrush = Brushes.Red;
                             change_client.IsEnabled = false;
@@ -33837,7 +33993,7 @@ namespace SGC
                         else
                         {
                             BrushConverter bc = new BrushConverter();
-                            Console.WriteLine("!32007");
+                            //Console.writeLine("!32007");
                             Clientes_FechaEntrada.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                             Clientes_FechaSalida.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                         }
@@ -34295,7 +34451,7 @@ namespace SGC
                         var frame = st.GetFrame(0);
                         var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                         Peta(ee, line + "");
-                        Console.WriteLine(line + ": " + ee.Message);
+                        //Console.writeLine(line + ": " + ee.Message);
                     }
                     DateTime dt3 = (DateTime)Clientes_HoraSalida.Value;
                     if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -34453,7 +34609,7 @@ namespace SGC
 
 
                 img.ImageSource = new BitmapImage(new Uri(ofd.FileName), new System.Net.Cache.RequestCachePolicy());
-                //console.writeline(ofd.FileName);
+                ////Console.writeLine(ofd.FileName);
                 fileName = "1.png";
                 targetPath = System.IO.Path.Combine(targetPath, fileName);
                 System.IO.File.Copy(ofd.FileName, targetPath, true);
@@ -34556,22 +34712,21 @@ namespace SGC
                
                 bdr2.HorizontalAlignment = HorizontalAlignment.Left;
                 pos = true;
+                numero_plaza.SelectedItem = null;
+                Potencia.SelectedItem = null;
 
 
             }
             else
-            {
-
-               
+            {               
                 bdr2.HorizontalAlignment = HorizontalAlignment.Right;
-                if (bdrpower.HorizontalAlignment == HorizontalAlignment.Left)
+
+                Clientes cc2 = Clientes.SelectedItem as Clientes;
+                if (!(cc2 is null))
                 {
-                    MouseButtonEventArgs mb = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right);
-                    power_MouseLeftButtonDown(power, mb);
+                    numero_plaza.SelectedItem = lprc.Find(x => x.id == int.Parse(cc2.n_plaza));
+                    Potencia.SelectedItem = lcnt.Find(x => x.Id == cc2.Potencia);
                 }
-
-
-
             }
 
             Clientes cc = Clientes.SelectedItem as Clientes;
@@ -34603,10 +34758,10 @@ namespace SGC
                     {
 
                     }
-                    ////console.writeline(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
-                    //console.writeline(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
-                    //console.writeline(numero_cliente.Text.Equals(cc.n_cliemte) + " " + Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) + " " + Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) + " " + vehiculo1.Text.Equals(cc.Vehiculo1) + " " + matricula1.Text.Equals(cc.matricula1) + " " + numero_bastidor.Text.Equals(cc.Numero_Bastidor1) + " " + vehiculo2.Text.Equals(cc.Vehiculo2) + " " + matricula2.Text.Equals(cc.matricula2) + " " + numero_bastidor2.Text.Equals(cc.Numero_Bastidor2) + " " + nota1.Text.Equals(cc.Nota1) + " " + Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) + " " + Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
-                    //console.writeline((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
+                    //////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
+                    ////Console.writeLine(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
+                    ////Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte) + " " + Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) + " " + Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) + " " + vehiculo1.Text.Equals(cc.Vehiculo1) + " " + matricula1.Text.Equals(cc.matricula1) + " " + numero_bastidor.Text.Equals(cc.Numero_Bastidor1) + " " + vehiculo2.Text.Equals(cc.Vehiculo2) + " " + matricula2.Text.Equals(cc.matricula2) + " " + numero_bastidor2.Text.Equals(cc.Numero_Bastidor2) + " " + nota1.Text.Equals(cc.Nota1) + " " + Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) + " " + Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
+                    ////Console.writeLine((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
 
                     if (p.id == null)
                         p.id = 0;
@@ -34618,37 +34773,37 @@ namespace SGC
                         cd = cc.caducidad.Split('/')[0];
                         cd2 = cc.caducidad.Split('/')[1];
                     }
-                    Console.WriteLine(email_cliente.Text.Equals(cc.mail));
-                    Console.WriteLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
-                    Console.WriteLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
-                    Console.WriteLine(pais_cliente_alta.Text.Equals(cc.Pais));
-                    Console.WriteLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
-                    Console.WriteLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
-                    Console.WriteLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
-                    Console.WriteLine(direccion_cliente_alta.Text.Equals(cc.direccion));
-                    Console.WriteLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
-                    Console.WriteLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
+                    //Console.writeLine(email_cliente.Text.Equals(cc.mail));
+                    //Console.writeLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
+                    //Console.writeLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
+                    //Console.writeLine(pais_cliente_alta.Text.Equals(cc.Pais));
+                    //Console.writeLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
+                    //Console.writeLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
+                    //Console.writeLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
+                    //Console.writeLine(direccion_cliente_alta.Text.Equals(cc.direccion));
+                    //Console.writeLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
+                    //Console.writeLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
                     string aa = Clientes_FechaEntrada_alta.SelectedDate.ToString();
                     string aa2 = cc.Fecha_In.ToString();
 
-                    Console.WriteLine(Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In);
-                    Console.WriteLine(Clientes_FechaSalida_alta.SelectedDate.Equals(cc.Fecha_Out)); //
-                    Console.WriteLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
-                    Console.WriteLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
-                    Console.WriteLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
-                    Console.WriteLine((nota1_alta.Text.Equals(cc.Nota1))); //
-                    //Console.WriteLine((b == cc.Switch)); //
-                    Console.WriteLine((p.id == int.Parse(cc.n_plaza))); //
-                    Console.WriteLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
-                    Console.WriteLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
-                    Console.WriteLine((email_cliente2.Text.Equals(cc.mail2))); //
-                    Console.WriteLine((pos == cc.DeBaja)); //
+                    //Console.writeLine(Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In);
+                    //Console.writeLine(Clientes_FechaSalida_alta.SelectedDate.Equals(cc.Fecha_Out)); //
+                    //Console.writeLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
+                    //Console.writeLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
+                    //Console.writeLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
+                    //Console.writeLine((nota1_alta.Text.Equals(cc.Nota1))); //
+                    ////Console.writeLine((b == cc.Switch)); //
+                    //Console.writeLine((p.id == int.Parse(cc.n_plaza))); //
+                    //Console.writeLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
+                    //Console.writeLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
+                    //Console.writeLine((email_cliente2.Text.Equals(cc.mail2))); //
+                    //Console.writeLine((pos == cc.DeBaja)); //
                    
-                    Console.WriteLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
-                    //console.writeline(p.id + " " + cc.n_plaza);
+                    //Console.writeLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
+                    ////Console.writeLine(p.id + " " + cc.n_plaza);
                     if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1) && bastidor.Text.Equals(cc.Numero_Bastidor1) && nbastidor2.Text.Equals(cc.Numero_Bastidor2) && nbastidor3.Text.Equals(cc.Numero_Bastidor3) && nbastidor4.Text.Equals(cc.Numero_Bastidor4) && medidas2.Text.Equals(cc.Medidas_Vehiculo2) && medidas3.Text.Equals(cc.Medidas_Vehiculo3) && medidas4.Text.Equals(cc.Medidas_Vehiculo4) && nota.Text.Equals(cc.Nota1) && tarjeta.Text.Equals(cc.N_tarjeta) && nota1_alta2.Text.Equals(cc.Nota2))
                     {
-                        Console.WriteLine("33077");
+                        //Console.writeLine("33077");
                         change_client.IsEnabled = false;
 
                         change_client.IsEnabled = false;
@@ -34657,7 +34812,7 @@ namespace SGC
                     }
                     else
                     {
-                        Console.WriteLine("!33077");
+                        //Console.writeLine("!33077");
                         change_client.IsEnabled = true;
 
                         change_client.IsEnabled = true;
@@ -34925,40 +35080,40 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Left)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
 
-                        Console.WriteLine(email_cliente.Text.Equals(cc.mail));
-                        Console.WriteLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
-                        Console.WriteLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
-                        Console.WriteLine(pais_cliente_alta.Text.Equals(cc.Pais));
-                        Console.WriteLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
-                        Console.WriteLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
-                        Console.WriteLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
-                        Console.WriteLine(direccion_cliente_alta.Text.Equals(cc.direccion));
-                        Console.WriteLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) +" "+ nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
-                        Console.WriteLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
+                        //Console.writeLine(email_cliente.Text.Equals(cc.mail));
+                        //Console.writeLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
+                        //Console.writeLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
+                        //Console.writeLine(pais_cliente_alta.Text.Equals(cc.Pais));
+                        //Console.writeLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
+                        //Console.writeLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
+                        //Console.writeLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
+                        //Console.writeLine(direccion_cliente_alta.Text.Equals(cc.direccion));
+                        //Console.writeLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) +" "+ nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
+                        //Console.writeLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
                         string aa = Clientes_FechaEntrada_alta.SelectedDate.ToString();
                         string aa2 = cc.Fecha_In.ToString();
 
                         
-                        Console.WriteLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1+"")); //
-                        Console.WriteLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
-                        Console.WriteLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) +" "+ bastidor2_alta.Text.Equals(cc.matricula2)); //
-                        Console.WriteLine((nota1_alta.Text.Equals(cc.Nota1))); //
-                        Console.WriteLine((b == cc.Switch)); //
-                        Console.WriteLine((p.id == int.Parse(cc.n_plaza))); //
-                        Console.WriteLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
-                        Console.WriteLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
-                        Console.WriteLine((email_cliente2.Text.Equals(cc.mail2))); //
-                        Console.WriteLine((pos == cc.DeBaja)); //
-                        Console.WriteLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
-                        Console.WriteLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
-                        Console.WriteLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
+                        //Console.writeLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1+"")); //
+                        //Console.writeLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
+                        //Console.writeLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) +" "+ bastidor2_alta.Text.Equals(cc.matricula2)); //
+                        //Console.writeLine((nota1_alta.Text.Equals(cc.Nota1))); //
+                        //Console.writeLine((b == cc.Switch)); //
+                        //Console.writeLine((p.id == int.Parse(cc.n_plaza))); //
+                        //Console.writeLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
+                        //Console.writeLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
+                        //Console.writeLine((email_cliente2.Text.Equals(cc.mail2))); //
+                        //Console.writeLine((pos == cc.DeBaja)); //
+                        //Console.writeLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
+                        //Console.writeLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
+                        //Console.writeLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
 
 
                         if (tarjeta_alta.Text.Equals(cc.N_tarjeta)&&email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In && Clientes_FechaSalida_alta.SelectedDate == cc.Fecha_Out && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado && Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)&& bastidor_alta.Text.Equals(cc.Numero_Bastidor1) && nbastidor2_alta.Text.Equals(cc.Numero_Bastidor2) && nbastidor3_alta.Text.Equals(cc.Numero_Bastidor3) && nbastidor4_alta.Text.Equals(cc.Numero_Bastidor4)&&medidas2_alta.Text.Equals(cc.Medidas_Vehiculo2) && medidas3_alta.Text.Equals(cc.Medidas_Vehiculo3) && medidas4_alta.Text.Equals(cc.Medidas_Vehiculo4))
                         {
-                            Console.WriteLine("33060");
+                            //Console.writeLine("33060");
                             change_client.IsEnabled = false;
 
                             safe = false;
@@ -34966,7 +35121,7 @@ namespace SGC
                         }
                         else
                         {
-                            Console.WriteLine("!33060");
+                            //Console.writeLine("!33060");
                             change_client.IsEnabled = true;
 
                             safe = true;
@@ -35453,7 +35608,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -35614,8 +35769,8 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        Console.WriteLine(email_cliente.Text.Equals(cc.mail));
-                        Console.WriteLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
+                        //Console.writeLine(email_cliente.Text.Equals(cc.mail));
+                        //Console.writeLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate.Equals(cc.Fecha_In) && Clientes_FechaSalida_alta.SelectedDate.Equals(cc.Fecha_Out) && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate.Equals(cc.fecha_entrada_estado) && Clientes_FechaPago_alta.SelectedDate.Equals(cc.fecha_pago) && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
                             change_client.IsEnabled = false;
@@ -36014,7 +36169,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -36198,7 +36353,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate.Equals(cc.Fecha_In) && Clientes_FechaSalida_alta.SelectedDate.Equals(cc.Fecha_Out) && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate.Equals(cc.fecha_entrada_estado) && Clientes_FechaPago_alta.SelectedDate.Equals(cc.fecha_pago) && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
                             change_client.IsEnabled = false;
@@ -36598,7 +36753,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -36711,6 +36866,7 @@ namespace SGC
             }
             
             clientebool = true;
+            cargaclientes = true;
             cargarClientes();
             posicion = lista_clientes_ficha.Count() - 1;
 
@@ -36789,7 +36945,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate.Equals(cc.Fecha_In) && Clientes_FechaSalida_alta.SelectedDate.Equals(cc.Fecha_Out) && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate.Equals(cc.fecha_entrada_estado) && Clientes_FechaPago_alta.SelectedDate.Equals(cc.fecha_pago) && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
                             change_client.IsEnabled = false;
@@ -37188,7 +37344,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -37348,7 +37504,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate.Equals(cc.Fecha_In) && Clientes_FechaSalida_alta.SelectedDate.Equals(cc.Fecha_Out) && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate.Equals(cc.fecha_entrada_estado) && Clientes_FechaPago_alta.SelectedDate.Equals(cc.fecha_pago) && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
                             change_client.IsEnabled = false;
@@ -37747,7 +37903,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -37842,11 +37998,7 @@ namespace SGC
                     if (alta_baja.HorizontalAlignment == HorizontalAlignment.Left)
                     {
                         alta_baja.HorizontalAlignment = HorizontalAlignment.Right;
-                        if (on_off_border.HorizontalAlignment == HorizontalAlignment.Left)
-                        {
-                            MouseButtonEventArgs mb = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left);
-                            FichaPotencia(on_off, mb);
-                        }
+                        
                     }
                     else
                     {
@@ -37928,7 +38080,7 @@ namespace SGC
                         }
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Left)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate.Equals(cc.Fecha_In) && Clientes_FechaSalida_alta.SelectedDate.Equals(cc.Fecha_Out) && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate.Equals(cc.fecha_entrada_estado) && Clientes_FechaPago_alta.SelectedDate.Equals(cc.fecha_pago) && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
                             change_client.IsEnabled = false;
@@ -38327,7 +38479,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -38850,7 +39002,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate.Equals(cc.Fecha_In) && Clientes_FechaSalida_alta.SelectedDate.Equals(cc.Fecha_Out) && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate.Equals(cc.fecha_entrada_estado) && Clientes_FechaPago_alta.SelectedDate.Equals(cc.fecha_pago) && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
                             change_client.IsEnabled = false;
@@ -39250,7 +39402,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -44601,8 +44753,8 @@ namespace SGC
                 DateTime? b = null;
                 while (rdr2.Read())
                 {
-                    Console.WriteLine("Vehiculos");
-                    Console.WriteLine(rdr2.GetString(1));
+                    //Console.writeLine("Vehiculos");
+                    //Console.writeLine(rdr2.GetString(1));
                     DateTime d = DateTime.Parse(rdr2.GetString(1));
                     b = d;
                 }
@@ -44632,7 +44784,7 @@ namespace SGC
                                     {
                                         string mycontent = await content22.ReadAsStringAsync();
                                         HttpContentHeaders hch = content22.Headers;
-                                        //console.writeline(mycontent);
+                                        ////Console.writeLine(mycontent);
                                         //v = new Version(mycontent);
                                         //Debug.WriteLine("IsSuccessStatusCode");
 
@@ -44897,7 +45049,7 @@ namespace SGC
                 {
 
                     cmbx.IsDropDownOpen = true;
-                    //console.writeline(list3[0].Split('-')[0]);
+                    ////Console.writeLine(list3[0].Split('-')[0]);
                     c = lvhc.Find(x => x.Tipo.Contains(list3[0].Split('-')[0]));
 
                 }
@@ -44946,17 +45098,17 @@ namespace SGC
                     {
 
                     }
-                    ////console.writeline(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
-                    //console.writeline(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
-                    ////console.writeline(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
-                    //console.writeline((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
+                    //////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
+                    ////Console.writeLine(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
+                    //////Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
+                    ////Console.writeLine((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
 
                     if (p.id == null)
                         p.id = 0;
                     bool pos = false;
                     if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                         pos = true;
-                    //console.writeline(p.id + " " + cc.n_plaza);
+                    ////Console.writeLine(p.id + " " + cc.n_plaza);
 
 
 
@@ -44968,24 +45120,24 @@ namespace SGC
                         cd2 = cc.caducidad.Split('/')[1];
                     }
 
-                    Console.WriteLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()));
-                    Console.WriteLine(caducidad.Text.Equals(cd));
-                    Console.WriteLine(caducidad1.Text.Equals(cd2));
-                    Console.WriteLine(titular_tarjeta.Text.Equals(cc.titular));
-                    Console.WriteLine(numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()));
-                    Console.WriteLine(mail_cliente.Text.Equals(cc.mail));
-                    Console.WriteLine(telefonos_cliente2.Text.Equals(cc.telefon2));
-                    Console.WriteLine(telefonos_cliente.Text.Equals(cc.telefon1));
-                    Console.WriteLine(pais.Text.Equals(cc.Pais));
-                    Console.WriteLine(provincia.Text.Equals(cc.Provincia)); Console.WriteLine(poblacion_cliente.Text.Equals(cc.poblacio)); Console.WriteLine(CP.Text.Equals(cc.codigo_postal)); Console.WriteLine(puerta.Text.Equals(cc.Puerta)); Console.WriteLine(piso.Text.Equals(cc.Piso)); Console.WriteLine(numero.Text.Equals(cc.Numero)); Console.WriteLine(direccion_cliente.Text.Equals(cc.direccion)); Console.WriteLine(dni.Text.Equals(cc.dni)); Console.WriteLine(apellidos_cliente.Text.Equals(cc.apellidos_cliente)); Console.WriteLine(nombre_cliente.Text.Equals(cc.nombre_cliente)); 
-                    Console.WriteLine(numero_cliente.Text.Equals(cc.n_cliemte+"")); 
-                        Console.WriteLine((pos == cc.DeBaja)); 
-                    Console.WriteLine(Fecha_Entrada_Estado.SelectedDate.Equals(cc.fecha_entrada_estado)); Console.WriteLine(Fecha_Contrato.SelectedDate.Equals(cc.fecha_contrato)); Console.WriteLine(Fecha_Pago.SelectedDate.Equals(cc.fecha_pago)); 
-                    Console.WriteLine( medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1));
+                    //Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()));
+                    //Console.writeLine(caducidad.Text.Equals(cd));
+                    //Console.writeLine(caducidad1.Text.Equals(cd2));
+                    //Console.writeLine(titular_tarjeta.Text.Equals(cc.titular));
+                    //Console.writeLine(numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()));
+                    //Console.writeLine(mail_cliente.Text.Equals(cc.mail));
+                    //Console.writeLine(telefonos_cliente2.Text.Equals(cc.telefon2));
+                    //Console.writeLine(telefonos_cliente.Text.Equals(cc.telefon1));
+                    //Console.writeLine(pais.Text.Equals(cc.Pais));
+                    //Console.writeLine(provincia.Text.Equals(cc.Provincia)); //Console.writeLine(poblacion_cliente.Text.Equals(cc.poblacio)); //Console.writeLine(CP.Text.Equals(cc.codigo_postal)); //Console.writeLine(puerta.Text.Equals(cc.Puerta)); //Console.writeLine(piso.Text.Equals(cc.Piso)); //Console.writeLine(numero.Text.Equals(cc.Numero)); //Console.writeLine(direccion_cliente.Text.Equals(cc.direccion)); //Console.writeLine(dni.Text.Equals(cc.dni)); //Console.writeLine(apellidos_cliente.Text.Equals(cc.apellidos_cliente)); //Console.writeLine(nombre_cliente.Text.Equals(cc.nombre_cliente)); 
+                    //Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte+"")); 
+                        //Console.writeLine((pos == cc.DeBaja)); 
+                    //Console.writeLine(Fecha_Entrada_Estado.SelectedDate.Equals(cc.fecha_entrada_estado)); //Console.writeLine(Fecha_Contrato.SelectedDate.Equals(cc.fecha_contrato)); //Console.writeLine(Fecha_Pago.SelectedDate.Equals(cc.fecha_pago)); 
+                    //Console.writeLine( medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1));
 
                     if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                     {
-                        Console.WriteLine("41832");
+                        //Console.writeLine("41832");
                         change_client.IsEnabled = false;
 
                         change_client.IsEnabled = false;
@@ -44994,7 +45146,7 @@ namespace SGC
                     }
                     else
                     {
-                        Console.WriteLine("!41832");
+                        //Console.writeLine("!41832");
                         change_client.IsEnabled = true;
 
                         change_client.IsEnabled = true;
@@ -45498,7 +45650,7 @@ namespace SGC
                             var frame = st.GetFrame(0);
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
-                            Console.WriteLine(line + ": " + ee.Message);
+                            //Console.writeLine(line + ": " + ee.Message);
                         }
                         DateTime dt3 = (DateTime)Clientes_HoraSalida.Value;
                         if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -45678,17 +45830,17 @@ namespace SGC
                     {
 
                     }
-                    ////console.writeline(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
-                    //console.writeline(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
-                    ////console.writeline(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
-                    //console.writeline((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
+                    //////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
+                    ////Console.writeLine(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
+                    //////Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
+                    ////Console.writeLine((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
 
                     if (p.id == null)
                         p.id = 0;
                     bool pos = false;
                     if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                         pos = true;
-                    //console.writeline(p.id + " " + cc.n_plaza);
+                    ////Console.writeLine(p.id + " " + cc.n_plaza);
 
 
 
@@ -45700,37 +45852,37 @@ namespace SGC
                         cd2 = cc.caducidad.Split('/')[1];
                     }
 
-                    Console.WriteLine(email_cliente.Text.Equals(cc.mail));
-                    Console.WriteLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
-                    Console.WriteLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
-                    Console.WriteLine(pais_cliente_alta.Text.Equals(cc.Pais));
-                    Console.WriteLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
-                    Console.WriteLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
-                    Console.WriteLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
-                    Console.WriteLine(direccion_cliente_alta.Text.Equals(cc.direccion));
-                    Console.WriteLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
-                    Console.WriteLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
+                    //Console.writeLine(email_cliente.Text.Equals(cc.mail));
+                    //Console.writeLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
+                    //Console.writeLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
+                    //Console.writeLine(pais_cliente_alta.Text.Equals(cc.Pais));
+                    //Console.writeLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
+                    //Console.writeLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
+                    //Console.writeLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
+                    //Console.writeLine(direccion_cliente_alta.Text.Equals(cc.direccion));
+                    //Console.writeLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
+                    //Console.writeLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
                     string aa = Clientes_FechaEntrada_alta.SelectedDate.ToString();
                     string aa2 = cc.Fecha_In.ToString();
 
                     
-                    Console.WriteLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
-                    Console.WriteLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
-                    Console.WriteLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
-                    Console.WriteLine((nota1_alta.Text.Equals(cc.Nota1))); //
-                    Console.WriteLine((b == cc.Switch)); //
-                    Console.WriteLine((p.id == int.Parse(cc.n_plaza))); //
-                    Console.WriteLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
-                    Console.WriteLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
-                    Console.WriteLine((email_cliente2.Text.Equals(cc.mail2))); //
-                    Console.WriteLine((pos == cc.DeBaja)); //
-                    Console.WriteLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
-                    Console.WriteLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
-                    Console.WriteLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
+                    //Console.writeLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
+                    //Console.writeLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
+                    //Console.writeLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
+                    //Console.writeLine((nota1_alta.Text.Equals(cc.Nota1))); //
+                    //Console.writeLine((b == cc.Switch)); //
+                    //Console.writeLine((p.id == int.Parse(cc.n_plaza))); //
+                    //Console.writeLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
+                    //Console.writeLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
+                    //Console.writeLine((email_cliente2.Text.Equals(cc.mail2))); //
+                    //Console.writeLine((pos == cc.DeBaja)); //
+                    //Console.writeLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
+                    //Console.writeLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
+                    //Console.writeLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
 
                     if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                     {
-                        Console.WriteLine("42166");
+                        //Console.writeLine("42166");
                         change_client.IsEnabled = false;
 
                         change_client.IsEnabled = false;
@@ -45739,7 +45891,7 @@ namespace SGC
                     }
                     else
                     {
-                        Console.WriteLine("!42166");
+                        //Console.writeLine("!42166");
                         change_client.IsEnabled = true;
 
                         change_client.IsEnabled = true;
@@ -46244,7 +46396,7 @@ namespace SGC
                             var frame = st.GetFrame(0);
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
-                            Console.WriteLine(line + ": " + ee.Message);
+                            //Console.writeLine(line + ": " + ee.Message);
                         }
                         DateTime dt3 = (DateTime)Clientes_HoraSalida.Value;
                         if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -46449,7 +46601,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
 
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In && Clientes_FechaSalida_alta.SelectedDate == cc.Fecha_Out && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado && Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
@@ -46849,7 +47001,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -47019,7 +47171,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
 
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In && Clientes_FechaSalida_alta.SelectedDate == cc.Fecha_Out && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado && Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
@@ -47419,7 +47571,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -47589,7 +47741,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
 
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In && Clientes_FechaSalida_alta.SelectedDate == cc.Fecha_Out && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado && Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
@@ -47990,7 +48142,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -48160,7 +48312,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
 
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In && Clientes_FechaSalida_alta.SelectedDate == cc.Fecha_Out && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado && Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
@@ -48547,7 +48699,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -48716,7 +48868,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
 
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In && Clientes_FechaSalida_alta.SelectedDate == cc.Fecha_Out && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado && Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
@@ -49103,7 +49255,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -49273,7 +49425,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
 
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In && Clientes_FechaSalida_alta.SelectedDate == cc.Fecha_Out && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado && Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
@@ -49660,7 +49812,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -49830,7 +49982,7 @@ namespace SGC
                         bool pos = false;
                         if (alta_baja.HorizontalAlignment == HorizontalAlignment.Right)
                             pos = true;
-                        //console.writeline(p.id + " " + cc.n_plaza);
+                        ////Console.writeLine(p.id + " " + cc.n_plaza);
 
                         if (email_cliente.Text.Equals(cc.mail) && telefono2_cliente_alta.Text.Equals(cc.telefon2) && telefono_cliente_alta.Text.Equals(cc.telefon1) && pais_cliente_alta.Text.Equals(cc.Pais) && provincia_cliente_alta.Text.Equals(cc.Provincia) && poblacion_cliente_alta.Text.Equals(cc.poblacio) && cp_cliente_alta.Text.Equals(cc.codigo_postal) && direccion_cliente_alta.Text.Equals(cc.direccion) && dni_cliente_alta.Text.Equals(cc.dni) && apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) && nombre_cliente_alta.Text.Equals(cc.nombre_cliente) && numero_cliente_alta.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada_alta.SelectedDate == cc.Fecha_In && Clientes_FechaSalida_alta.SelectedDate == cc.Fecha_Out && Vehiculo1_alta.Text.Equals(cc.Vehiculo1) && bastidor1_alta.Text.Equals(cc.matricula1) && Vehiculo2_alta.Text.Equals(cc.Vehiculo2) && bastidor2_alta.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1_alta.Text.Equals(cc.Nota1) && b == cc.Switch && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada) && Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida) && email_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado && Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago && medidas_alta.Text.Equals(cc.Medidas_Vehiculo1))
                         {
@@ -50217,7 +50369,7 @@ namespace SGC
                                 var frame = st.GetFrame(0);
                                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                                 Peta(ee, line + "");
-                                Console.WriteLine(line + ": " + ee.Message);
+                                //Console.writeLine(line + ": " + ee.Message);
                             }
                             DateTime dt3 = (DateTime)Clientes_HoraPeriodo_alta.Value;
                             if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -50843,6 +50995,7 @@ namespace SGC
                 bdr4.HorizontalAlignment = HorizontalAlignment.Right;
                 Properties.Settings.Default.posicion = 1;
                 Properties.Settings.Default.Save();
+                infobuss.Visibility = Visibility.Visible;
                 seguir = true;
                 mirarDeNuevo = false;
                 if (!conectado)
@@ -50982,7 +51135,7 @@ namespace SGC
 
                             }
                         timerqueobserva.Content = t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00");
-                        Console.WriteLine(t.Minutes + ":" + t.Seconds);
+                        //Console.writeLine(t.Minutes + ":" + t.Seconds);
                     };
 
                     timerObs.Start();
@@ -51030,9 +51183,9 @@ namespace SGC
             DataTemplate dt = l.ItemTemplate;
             Border b = (Border)dt.LoadContent();
             Grid ff = (Grid)b.Child;
-            Console.WriteLine("Lista" + Clientes.ActualWidth);
+            //Console.writeLine("Lista" + Clientes.ActualWidth);
             Double d = Clientes.ActualWidth / 8;
-            Console.WriteLine("double1" + d);
+            //Console.writeLine("double1" + d);
             ff.ColumnDefinitions.Clear();
 
 
@@ -51121,7 +51274,7 @@ namespace SGC
             foreach (ColumnDefinition cd in ff.ColumnDefinitions)
             {
 
-                Console.WriteLine(cd.Width);
+                //Console.writeLine(cd.Width);
             }
 
             Facturas.ItemsSource = null;
@@ -51139,7 +51292,7 @@ namespace SGC
             Grid ff = (Grid)b.Child;
             Double d = Usuarios.ActualWidth / 5;
             ff.ColumnDefinitions.Clear();
-            Console.WriteLine(Usuarios.ActualWidth);
+            //Console.writeLine(Usuarios.ActualWidth);
             for (int i = 0; i < 5; i++)
             {
                 ColumnDefinition df = new ColumnDefinition();
@@ -51151,7 +51304,7 @@ namespace SGC
             {
 
 
-                Console.WriteLine(cd.Width);
+                //Console.writeLine(cd.Width);
             }
             Usuarios.ItemsSource = null;
             Usuarios.ItemsSource = lusr;
@@ -51164,9 +51317,9 @@ namespace SGC
             DataTemplate dt = l.ItemTemplate;
             Border b = (Border)dt.LoadContent();
             Grid ff = (Grid)b.Child;
-            Console.WriteLine("Lista" + Clientes.ActualWidth);
+            //Console.writeLine("Lista" + Clientes.ActualWidth);
             Double d = Clientes.ActualWidth / 8;
-            Console.WriteLine("double1" + d);
+            //Console.writeLine("double1" + d);
             ff.ColumnDefinitions.Clear();
             
             
@@ -51248,7 +51401,7 @@ namespace SGC
             {
 
 
-                Console.WriteLine(cd.Width);
+                //Console.writeLine(cd.Width);
             }
 
             Clientes.ItemsSource = null;
@@ -51262,9 +51415,9 @@ namespace SGC
             DataTemplate dt = l.ItemTemplate;
             Border b = (Border)dt.LoadContent();
             Grid ff = (Grid)b.Child;
-            Console.WriteLine("Lista" + Clientes.ActualWidth);
+            //Console.writeLine("Lista" + Clientes.ActualWidth);
             Double d = Clientes.ActualWidth / 8;
-            Console.WriteLine("double1" + d);
+            //Console.writeLine("double1" + d);
             ff.ColumnDefinitions.Clear();
 
 
@@ -51353,7 +51506,7 @@ namespace SGC
             foreach (ColumnDefinition cd in ff.ColumnDefinitions)
             {
 
-                Console.WriteLine(cd.Width);
+                //Console.writeLine(cd.Width);
             }
 
             Recibos.ItemsSource = null;
@@ -51367,9 +51520,9 @@ namespace SGC
             DataTemplate dt = l.ItemTemplate;
             Border b = (Border)dt.LoadContent();
             Grid ff = (Grid)b.Child;
-            Console.WriteLine("Lista" + lista_productos.ActualWidth);
+            //Console.writeLine("Lista" + lista_productos.ActualWidth);
             Double d = lista_productos.ActualWidth / 5;
-            Console.WriteLine("double1" + d);
+            //Console.writeLine("double1" + d);
             ff.ColumnDefinitions.Clear();
             for (int i = 0; i < 5; i++)
             {
@@ -51382,7 +51535,7 @@ namespace SGC
             {
 
 
-                Console.WriteLine(cd.Width);
+                //Console.writeLine(cd.Width);
             }
             
             lista_productos.ItemsSource =  lista_productos.ItemsSource;
@@ -51397,10 +51550,10 @@ namespace SGC
             Properties.Settings.Default.UsuariosWidth = Convert.ToInt32(this.ActualWidth * 0.97) + "";
             Properties.Settings.Default.UsuariosWidth = Convert.ToInt32(this.ActualWidth * 0.97) + "";
             //Properties.Settings.Default.LabelwidthFactura = Double.Parse(Facturas.ActualWidth / 9 + "");
-            //Console.WriteLine(Facturas.ActualWidth / 9);
-            //Console.WriteLine();
+            ////Console.writeLine(Facturas.ActualWidth / 9);
+            ////Console.writeLine();
 
-            Console.WriteLine(this.ActualWidth + " " + this.ActualHeight);
+            //Console.writeLine(this.ActualWidth + " " + this.ActualHeight);
 
             Properties.Settings.Default.Save();
 
@@ -51445,7 +51598,7 @@ namespace SGC
             
             if (this.ActualWidth < 1400)
             {
-                Console.WriteLine(this.ActualWidth);
+                //Console.writeLine(this.ActualWidth);
                 Grid g = (Grid)sender;
 
                 g.ColumnDefinitions.Clear();
@@ -51471,7 +51624,7 @@ namespace SGC
             }
             else
             {
-                Console.WriteLine(this.ActualWidth);
+                //Console.writeLine(this.ActualWidth);
                 Grid g = (Grid)sender;
 
                 g.ColumnDefinitions.Clear();
@@ -51500,11 +51653,11 @@ namespace SGC
         {
 
             int rowIndex = Grid.GetColumn((UIElement)sender);
-            Console.WriteLine(rowIndex);
+            //Console.writeLine(rowIndex);
 
             foreach (ColumnDefinition cd in gridd1.ColumnDefinitions)
             {
-                Console.WriteLine(cd.ActualWidth);
+                //Console.writeLine(cd.ActualWidth);
             }
 
             switch (rowIndex)
@@ -51667,11 +51820,11 @@ namespace SGC
         {
             
             int rowIndex = Grid.GetColumn((UIElement)sender);
-            Console.WriteLine(rowIndex);
+            //Console.writeLine(rowIndex);
 
             foreach (ColumnDefinition cd in gridd1.ColumnDefinitions)
             {
-                Console.WriteLine(cd.ActualWidth);
+                //Console.writeLine(cd.ActualWidth);
             }
 
             switch (rowIndex)
@@ -51819,14 +51972,14 @@ namespace SGC
                 Label l = (Label)sender;
 
                 l.MaxWidth = Usuarios.ActualWidth / 5;
-                //Console.WriteLine(l.MaxWidth);
+                ////Console.writeLine(l.MaxWidth);
             }
             if (sender is TextBlock)
             {
                 TextBlock l = (TextBlock)sender;
 
                 l.MaxWidth = Usuarios.ActualWidth / 5;
-                //Console.WriteLine(l.MaxWidth);
+                ////Console.writeLine(l.MaxWidth);
             }
         }
 
@@ -51842,14 +51995,14 @@ namespace SGC
                 Label l = (Label)sender;
 
                 l.MaxWidth = Recibos.ActualWidth / 7;
-                //Console.WriteLine(l.MaxWidth);
+                ////Console.writeLine(l.MaxWidth);
             }
             if (sender is TextBlock)
             {
                 TextBlock l = (TextBlock)sender;
 
                 l.MaxWidth = Recibos.ActualWidth / 7;
-                //Console.WriteLine(l.MaxWidth);
+                ////Console.writeLine(l.MaxWidth);
             }
         }
 
@@ -51860,14 +52013,14 @@ namespace SGC
                 Label l = (Label)sender;
 
                 l.MaxWidth = lista_productos.ActualWidth / 5;
-                //Console.WriteLine(l.MaxWidth);
+                ////Console.writeLine(l.MaxWidth);
             }
             if (sender is TextBlock)
             {
                 TextBlock l = (TextBlock)sender;
 
                 l.MaxWidth = lista_productos.ActualWidth / 5;
-                //Console.WriteLine(l.MaxWidth);
+                ////Console.writeLine(l.MaxWidth);
             }
         }
 
@@ -52462,7 +52615,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Nombre_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("1 " + a);
+                //Console.writeLine("1 " + a);
 
                 if (!DNI_Cliente_Factura.Text.Equals(f.DNI_CIF))
                 {
@@ -52475,7 +52628,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     DNI_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("2 " + a);
+                //Console.writeLine("2 " + a);
                 if (!Direccion_Camping_Factura.Text.Equals(f.Direccion_Facturacion))
                 {
                     a = true;
@@ -52486,7 +52639,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Direccion_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("3 " + a);
+                //Console.writeLine("3 " + a);
                 if (!Poblacion_Camping_Factura.Text.Equals(f.Poblecion_Facturacion))
                 {
                     a = true;
@@ -52497,7 +52650,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Poblacion_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("4 " + a);
+                //Console.writeLine("4 " + a);
 
                 if (!Codigo_Postal_Camping_Factura.Text.Equals(f.CP_Facturacion.ToString()))
                 {
@@ -52510,7 +52663,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Codigo_Postal_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("5 " + a);
+                //Console.writeLine("5 " + a);
                 if (!Provincia_Camping_Factura.Text.Equals(f.Provincia_Facturacion))
 
                 {
@@ -52524,7 +52677,7 @@ namespace SGC
                     Provincia_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
 
-                Console.WriteLine("6 " + a);
+                //Console.writeLine("6 " + a);
                 if (!Fecha_Factura.SelectedDate.Equals(f.fecha))
                 {
                     a = true;
@@ -52535,7 +52688,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Fecha_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("7 " + a);
+                //Console.writeLine("7 " + a);
                 if (!Fecha_Factura_ven.SelectedDate.Equals(f.fecha_ven))
                 {
                     a = true;
@@ -52546,7 +52699,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Fecha_Factura_ven.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("8 " + a);
+                //Console.writeLine("8 " + a);
                 if (!Importe_Factura.Text.Equals(f.Importe.ToString("0.00") + " €"))
                 {
                     a = true;
@@ -52557,7 +52710,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Base_Imponible.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("9 " + a);
+                //Console.writeLine("9 " + a);
 
                 if (!Direccion_Cliente_Factura.Text.Equals(f.Direccion_Cliente))
                 {
@@ -52569,7 +52722,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Direccion_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("10 " + a);
+                //Console.writeLine("10 " + a);
                 if (!Poblacion_Cliente_Factura.Text.Equals(f.Poblacio_Cliente))
                 {
                     a = true;
@@ -52580,7 +52733,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Poblacion_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("11 " + a);
+                //Console.writeLine("11 " + a);
                 if (!Codigo_Postal_Cliente_Facturacion.Text.Equals(f.CP_Cliente.ToString()))
                 {
                     a = true;
@@ -52591,7 +52744,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Codigo_Postal_Cliente_Facturacion.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("12 " + a);
+                //Console.writeLine("12 " + a);
                 if (!Provincia_Cliente_Factura.Text.Equals(f.Provincia_Cliente))
                 {
                     a = true;
@@ -52602,7 +52755,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Provincia_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("13 " + a);
+                //Console.writeLine("13 " + a);
 
 
 
@@ -52616,7 +52769,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Pais_Cliente_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("14 " + a);
+                //Console.writeLine("14 " + a);
 
                 if (!Pais_Camping_Factura.Text.Equals(f.Pais_Facturacion))
                 {
@@ -52628,7 +52781,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Pais_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("15 " + a);
+                //Console.writeLine("15 " + a);
 
                 if (!Empresa.Text.Equals(f.Empresa))
                 {
@@ -52640,7 +52793,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Empresa.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("16 " + a);
+                //Console.writeLine("16 " + a);
 
 
                 if (!Telefono_cliente.Text.Equals(f.Telefono))
@@ -52653,7 +52806,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Telefono_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("17 " + a);
+                //Console.writeLine("17 " + a);
                 if (!Telefono_Camping_Factura.Text.Equals(f.Telefono_Camping))
                 {
                     a = true;
@@ -52664,7 +52817,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Telefono_Camping_Factura.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("18 " + a);
+                //Console.writeLine("18 " + a);
 
                 if (Metodo_Pago.SelectedIndex != f.Metodo_Pago)
                 {
@@ -52676,7 +52829,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Metodo_Pago.Foreground = Brushes.Black;
                 }
-                Console.WriteLine("19 " + a);
+                //Console.writeLine("19 " + a);
                 if (!Descuento.Text.Equals(f.Descuento))
                 {
                     a = true;
@@ -52687,7 +52840,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Descuento.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("20 " + a);
+                //Console.writeLine("20 " + a);
                 int[] pr = new int[f.Lista_productos.Count()];
                 for (int i = 0; i < pr.Count(); i++)
                 {
@@ -52719,7 +52872,7 @@ namespace SGC
                     a = true;
 
                 foreach (int i in pr)
-                    Console.WriteLine(i + " ");
+                    //Console.writeLine(i + " ");
                 if (pr.Contains(0))
                 {
                     a = true;
@@ -52730,7 +52883,7 @@ namespace SGC
                     BrushConverter bc = new BrushConverter();
                     Productos.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
                 }
-                Console.WriteLine("21 " + a);
+                //Console.writeLine("21 " + a);
 
                 if (a)
                 {
@@ -53057,11 +53210,11 @@ namespace SGC
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             int rowIndex = Grid.GetColumn((UIElement)sender);
-            Console.WriteLine(rowIndex);
+            //Console.writeLine(rowIndex);
 
             foreach (ColumnDefinition cd in gridd4.ColumnDefinitions)
             {
-                Console.WriteLine(cd.ActualWidth);
+                //Console.writeLine(cd.ActualWidth);
             }
 
             switch (rowIndex)
@@ -53182,9 +53335,9 @@ namespace SGC
                 DataTemplate dt = l.ItemTemplate;
                 Border b = (Border)dt.LoadContent();
                 Grid ff = (Grid)b.Child;
-                Console.WriteLine("Lista" + Productos2.ActualWidth);
+                //Console.writeLine("Lista" + Productos2.ActualWidth);
                 Double d = Productos2.ActualWidth / 7;
-                Console.WriteLine("double1" + d);
+                //Console.writeLine("double1" + d);
                 ff.ColumnDefinitions.Clear();
                 for (int i = 0; i < 7; i++)
                 {
@@ -53255,7 +53408,7 @@ namespace SGC
                 {
 
 
-                    Console.WriteLine(cd.Width);
+                    //Console.writeLine(cd.Width);
                 }
                 Productos2.Items.Clear();
             Recibos r = Recibos.SelectedItem as Recibos;
@@ -53271,9 +53424,9 @@ namespace SGC
             DataTemplate dt = l.ItemTemplate;
             Border b = (Border)dt.LoadContent();
             Grid ff = (Grid)b.Child;
-            Console.WriteLine("Lista" + Productos.ActualWidth);
+            //Console.writeLine("Lista" + Productos.ActualWidth);
             Double d = Productos.ActualWidth / 7;
-            Console.WriteLine("double1" + d);
+            //Console.writeLine("double1" + d);
             ff.ColumnDefinitions.Clear();
             for (int i = 0; i < 7; i++)
             {
@@ -53344,7 +53497,7 @@ namespace SGC
             {
 
 
-                Console.WriteLine(cd.Width);
+                //Console.writeLine(cd.Width);
             }
             List<Producto> lista = Productos.Items.Cast<Producto>()
                                  .Select(item => item)
@@ -53358,11 +53511,11 @@ namespace SGC
         private void Grid_SizeChanged_1(object sender, SizeChangedEventArgs e)
         {
             int rowIndex = Grid.GetColumn((UIElement)sender);
-            Console.WriteLine(rowIndex);
+            //Console.writeLine(rowIndex);
 
             foreach (ColumnDefinition cd in gridd3.ColumnDefinitions)
             {
-                Console.WriteLine(cd.ActualWidth);
+                //Console.writeLine(cd.ActualWidth);
             }
 
             switch (rowIndex)
@@ -53506,17 +53659,17 @@ namespace SGC
                     {
 
                     }
-                    ////console.writeline(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
-                    //console.writeline(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
-                    ////console.writeline(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
-                    //console.writeline((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
+                    //////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
+                    ////Console.writeLine(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
+                    //////Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
+                    ////Console.writeLine((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
 
                     if (p.id == null)
                         p.id = 0;
                     bool pos = false;
                     if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
                         pos = true;
-                    //console.writeline(p.id + " " + cc.n_plaza);
+                    ////Console.writeLine(p.id + " " + cc.n_plaza);
 
 
 
@@ -53528,37 +53681,37 @@ namespace SGC
                         cd2 = cc.caducidad.Split('/')[1];
                     }
 
-                    Console.WriteLine(email_cliente.Text.Equals(cc.mail));
-                    Console.WriteLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
-                    Console.WriteLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
-                    Console.WriteLine(pais_cliente_alta.Text.Equals(cc.Pais));
-                    Console.WriteLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
-                    Console.WriteLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
-                    Console.WriteLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
-                    Console.WriteLine(direccion_cliente_alta.Text.Equals(cc.direccion));
-                    Console.WriteLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
-                    Console.WriteLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
+                    //Console.writeLine(email_cliente.Text.Equals(cc.mail));
+                    //Console.writeLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
+                    //Console.writeLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
+                    //Console.writeLine(pais_cliente_alta.Text.Equals(cc.Pais));
+                    //Console.writeLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
+                    //Console.writeLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
+                    //Console.writeLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
+                    //Console.writeLine(direccion_cliente_alta.Text.Equals(cc.direccion));
+                    //Console.writeLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
+                    //Console.writeLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
                     string aa = Clientes_FechaEntrada_alta.SelectedDate.ToString();
                     string aa2 = cc.Fecha_In.ToString();
 
                  
-                    Console.WriteLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
-                    Console.WriteLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
-                    Console.WriteLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
-                    Console.WriteLine((nota1_alta.Text.Equals(cc.Nota1))); //
-                    Console.WriteLine((b == cc.Switch)); //
-                    Console.WriteLine((p.id == int.Parse(cc.n_plaza))); //
-                    Console.WriteLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
-                    Console.WriteLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
-                    Console.WriteLine((email_cliente2.Text.Equals(cc.mail2))); //
-                    Console.WriteLine((pos == cc.DeBaja)); //
-                    Console.WriteLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
-                    Console.WriteLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
-                    Console.WriteLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
+                    //Console.writeLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
+                    //Console.writeLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
+                    //Console.writeLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
+                    //Console.writeLine((nota1_alta.Text.Equals(cc.Nota1))); //
+                    //Console.writeLine((b == cc.Switch)); //
+                    //Console.writeLine((p.id == int.Parse(cc.n_plaza))); //
+                    //Console.writeLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
+                    //Console.writeLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
+                    //Console.writeLine((email_cliente2.Text.Equals(cc.mail2))); //
+                    //Console.writeLine((pos == cc.DeBaja)); //
+                    //Console.writeLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
+                    //Console.writeLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
+                    //Console.writeLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
 
                     if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
                     {
-                        Console.WriteLine("49554");
+                        //Console.writeLine("49554");
                         change_client.IsEnabled = false;
 
                         change_client.IsEnabled = false;
@@ -53567,7 +53720,7 @@ namespace SGC
                     }
                     else
                     {
-                        Console.WriteLine("!49554");
+                        //Console.writeLine("!49554");
                         change_client.IsEnabled = true;
 
                         change_client.IsEnabled = true;
@@ -54060,7 +54213,7 @@ namespace SGC
                             var frame = st.GetFrame(0);
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
-                            Console.WriteLine(line + ": " + ee.Message);
+                            //Console.writeLine(line + ": " + ee.Message);
                         }
                         DateTime dt3 = (DateTime)Clientes_HoraSalida.Value;
                         if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
@@ -54282,7 +54435,7 @@ namespace SGC
             {
                 Acompañantes ac = c.lista_acompañantes[0];
                 c.lista_acompañantes[0] = null;
-                Console.WriteLine(ac.ToString());
+                //Console.writeLine(ac.ToString());
                 nombreacompañante1_alta.Text = "";
                 s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
             }
@@ -54403,7 +54556,7 @@ namespace SGC
                 {
                     Acompañantes ac = c.lista_acompañantes[1];
                     c.lista_acompañantes[1] = null;
-                    Console.WriteLine(ac.ToString());
+                    //Console.writeLine(ac.ToString());
                     nombreacompañante3_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
                 }
@@ -54512,7 +54665,7 @@ namespace SGC
                 {
                     Acompañantes ac = c.lista_acompañantes[2];
                     c.lista_acompañantes[2] = null;
-                    Console.WriteLine(ac.ToString());
+                    //Console.writeLine(ac.ToString());
                     nombreacompañante3_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
                 }
@@ -54621,7 +54774,7 @@ namespace SGC
                 {
                     Acompañantes ac = c.lista_acompañantes[3];
                     c.lista_acompañantes[3] = null;
-                    Console.WriteLine(ac.ToString());
+                    //Console.writeLine(ac.ToString());
                     nombreacompañante4_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
                 }
@@ -54730,7 +54883,7 @@ namespace SGC
                 {
                     Acompañantes ac = c.lista_acompañantes[4];
                     c.lista_acompañantes[4] = null;
-                    Console.WriteLine(ac.ToString());
+                    //Console.writeLine(ac.ToString());
                     nombreacompañante3_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
                 }
@@ -54838,7 +54991,7 @@ namespace SGC
                 {
                     Acompañantes ac = c.lista_acompañantes[5];
                     c.lista_acompañantes[5] = null;
-                    Console.WriteLine(ac.ToString());
+                    //Console.writeLine(ac.ToString());
                     nombreacompañante3_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
                 }
@@ -55071,7 +55224,7 @@ namespace SGC
             }
             catch (Exception ee)
             {
-                Console.WriteLine(ee.Message);
+                //Console.writeLine(ee.Message);
                 MessageBox.Show("Error! Compruebe si esta bien configurado el mail desde sistema", "Alerta!", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 if (System.IO.File.Exists(oLog.getpathname()))
@@ -55176,7 +55329,7 @@ namespace SGC
                 string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 Log oLog = new Log(path2);
                 Exception savedException = null;
-                Console.WriteLine("Hello from the pool " + Thread.CurrentThread.ManagedThreadId);
+                //Console.writeLine("Hello from the pool " + Thread.CurrentThread.ManagedThreadId);
 
                 try
                 {
@@ -55204,7 +55357,7 @@ namespace SGC
 
                 }
 
-                Console.WriteLine("Bye " + Thread.CurrentThread.ManagedThreadId);
+                //Console.writeLine("Bye " + Thread.CurrentThread.ManagedThreadId);
             }));
         }
 
@@ -55864,7 +56017,7 @@ namespace SGC
 
                         }
                     timerqueobserva.Content = t.Minutes.ToString("00") +":"+ t.Seconds.ToString("00");
-                    Console.WriteLine(t.Minutes + ":" + t.Seconds);
+                    //Console.writeLine(t.Minutes + ":" + t.Seconds);
                 };
                 timerObs.Start();
                
@@ -55900,6 +56053,7 @@ namespace SGC
             if (pp != null)
             {
                 luz.Content = "Comprobando...";
+                luzFicha.Content = "Comprobando...";
 
                 // onoffparcela.IsEnabled = false;
                 actu.IsEnabled = false;
@@ -56089,6 +56243,7 @@ private void offparcela_Click(object sender, RoutedEventArgs e)
             if (pp != null)
             {
                 luz.Content = "Comprobando...";
+                luzFicha.Content = "Comprobando...";
 
                 // onoffparcela.IsEnabled = false;
                 actu.IsEnabled = false;
@@ -56279,6 +56434,7 @@ private void offparcela_Click(object sender, RoutedEventArgs e)
             if (pp != null)
             {
                 luz.Content = "Comprobando...";
+                luzFicha.Content = "Comprobando...";
                // onoffparcela.IsEnabled = false;
                 actu.IsEnabled = false;
 
@@ -56328,6 +56484,17 @@ private void offparcela_Click(object sender, RoutedEventArgs e)
         private void Button_Click_26(object sender, RoutedEventArgs e)
         {
             busstext.Inlines.Clear();
+        }
+
+        private void borrarLog(object sender, RoutedEventArgs e)
+        {
+            Clientes c = Clientes.SelectedItem as Clientes;
+            if (c != null)
+            {
+                s.EjecutarQuery("DELETE FROM Log WHERE IdCliente=" + c.id);
+                c.lstring.Clear();
+                logs.Items.Refresh();
+            }
         }
 
         ///////////////////////////////////////////////////////////////////////////

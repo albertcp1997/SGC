@@ -31,29 +31,51 @@ namespace SGC.KNXLib.DPT
         {
             // DPT bits high byte: MEEEEMMM, low byte: MMMMMMMM
             // first M is signed state from two's complement notation
-
-            int val = 0;
-            uint m = (uint)((data[0] & 0x07) << 8) | (data[1]);
-            bool signed = ((data[0] & 0x80) >> 7) == 1;
-
-            if (signed)
+            try
             {
-                // change for two's complement notation and use only mantissa bytes
-                m = m - 1;
-                m = ~(m);
-                m = m & (0 | 0x07FF);
-                val = (int)(m * -1);
-            }
-            else
+                string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                SGC.Clases.Log oLog = new SGC.Clases.Log(path2 + "\\9_001");
+
+                oLog.Add(data[0].ToString());
+                oLog.Add("lenght " + data.Length);
+
+                string hex = BitConverter.ToString(data);
+
+                oLog.Add("hex " + hex);
+
+                int val = 0;
+                uint m = (uint)((data[0] & 0x07) << 8) | (data[1]);
+                bool signed = ((data[0] & 0x80) >> 7) == 1;
+
+                if (signed)
+                {
+                    // change for two's complement notation and use only mantissa bytes
+                    m = m - 1;
+                    m = ~(m);
+                    m = m & (0 | 0x07FF);
+                    val = (int)(m * -1);
+                }
+                else
+                {
+                    val = (int)m;
+                }
+
+                int power = (data[0] & 0x78) >> 3;
+
+                double calc = 0.01d * val;
+
+
+                oLog.Add("Calc " + calc + " " + power);
+                SGC.Properties.Settings.Default.hex = hex;
+                SGC.Properties.Settings.Default.Save();
+                return (decimal)Math.Round(calc * Math.Pow(2, power), 2);
+            }catch(Exception e)
             {
-                val = (int)m;
+                string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                SGC.Clases.Log oLog = new SGC.Clases.Log(path2 + "\\9_001");
+                oLog.Add("lenght " + e.Message);
             }
-
-            int power = (data[0] & 0x78) >> 3;
-
-            double calc = 0.01d * val;
-
-            return (decimal)Math.Round(calc * Math.Pow(2, power), 2);
+            return -1;
         }
 
         public override byte[] ToDataPoint(string value)

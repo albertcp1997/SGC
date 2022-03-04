@@ -325,7 +325,7 @@
                                                             </StackPanel>
 
                                                             <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                                                                <Button Background="#e22a46" Margin="10,0,0,3" Width="50" x:Name="deleteProducto" Height="40" Click="deleteProducto_Click" VerticalAlignment="Bottom">
+                                                                <Button Background="#e22a46" Margin="10,0,0,3" Width="35" x:Name="deleteProducto" Height="30" Click="deleteProducto_Click" VerticalAlignment="Bottom">
                                                                     <Button.Resources>
                                                                         <Style TargetType="Border">
                                                                             <Setter Property="CornerRadius" Value="10"></Setter>
@@ -335,7 +335,7 @@
 
                                                                     </Image>
                                                                 </Button>
-                                                                <Button Grid.Column="1" Margin="15,3,6,3" x:Name="AddnewProduct" Click="AddnewProduct_Click" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontSize="30" Width="50" Height="40" Background="#00ba92" HorizontalAlignment="Center">
+                                                                <Button Grid.Column="1" Margin="15,3,6,3" x:Name="AddnewProduct" Click="AddnewProduct_Click" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontSize="30" Width="35" Height="30" Background="#00ba92" HorizontalAlignment="Center">
                                                                     <Button.Resources>
                                                                         <Style TargetType="Border">
                                                                             <Setter Property="CornerRadius" Value="10"></Setter>

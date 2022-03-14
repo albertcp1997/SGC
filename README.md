@@ -1,0 +1,2 @@
+# SGC
+Proyecto SGC

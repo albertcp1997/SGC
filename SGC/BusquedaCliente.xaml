@@ -54,6 +54,7 @@
                     <ComboBoxItem>Fecha entrada</ComboBoxItem>
                     <ComboBoxItem>Fecha salida</ComboBoxItem>
                     <ComboBoxItem>Fecha pago</ComboBoxItem>
+                    <ComboBoxItem>Parcela</ComboBoxItem>
 
                 </ComboBox>
 
@@ -62,6 +63,17 @@
                 <DatePicker Visibility="Collapsed" Grid.Column="3" BorderBrush="Gray" BorderThickness="1"  x:Name="buscadorClientes2"  Height="25" Margin="10,0,10,0" VerticalAlignment="Center" VerticalContentAlignment="Center">
                     
                 </DatePicker>
+                <ComboBox Grid.Column="3" x:Name="nparcela" Height="25" Margin="10,0,10,0" BorderBrush="Gray" BorderThickness="1" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding nom}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                <TextBlock Text=" " HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                <TextBlock Text="{Binding ocupada2}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="4">
                     <Button HorizontalAlignment="Center" Background="#03b991" ToolTip="Buscar..."  Margin="0,0,0,0" Width="30" Height="25"  FontSize="12"  Click="Button_Click">

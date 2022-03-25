@@ -24,6 +24,7 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+              
                 <StackPanel Orientation="Horizontal" Visibility="Collapsed">
                     <Label FontSize="10" Content="Plantilla del PDF:" Foreground="#838d99" FontFamily="Helvetica neue"/>
                     <StackPanel Orientation="Horizontal">
@@ -76,7 +77,12 @@
                 </ComboBox>
                 
             </StackPanel>
+               
                 <Label x:Name="tipo" Content="Recibo estandar" FontFamily="helvetica neue" FontSize="10" Foreground="#00ba92" HorizontalAlignment="Center" Margin="0,0,10,5"></Label>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                    <Label IsEnabled="False" Height="25" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,-3,0,0">Mostrar datos cliente al pie de página</Label>
+                    <CheckBox Width="70" Height="20" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" Background="LightGray" x:Name="opcion"></CheckBox>
+                </StackPanel>
             </StackPanel>
             <Border BorderBrush="LightGray" BorderThickness="0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <StackPanel Margin="0,0,0,0"  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">

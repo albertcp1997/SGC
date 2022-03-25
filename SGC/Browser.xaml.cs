@@ -23,7 +23,7 @@ namespace SGC
     public partial class Browser : Window
     {
        
-        public delegate void GenPdf(string pathm, int t, PDF pdf, int p);
+        public delegate void GenPdf(string pathm, int t, PDF pdf, int p, bool num);
         public event GenPdf refresh;
         public static Browser le = new Browser(-1);
         public PDF pdf;
@@ -89,7 +89,10 @@ namespace SGC
         private void addall2_Click(object sender, RoutedEventArgs e)
         {
             PDF pdf = pdf_name.SelectedItem as PDF; 
-            le.refresh(source.Text, tipopdf.SelectedIndex, pdf, pos);
+            if((bool)opcion.IsChecked)
+                le.refresh(source.Text, tipopdf.SelectedIndex, pdf, pos, true);
+            else
+                le.refresh(source.Text, tipopdf.SelectedIndex, pdf, pos, false);
             this.Close();
         }
 

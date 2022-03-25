@@ -586,5 +586,17 @@ namespace SGC.Properties {
                 this["hex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FicheroRegistro {
+            get {
+                return ((int)(this["FicheroRegistro"]));
+            }
+            set {
+                this["FicheroRegistro"] = value;
+            }
+        }
     }
 }

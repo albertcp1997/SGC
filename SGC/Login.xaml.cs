@@ -44,7 +44,7 @@ namespace SGC
                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                 Peta(ee, line + "");
             }
-            //oLog.Add("Empezamos Login");
+           // oLog.Add("Empezamos Login");
 
 
         }
@@ -116,11 +116,14 @@ namespace SGC
 
         private void log(object sender, RoutedEventArgs e)
         {
-
+            Log oLog = new Log(Directory.GetCurrentDirectory());
+            oLog.Add("1");
             if (!(nick.Text.Equals("") && pas.Text.Equals("")))
             {
                 try
                 {
+
+                    oLog.Add("2");
                     string consulta = "Trabajadores";
                     string dni = nick.Text;
                     string pss = "";
@@ -136,9 +139,11 @@ namespace SGC
 
 
 
+                    oLog.Add("3");
                     if (s.login(dni, pss))
                     {
 
+                        oLog.Add("4");
                         Login ll = this as Login;
                         //MessageBoxResult result = System.Windows.MessageBox.Show(Directory.GetCurrentDirectory(), "Estado", MessageBoxButton.OK);
                         //result = System.Windows.MessageBox.Show("Nueva pagina", "Estado", MessageBoxButton.OK);

@@ -11,6 +11,7 @@ namespace SGC.Clases
     {
         private string Path = "";
         private string Name = "";
+        int aa = 0;
 
 
         public Log(string Path)
@@ -18,14 +19,22 @@ namespace SGC.Clases
             this.Path = Path;
             Name = "log_" + DateTime.Now.Year + "_" + DateTime.Now.Month + "_" + DateTime.Now.Day + ".txt"; 
         }
+        public Log(string Path, int a)
+        {
+            this.Path = Path;
+            Name = "arxiu."+a.ToString("000") + ".txt";
+            aa = 1;
+        }
 
         public void Add(string sLog)
         {
             CreateDirectory();
             string nombre = Name;
             string cadena = "";
-
-            cadena += DateTime.Now + " - " + sLog + Environment.NewLine;
+            if(aa==0)
+                cadena += DateTime.Now + " - " + sLog + Environment.NewLine;
+            else
+                cadena += sLog + Environment.NewLine;
 
             StreamWriter sw = new StreamWriter(Path + "/" + nombre, true);
             sw.Write(cadena);

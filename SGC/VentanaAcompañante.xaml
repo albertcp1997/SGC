@@ -35,6 +35,7 @@
                     <ComboBox  x:Name="Potencia"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" SelectionChanged="Potencia_SelectionChanged">
                         <ComboBoxItem >DNI</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">Pasaporte</ComboBoxItem>
+                        <ComboBoxItem >Carnet de conducir</ComboBoxItem>
                         <ComboBoxItem>Documento de identidad</ComboBoxItem>
                         <ComboBoxItem>Permiso residencia español</ComboBoxItem>
                         <ComboBoxItem>Permiso residencia de otro estado de la Union Europea</ComboBoxItem>
@@ -58,6 +59,9 @@
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="5">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -85,10 +89,13 @@
                                     <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="5">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                    </StackPanel>
+                    </StackPanel>                    
                     <StackPanel >
                         <Label Foreground="#838d99" Content="Carnet de conducir" FontFamily="Helvetica neue" FontSize="12"/>
                         <TextBox  x:Name="carnetdeconducir"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar"></TextBox>
@@ -108,6 +115,37 @@
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="5">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label Foreground="#838d99" Content="Documento de identidad" FontFamily="Helvetica neue" FontSize="12"/>
+                        <TextBox  x:Name="documentoIdentidad"  Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar"></TextBox>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="1">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="3">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="2">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="5">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -130,9 +168,12 @@
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=Potencia, Path=SelectedIndex}" Value="3">
-                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="5">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -158,6 +199,9 @@
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="4">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="5">
                                         <Setter Property="Visibility" Value="Visible"/>
                                     </DataTrigger>
                                 </Style.Triggers>

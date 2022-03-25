@@ -69,10 +69,15 @@ namespace SGC.x86
                     break;
                 case 3:
                     {
-                        Permisoresidenciaespaña.Text = a.dniacompañante1;
+                        documentoIdentidad.Text = a.dniacompañante1;
                     }
                     break;
                 case 4:
+                    {
+                        Permisoresidenciaespaña.Text = a.dniacompañante1;
+                    }
+                    break;
+                case 5:
                     {
                         Permisoresidenciaeuropa.Text = a.dniacompañante1;
                     }

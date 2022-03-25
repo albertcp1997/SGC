@@ -27,6 +27,8 @@ namespace SGC.Clases
             {
                 this.asignada = "Si";
             }
+            sobrepotencia = false;
+            ocupada = false;
         }
 
         public Direcciones(string descripcion, string nombre, int asignada)
@@ -35,6 +37,10 @@ namespace SGC.Clases
             Nombre = nombre;
 
             Asignada = asignada;
+            sobrepotencia = false;
+            ocupada = false;
+            ocupada2 = "No";
+
         }
 
         public Direcciones(string descripcion, string nombre, int longitud, int asignada)
@@ -52,6 +58,9 @@ namespace SGC.Clases
             {
                 this.asignada = "Si";
             }
+            sobrepotencia = false;
+            ocupada = false;
+            ocupada2 = "No";
         }
 
         public Direcciones(int id, string descripcion, string nombre, int longitud, int asignada)
@@ -68,6 +77,9 @@ namespace SGC.Clases
             {
                 this.asignada = "Si";
             }
+            sobrepotencia = false;
+            ocupada = false;
+            ocupada2 = "No";
         }
 
         public int Id { get; set; }
@@ -80,6 +92,10 @@ namespace SGC.Clases
         public string imagee { get; set; }
         public bool onIsSelected { get; set; }
         public bool mostrar { get; set; }
+
+        public bool sobrepotencia { get; set; }
+        public bool ocupada { get; set; }
+        public string ocupada2 { get; set; }
 
 
     }

@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -749,16 +752,78 @@ namespace SGC
         }
         internal bool login(string dni, string pss)
         {
-            SQLiteCommand sql_cmd = new SQLiteCommand("SELECT * FROM Usuario WHERE Nombre_Usuario LIKE '" + dni + "' AND Password LIKE '" + pss + "'", cn);
-            SQLiteDataReader rdr = sql_cmd.ExecuteReader();
-            if (rdr.HasRows)
+            try
             {
-                return true;
+                Log oLog = new Log(Directory.GetCurrentDirectory());
+                oLog.Add("log1");
+                SQLiteCommand sql_cmd = new SQLiteCommand("SELECT * FROM Usuario WHERE Nombre_Usuario LIKE '" + dni + "' AND Password LIKE '" + pss + "'", cn);
+                SQLiteDataReader rdr = sql_cmd.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    return true;
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ee)
+            {
+                string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                Peta(ee, line + "");
+
+                return false;
 
             }
-            else
+        }
+        private void Peta(Exception ee, string l)
+        {
+            var st = new StackTrace(ee, true);
+            var frame = st.GetFrame(0);
+            var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+            Log oLog = new Log(Directory.GetCurrentDirectory());
+            oLog.Add(l + ": " + ee.Message);
+            //ROUNDCUBE ssl0.ovh.net
+            try
             {
-                return false;
+                var fromAddress = new MailAddress("app@adex-integracio.com", "Error");
+                var toAddress = new MailAddress("app@adex-integracio.com", "To Name");
+                string fromPassword = "AdexAPP462";
+                string subject = "Subject";
+                string body = "Body";
+                var smtp = new SmtpClient
+                {
+                    Host = "ssl0.ovh.net",
+                    Port = 587,
+                    EnableSsl = true,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress))
+                {
+                    message.Subject = "Factura";
+                    message.Body = "Factura";
+                    message.Attachments.Add(new Attachment(oLog.getpathname()));
+
+                    smtp.Send(message);
+                    smtp.Dispose();
+                }
+
+                if (System.IO.File.Exists(oLog.getpathname()))
+                {
+                    System.IO.File.Delete(oLog.getpathname());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(ee.Message);
+
+                if (System.IO.File.Exists(oLog.getpathname()))
+                {
+                    System.IO.File.Delete(oLog.getpathname());
+                }
             }
         }
 

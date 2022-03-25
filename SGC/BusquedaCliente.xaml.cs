@@ -23,11 +23,11 @@ namespace SGC
         List<Clientes> lcln;
         public delegate void Eventos(Clientes c);
         public event Eventos refresh;
-        public static BusquedaCliente le = new BusquedaCliente(null);
+        public static BusquedaCliente le = new BusquedaCliente(null, null);
         public int columna = -1;
         public int cont = 0;
 
-        public BusquedaCliente(List<Clientes> l)
+        public BusquedaCliente(List<Clientes> l, List<Parcelas> lp)
         {
             InitializeComponent();
             if (l != null)
@@ -36,6 +36,8 @@ namespace SGC
 
                 foreach (Clientes c in l.Select(x => x).Where(x => x.DeBaja == false).ToList())
                     Clientes.Items.Add(c);
+
+                nparcela.ItemsSource = lp.OrderByDescending(x=>x.ocupada);
             }
         }
 
@@ -371,6 +373,19 @@ namespace SGC
                         }
                     }
                     break;
+                case 15:
+                    {
+                        List<Clientes> lc = new List<Clientes>();
+                        Parcelas p = nparcela.SelectedItem as Parcelas;
+                        lc = lcln.Select(sublist => sublist).Where(item => item.n_plaza.Equals(p.id+"")).ToList();
+
+                        Clientes.Items.Clear();
+                        foreach (Clientes cl in lc)
+                        {
+                            Clientes.Items.Add(cl);
+                        }
+                    }
+                    break;
                 
 
 
@@ -395,17 +410,30 @@ namespace SGC
         private void filtrar_cliente_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             if(buscadorClientes!=null)
+                if (filtrar_cliente.SelectedIndex==15)
+                {
+                    buscadorClientes.Visibility = Visibility.Collapsed;
+                    buscadorClientes2.Visibility = Visibility.Collapsed;
+
+                    nparcela.Visibility = Visibility.Visible;
+                    nparcela.SelectedIndex = 0;
+                }
+                else
             if (filtrar_cliente.SelectedIndex > 11)
             {
                 buscadorClientes.Visibility = Visibility.Collapsed;
                 buscadorClientes2.Visibility = Visibility.Visible;
+                    nparcela.Visibility = Visibility.Collapsed;
                 buscadorClientes2.SelectedDate = DateTime.Now;
             }
-            else
+            else 
             {
                 buscadorClientes.Visibility = Visibility.Visible;
                 buscadorClientes2.Visibility = Visibility.Collapsed;
-            }
+
+                    nparcela.Visibility = Visibility.Collapsed;
+                }
+               
         }
 
         private void estado_alta_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

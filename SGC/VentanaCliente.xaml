@@ -440,11 +440,11 @@
                                     <Label Content="Datos Vehiculo" FontSize="16" FontFamily="helvetica neue"  HorizontalContentAlignment="Left"></Label>
                                 </Border>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
-                                    <Label Content="*" Foreground="Red" FontSize="9" ></Label>
+                                    <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
                                     <Label VerticalAlignment="Center" Content="Vehiculo 1" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" Grid.Row="1"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="2">
-                                    <Label Content="*" Foreground="Red" FontSize="9" ></Label>
+                                    <Label Content="*" Foreground="Transparent" FontSize="9" ></Label>
                                     <Label VerticalAlignment="Center" Foreground="#838d99" Content="Matricula 1" FontFamily="Helvetica neue" FontSize="9" Grid.Row="2"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="3">

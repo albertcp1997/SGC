@@ -33,11 +33,15 @@ namespace SGC.Clases
             Direccion = (int)p["Direccion"];
             if (ocupada == 1)
             {
+                
                 Disponibilidad = "No";
             }
             else
             {
-                Disponibilidad = "Si";
+                if (imagee.Equals("ON") || imagee.Equals("OFF") || imagee.Equals("ERROR"))
+                    Disponibilidad = imagee;
+                else
+                    Disponibilidad = "Si";
             }
 
             Medidas = (string)p["Medidas"];
@@ -56,16 +60,24 @@ namespace SGC.Clases
             if (ocupada == 0)
             {
                 Disponibilidad = "No";
+                ocupada2 = "Disponible";
             }
             else
             {
-                Disponibilidad = "Si";
+                if (imagee == null)
+                {
+                    Disponibilidad = "Si";
+                    ocupada2 = "Ocupada";
+                }
+                else
+                    Disponibilidad = imagee;
             }
 
 
             Medidas = medidas;
 
             imagee = "NA";
+            sobrepotencia = false;
         }
 
         public Parcelas(int id, string nom, int ocupada, string parcelas, int n_cliente, string descripción, string distrito, string orientacion, string nota, int d, string medidas)
@@ -84,14 +96,22 @@ namespace SGC.Clases
             if (ocupada == 0)
             {
                 Disponibilidad = "No";
+                ocupada2 = "Disponible";
             }
             else
             {
-                Disponibilidad = "Si";
+                if (imagee == null)
+                {
+                    Disponibilidad = "Si";
+                    ocupada2 = "Ocupada";
+                }
+                else
+                    Disponibilidad = imagee;
             }
 
             Medidas = medidas;
             imagee = "NA";
+            sobrepotencia = false;
         }
 
         public int? id { get; set; }
@@ -118,6 +138,9 @@ namespace SGC.Clases
 
         public string Medidas { get; set; }
         public string imagee { get; set; }
+        public string ocupada2 { get; set; }
+
+        public bool sobrepotencia { get; set; }
 
         public bool ParcelaIsSelected
         {

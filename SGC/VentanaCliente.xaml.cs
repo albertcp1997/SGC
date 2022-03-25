@@ -91,7 +91,7 @@ namespace SGC
 
                 Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
                 Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
-                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null  && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
                 {
                     addall2.IsEnabled = true;
                 }
@@ -122,7 +122,7 @@ namespace SGC
 
                 Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
                 Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
-                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
                 {
                     addall2.IsEnabled = true;
                 }
@@ -159,7 +159,7 @@ namespace SGC
 
                 Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
                 Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
-                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
                 {
                     addall2.IsEnabled = true;
                 }
@@ -184,7 +184,7 @@ namespace SGC
 
                 Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
                 Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
-                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
                 {
                     addall2.IsEnabled = true;
                 }
@@ -216,7 +216,7 @@ namespace SGC
 
                 Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
                 Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
-                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
                 {
                     addall2.IsEnabled = true;
                 }
@@ -248,7 +248,7 @@ namespace SGC
 
                 Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
                 Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
-                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
                 {
                     addall2.IsEnabled = true;
                 }
@@ -391,7 +391,7 @@ namespace SGC
 
                 Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
                 Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
-                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
                 {
                     addall2.IsEnabled = true;
                 }
@@ -450,7 +450,7 @@ namespace SGC
 
                 Clientes_FechaEntrada_alta.Foreground = Brushes.Black;
                 Clientes_FechaPeriodo_alta.Foreground = Brushes.Black;
-                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Vehiculo1_alta.Text.Length > 0 && bastidor1_alta.Text.Length > 0 && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
+                if (telefono_cliente_alta.Text.Length > 0 && numero_cliente_alta.Text.Length > 0 && apellido_cliente_alta.Text.Length > 0 && nombre_cliente_alta.Text.Length > 0 && Clientes_FechaEntrada_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null && Clientes_FechaPeriodo_alta.SelectedDate != null && Clientes_HoraPeriodo_alta.Value != null)
                 {
                     addall2.IsEnabled = true;
                 }

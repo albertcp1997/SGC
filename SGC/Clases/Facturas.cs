@@ -23,8 +23,8 @@ namespace SGC.Clases
             CP_Cliente = (string)p["CP_Cliente"];
             Provincia_Cliente = (string)p["Provincia_Cliente"];
             Pais_Cliente = (string)p["Pais_Cliente"];
-            
-            this.fecha = (DateTime)p["Fecha"];
+            Console.WriteLine(p["Fecha"]);
+            this.fecha = DateTime.Parse((string)p["Fecha"]);
             Console.WriteLine(((string)p["Bi"]).Replace(",", "."));
             Console.WriteLine(((string)p["Cuota_IVA"]).Replace(",", "."));
             Console.WriteLine(((string)p["Importe"]).Replace(",", "."));
@@ -46,13 +46,15 @@ namespace SGC.Clases
             Mail = (string)p["Mail"];
             Metodo_Pago = (int)p["Metodo_Pago"];
             Telefono_Camping = (string)p["Telefono_Camping"];
-            this.fecha_ven = (DateTime)p["Fecha_ven"];
+            Console.WriteLine(p["Fecha_ven"]);
+            this.fecha_ven = DateTime.Parse((string)p["Fecha_ven"]);
             //Lista_productos = lista_productos;
             Numero_Factura = (string)p["Numero_Factura"];
+            Lista_productos_tpv = new List<Producto_Registro_TPV>();
 
         }
 
-        public Facturas(string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban)
+        public Facturas(string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban, int tipo)
         {
             Nombre_Cliente = nombre_Cliente;
             DNI_CIF = dNI_CIF;
@@ -84,9 +86,47 @@ namespace SGC.Clases
             Vehiculo = veh;
             Matricula = mat;
             IBAN = iban;
+
+            Tipo = tipo;
+            Lista_productos_tpv = new List<Producto_Registro_TPV>();
+        }
+        public Facturas(string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto_Registro_TPV> lista_productos, string num, string desc, string veh, string mat, string iban, int tipo)
+        {
+            Nombre_Cliente = nombre_Cliente;
+            DNI_CIF = dNI_CIF;
+            Direccion_Cliente = direccion_Cliente;
+            Poblacio_Cliente = poblacio_Cliente;
+            CP_Cliente = cP_Cliente;
+            Provincia_Cliente = provincia_Cliente;
+            Pais_Cliente = pais_Cliente;
+            this.fecha = fecha;
+            BI = bI;
+            Cuota_IVA = cuota_IVA;
+            Direccion_Facturacion = direccion_Facturacion;
+            Poblecion_Facturacion = poblecion_Facturacion;
+            CP_Facturacion = cP_Facturacion;
+            Provincia_Facturacion = provincia_Facturacion;
+            Pais_Facturacion = pais_Facturacion;
+            Empresa = empresa;
+            Telefono = telefono;
+            Mail = mail;
+            Metodo_Pago = metodo_Pago;
+            Telefono_Camping = telefono_Camping;
+            this.fecha_ven = fecha_ven;
+            Lista_productos_tpv = lista_productos;
+            Importe = importe;
+
+            Numero_Factura = num;
+            Descuento = desc;
+
+            Vehiculo = veh;
+            Matricula = mat;
+            IBAN = iban;
+            Tipo = tipo;
+            this.Lista_productos = new List<Producto>();
         }
 
-        public Facturas(int id, string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban)
+        public Facturas(int id, string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban, int tipo, int ticket)
         {
             Id = id;
             Nombre_Cliente = nombre_Cliente;
@@ -117,6 +157,47 @@ namespace SGC.Clases
             Vehiculo = veh;
             Matricula = mat;
             IBAN = iban;
+            Tipo = tipo;
+            Id_Ticket = ticket;
+
+            Lista_productos_tpv = new List<Producto_Registro_TPV>();
+        }
+
+        public Facturas(int id, string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto_Registro_TPV> lista_productos, string num, string desc, string veh, string mat, string iban, int tipo, int ticket)
+        {
+            Id = id;
+            Nombre_Cliente = nombre_Cliente;
+            DNI_CIF = dNI_CIF;
+            Direccion_Cliente = direccion_Cliente;
+            Poblacio_Cliente = poblacio_Cliente;
+            CP_Cliente = cP_Cliente;
+            Provincia_Cliente = provincia_Cliente;
+            Pais_Cliente = pais_Cliente;
+            this.fecha = fecha;
+            BI = bI;
+            Cuota_IVA = cuota_IVA;
+            Importe = importe;
+            Direccion_Facturacion = direccion_Facturacion;
+            Poblecion_Facturacion = poblecion_Facturacion;
+            CP_Facturacion = cP_Facturacion;
+            Provincia_Facturacion = provincia_Facturacion;
+            Pais_Facturacion = pais_Facturacion;
+            Empresa = empresa;
+            Telefono = telefono;
+            Mail = mail;
+            Metodo_Pago = metodo_Pago;
+            Telefono_Camping = telefono_Camping;
+            this.fecha_ven = fecha_ven;
+            Lista_productos_tpv = lista_productos;
+            Numero_Factura = num.Replace("__","_");
+            Descuento = desc;
+            Vehiculo = veh;
+            Matricula = mat;
+            IBAN = iban;
+            Tipo = tipo;
+
+            Id_Ticket = ticket;
+            this.Lista_productos = new List<Producto>();
         }
 
         public int Id { get; set; }
@@ -148,5 +229,8 @@ namespace SGC.Clases
         public string IBAN { get; set; }
         public DateTime fecha_ven { get; set; }
         public List<Producto> Lista_productos { get; set; }
+        public List<Producto_Registro_TPV> Lista_productos_tpv { get; set; }
+        public int Tipo { get; set; }
+        public int Id_Ticket { get; set; }
     }
 }

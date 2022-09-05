@@ -246,7 +246,7 @@
                                                     <Border Background="#00ba91"></Border>
                                                     <StackPanel Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <Label Foreground="Red" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
+                                                            <Label Foreground="Transparent" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
                                                             <Label HorizontalAlignment="Left" Content="Metodo Pago"/>
                                                         </StackPanel>
 
@@ -258,7 +258,7 @@
                                                         </ComboBox>
                                                         <StackPanel x:Name="Iban" Orientation="Horizontal">
                                                             <Label Foreground="Transparent" Content="*" FontFamily="Helvetica neue" FontSize="12"></Label>
-                                                            <Label HorizontalAlignment="Left" Content="IBAN"/>
+                                                            <Label HorizontalAlignment="Left" Content="Nota"/>
                                                             <StackPanel.Style>
                                                                 <Style TargetType="StackPanel">
                                                                     <Style.Triggers>
@@ -266,13 +266,13 @@
                                                                             <Setter Property="Visibility" Value="Visible"/>
                                                                         </DataTrigger>
                                                                         <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="0">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            <Setter Property="Visibility" Value="Visible"/>
                                                                         </DataTrigger>
                                                                         <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="1">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            <Setter Property="Visibility" Value="Visible"/>
                                                                         </DataTrigger>
                                                                         <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="3">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            <Setter Property="Visibility" Value="Visible"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                 </Style>
@@ -287,13 +287,13 @@
                                                                         <Setter Property="Visibility" Value="Visible"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="0">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Setter Property="Visibility" Value="Visible"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="1">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            <Setter Property="Visibility" Value="Visible"/>
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding ElementName=Metodo_Pago, Path=SelectedIndex}" Value="3">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            <Setter Property="Visibility" Value="Visible"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -374,7 +374,7 @@
 
                                                             <Grid Grid.Row="1" Grid.ColumnSpan="7" HorizontalAlignment="Stretch">
                                                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                                                    <ListView SizeChanged="Productos_SizeChanged" x:Name="Productos" Height="100"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" >
+                                                                    <ListView SizeChanged="Productos_SizeChanged" x:Name="Productos" Height="250"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" >
                                                                         <ListView.ItemTemplate>
 
                                                                             <DataTemplate>
@@ -427,18 +427,38 @@
                                                             <Border BorderBrush="LightGray" BorderThickness="1,1,0,1" Grid.RowSpan="2" Grid.Column="5"></Border>
                                                             <Border BorderBrush="LightGray" BorderThickness="1,1,1,1" Grid.RowSpan="2" Grid.Column="6"></Border>
                                                         </Grid>
+                                                        <Grid >
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Margin="2,0">
+                                                                <Label HorizontalAlignment="Left">Base Imponible</Label>
+                                                                <TextBox IsEnabled="False" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height2}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15"  TextChanged="mirar" Foreground="#92959c"  x:Name="Base_Imponible"></TextBox>
 
-                                                        <Label HorizontalAlignment="Left">Base Imponible</Label>
-                                                        <TextBox IsEnabled="False" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height2}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15"  TextChanged="mirar" Foreground="#92959c"  x:Name="Base_Imponible"></TextBox>
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Column="1"  Margin="2,0">
+                                                                <Label HorizontalAlignment="Left">Cuota IVA</Label>
+                                                                <TextBox  IsEnabled="False" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height2}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15"  TextChanged="mirar" Foreground="#92959c"  x:Name="Cuota_IVA"></TextBox>
 
-                                                        <Label HorizontalAlignment="Left">Cuota IVA</Label>
-                                                        <TextBox  IsEnabled="False" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height2}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15"  TextChanged="mirar" Foreground="#92959c"  x:Name="Cuota_IVA"></TextBox>
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Column="2" Margin="2,0">
+                                                                <Label HorizontalAlignment="Left">Descuento (%)</Label>
+                                                                <TextBox  IsEnabled="True" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height2}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15"  TextChanged="mirar" Foreground="#92959c"  x:Name="Descuento"></TextBox>
 
-                                                        <Label HorizontalAlignment="Left">Descuento (%)</Label>
-                                                        <TextBox  IsEnabled="True" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height2}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15"  TextChanged="mirar" Foreground="#92959c"  x:Name="Descuento"></TextBox>
-                                                        <Label HorizontalAlignment="Left">Importe</Label>
-                                                        <TextBox IsEnabled="False" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height2}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15"  TextChanged="mirar" Foreground="#92959c"  x:Name="Importe_Factura"></TextBox>
+                                                            </StackPanel>
+                                                            <StackPanel Grid.Column="3" Margin="2,0">
+                                                                <Label HorizontalAlignment="Left">Importe</Label>
+                                                                <TextBox IsEnabled="False" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height2}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15"  TextChanged="mirar" Foreground="#92959c"  x:Name="Importe_Factura"></TextBox>
 
+                                                            </StackPanel>
+                                                        </Grid>
+                                                        
+                                                       
+                                                       
+                                                        
                                                     </StackPanel>
                                                 </Grid>
                                             </Border>

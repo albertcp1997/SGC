@@ -1,0 +1,89 @@
+27/06/2022 11:05:28 - Direccion Encendida: 1/0/1
+27/06/2022 11:05:36 - Direccion Encendida VALOR: -2
+27/06/2022 11:05:46 - Direccion Encendida: 1/0/6
+27/06/2022 11:05:54 - Direccion Encendida VALOR: -2
+27/06/2022 11:06:02 - Direccion Encendida: 1/0/8
+27/06/2022 11:06:11 - Direccion Encendida VALOR: -2
+27/06/2022 11:06:20 - Direccion Encendida: 1/0/13
+27/06/2022 11:06:29 - Direccion Encendida VALOR: -2
+27/06/2022 11:07:56 - Direccion Encendida: 1/0/1
+27/06/2022 11:08:02 - Direccion Encendida VALOR: -2
+27/06/2022 11:08:08 - Direccion Encendida: 1/0/6
+27/06/2022 11:08:14 - Direccion Encendida VALOR: -2
+27/06/2022 11:08:20 - Direccion Encendida: 1/0/8
+27/06/2022 11:08:26 - Direccion Encendida VALOR: -2
+27/06/2022 11:08:32 - Direccion Encendida: 1/0/13
+27/06/2022 11:08:38 - Direccion Encendida VALOR: -2
+27/06/2022 11:08:44 - Direccion Encendida: 1/1/3
+27/06/2022 11:09:56 - Direccion Encendida: 1/0/1
+27/06/2022 11:10:20 - Direccion Encendida VALOR: -2
+27/06/2022 11:10:24 - Direccion Encendida: 1/0/6
+27/06/2022 11:10:27 - Direccion Encendida VALOR: -2
+27/06/2022 11:10:31 - Direccion Encendida: 1/0/8
+27/06/2022 11:10:35 - Direccion Encendida VALOR: -2
+27/06/2022 11:10:38 - Direccion Encendida: 1/0/13
+27/06/2022 11:10:42 - Direccion Encendida VALOR: -2
+27/06/2022 11:10:46 - Direccion Encendida: 1/1/3
+27/06/2022 11:10:49 - Direccion Encendida VALOR: -2
+27/06/2022 11:10:53 - Direccion Encendida: 1/1/11
+27/06/2022 11:10:57 - Direccion Encendida VALOR: -2
+27/06/2022 11:11:00 - Direccion Encendida: 1/3/4
+27/06/2022 11:11:04 - Direccion Encendida VALOR: -2
+27/06/2022 11:11:08 - Direccion Encendida: 1/4/1
+27/06/2022 11:11:11 - Direccion Encendida VALOR: -2
+27/06/2022 11:11:15 - Direccion Encendida: 1/4/2
+27/06/2022 11:11:18 - Direccion Encendida VALOR: -2
+27/06/2022 11:11:22 - Direccion Encendida: 1/4/5
+27/06/2022 11:11:26 - Direccion Encendida VALOR: -2
+27/06/2022 11:11:29 - Direccion Encendida: 1/5/3
+27/06/2022 11:11:33 - Direccion Encendida VALOR: -2
+27/06/2022 11:11:37 - Direccion Encendida: 1/5/9
+27/06/2022 11:11:40 - Direccion Encendida VALOR: -2
+27/06/2022 11:23:35 - Direccion Encendida: 1/0/1
+27/06/2022 11:23:39 - Direccion Encendida VALOR: -2
+27/06/2022 11:23:43 - Direccion Encendida: 1/0/6
+27/06/2022 11:23:46 - Direccion Encendida VALOR: -2
+27/06/2022 11:23:50 - Direccion Encendida: 1/0/8
+27/06/2022 11:23:54 - Direccion Encendida VALOR: -2
+27/06/2022 11:23:57 - Direccion Encendida: 1/0/13
+27/06/2022 11:24:01 - Direccion Encendida VALOR: -2
+27/06/2022 11:24:05 - Direccion Encendida: 1/1/3
+27/06/2022 11:24:08 - Direccion Encendida VALOR: -2
+27/06/2022 11:24:12 - Direccion Encendida: 1/1/11
+27/06/2022 11:24:16 - Direccion Encendida VALOR: -2
+27/06/2022 11:24:19 - Direccion Encendida: 1/3/4
+27/06/2022 11:24:23 - Direccion Encendida VALOR: -2
+27/06/2022 11:24:27 - Direccion Encendida: 1/4/1
+27/06/2022 11:24:30 - Direccion Encendida VALOR: -2
+27/06/2022 11:24:34 - Direccion Encendida: 1/4/2
+27/06/2022 11:24:38 - Direccion Encendida VALOR: -2
+27/06/2022 11:24:41 - Direccion Encendida: 1/4/5
+27/06/2022 11:24:45 - Direccion Encendida VALOR: -2
+27/06/2022 11:24:49 - Direccion Encendida: 1/5/3
+27/06/2022 11:24:52 - Direccion Encendida VALOR: -2
+27/06/2022 11:24:56 - Direccion Encendida: 1/5/9
+27/06/2022 11:25:00 - Direccion Encendida VALOR: -2
+27/06/2022 11:26:52 - Direccion Encendida: 1/0/1
+27/06/2022 11:26:56 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:00 - Direccion Encendida: 1/0/6
+27/06/2022 11:27:03 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:07 - Direccion Encendida: 1/0/8
+27/06/2022 11:27:11 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:14 - Direccion Encendida: 1/0/13
+27/06/2022 11:27:18 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:22 - Direccion Encendida: 1/1/3
+27/06/2022 11:27:25 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:29 - Direccion Encendida: 1/1/11
+27/06/2022 11:27:33 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:36 - Direccion Encendida: 1/3/4
+27/06/2022 11:27:40 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:44 - Direccion Encendida: 1/4/1
+27/06/2022 11:27:48 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:51 - Direccion Encendida: 1/4/2
+27/06/2022 11:27:55 - Direccion Encendida VALOR: -2
+27/06/2022 11:27:59 - Direccion Encendida: 1/4/5
+27/06/2022 11:28:02 - Direccion Encendida VALOR: -2
+27/06/2022 11:28:06 - Direccion Encendida: 1/5/3
+27/06/2022 11:28:10 - Direccion Encendida VALOR: -2
+27/06/2022 11:28:13 - Direccion Encendida: 1/5/9
+27/06/2022 11:28:18 - Direccion Encendida VALOR: -2

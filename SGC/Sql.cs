@@ -12,6 +12,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace SGC
 {
@@ -23,7 +24,6 @@ namespace SGC
         {
             BuscarDB();
             Conexion();
-
         }
         private void BuscarDB()
         {
@@ -59,9 +59,19 @@ namespace SGC
             // executed again until the call to Last()  
 
 
+            if (Properties.Settings.Default.DB.Count() == 0)
+            {
 
+                OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-            string path = conexiondb;
+                openFileDialog1.Filter = "Data Base File (*.db)|*.db";
+
+                openFileDialog1.ShowDialog();
+                Properties.Settings.Default.DB = openFileDialog1.FileName;
+                Properties.Settings.Default.Save();
+            }
+
+            string path = Properties.Settings.Default.DB;
             try
             {
                 //oLog.Add("1");
@@ -69,8 +79,8 @@ namespace SGC
 
                 Uri u = new Uri(conexiondb + "\\test.db");
                 //oLog.Add("2");
-                conexiondb = "Data Source=" + conexiondb;
-                SQLiteConnection con = new SQLiteConnection("Data Source=" + sf.FullName);
+                conexiondb = "Data Source=" + Properties.Settings.Default.DB;
+                SQLiteConnection con = new SQLiteConnection("Data Source=" + Properties.Settings.Default.DB);
                 //oLog.Add("3");
 
             }
@@ -548,11 +558,88 @@ namespace SGC
 
 
 
-                a = new Clientes(rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetString(2), rdr.GetString(3), rdr.GetString(4), rdr.GetString(5), rdr.GetString(6), rdr.GetString(7), rdr.GetString(8), rdr.GetString(9), rdr.GetString(10), rdr.GetString(11), rdr.GetString(12), rdr.GetBoolean(13), rdr.GetString(14), rdr.GetString(15), rdr.GetString(16), rdr.GetString(17), rdr.GetString(18), rdr.GetString(19), rdr.GetString(20), rdr.GetString(21), rdr.GetString(22), rdr.GetString(23), rdr.GetString(24), rdr.GetBoolean(25), dd, dd2, rdr.GetInt32(28), rdr.GetInt32(29), rdr.GetString(30), rdr.GetString(31), rdr.GetString(32), rdr.GetString(33), rdr.GetValue(34).ToString(), rdr.GetValue(35).ToString(), rdr.GetValue(36).ToString(), "00:00", "00:00", rdr.GetString(39), rdr.GetString(40), rdr.GetString(41), rdr.GetString(42), dd3, dd4, dd5, rdr.GetString(46), rdr.GetString(47), rdr.GetString(50), rdr.GetString(51), rdr.GetString(52), rdr.GetString(53), rdr.GetString(49), rdr.GetString(54), rdr.GetString(55), rdr.GetString(56), rdr.GetString(57), rdr.GetString(58));
+                a = new Clientes(rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetString(2), rdr.GetString(3), rdr.GetString(4), rdr.GetString(5), rdr.GetString(6), rdr.GetString(7), rdr.GetString(8), rdr.GetString(9), rdr.GetString(10), rdr.GetString(11), rdr.GetString(12), rdr.GetBoolean(13), rdr.GetString(14), rdr.GetString(15), rdr.GetString(16), rdr.GetString(17), rdr.GetString(18), rdr.GetString(19), rdr.GetString(20), rdr.GetString(21), rdr.GetString(22), rdr.GetString(23), rdr.GetString(24), rdr.GetBoolean(25), dd, dd2, rdr.GetInt32(28), rdr.GetInt32(29), rdr.GetString(30), rdr.GetString(31), rdr.GetString(32), rdr.GetString(33), rdr.GetValue(34).ToString(), rdr.GetValue(35).ToString(), rdr.GetValue(36).ToString(), "00:00", "00:00", rdr.GetString(39), rdr.GetString(40), rdr.GetString(41), rdr.GetString(42), dd3, dd4, dd5, rdr.GetString(46), rdr.GetString(47), rdr.GetString(50), rdr.GetString(51), rdr.GetString(52), rdr.GetString(53), rdr.GetString(49), rdr.GetString(54), rdr.GetString(55), rdr.GetString(56), rdr.GetString(57), rdr.GetString(58), rdr.GetString(59));
 
                 if (rdr.GetValue(38).ToString().Length > 0)
                 {
-                    a = new Clientes(rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetString(2), rdr.GetString(3), rdr.GetString(4), rdr.GetString(5), rdr.GetString(6), rdr.GetString(7), rdr.GetString(8), rdr.GetString(9), rdr.GetString(10), rdr.GetString(11), rdr.GetString(12), rdr.GetBoolean(13), rdr.GetString(14), rdr.GetString(15), rdr.GetString(16), rdr.GetString(17), rdr.GetString(18), rdr.GetString(19), rdr.GetString(20), rdr.GetString(21), rdr.GetString(22), rdr.GetString(23), rdr.GetString(24), rdr.GetBoolean(25), dd, dd2, rdr.GetInt32(28), rdr.GetInt32(29), rdr.GetString(30), rdr.GetString(31), rdr.GetString(32), rdr.GetString(33), rdr.GetString(34), rdr.GetString(35), rdr.GetString(36), rdr.GetString(37), rdr.GetString(38), rdr.GetString(39), rdr.GetString(40), rdr.GetString(41), rdr.GetString(42), dd3, dd4, dd5, rdr.GetString(46), rdr.GetString(47), rdr.GetString(50), rdr.GetString(51), rdr.GetString(52), rdr.GetString(53), rdr.GetString(49), rdr.GetString(54), rdr.GetString(55), rdr.GetString(56), rdr.GetString(57), rdr.GetString(58));
+                    a = new Clientes(rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetString(2), rdr.GetString(3), rdr.GetString(4), rdr.GetString(5), rdr.GetString(6), rdr.GetString(7), rdr.GetString(8), rdr.GetString(9), rdr.GetString(10), rdr.GetString(11), rdr.GetString(12), rdr.GetBoolean(13), rdr.GetString(14), rdr.GetString(15), rdr.GetString(16), rdr.GetString(17), rdr.GetString(18), rdr.GetString(19), rdr.GetString(20), rdr.GetString(21), rdr.GetString(22), rdr.GetString(23), rdr.GetString(24), rdr.GetBoolean(25), dd, dd2, rdr.GetInt32(28), rdr.GetInt32(29), rdr.GetString(30), rdr.GetString(31), rdr.GetString(32), rdr.GetString(33), rdr.GetString(34), rdr.GetString(35), rdr.GetString(36), rdr.GetString(37), rdr.GetString(38), rdr.GetString(39), rdr.GetString(40), rdr.GetString(41), rdr.GetString(42), dd3, dd4, dd5, rdr.GetString(46), rdr.GetString(47), rdr.GetString(50), rdr.GetString(51), rdr.GetString(52), rdr.GetString(53), rdr.GetString(49), rdr.GetString(54), rdr.GetString(55), rdr.GetString(56), rdr.GetString(57), rdr.GetString(58), rdr.GetString(59));
+
+                }
+            }
+            return a;
+        }
+        internal Clientes CargarUnCliente(int Id)
+        {
+            string sql_Text = "SELECT * FROM CLIENTE WHERE Id="+Id+" ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            Clientes a = new Clientes();
+            while (rdr.Read())
+            {
+                bool b = rdr.GetBoolean(13);
+                bool b2 = rdr.GetBoolean(25);
+                int ii = rdr.GetInt32(28);
+
+                DateTime? dd = null;
+                DateTime? dd2 = null;
+                try
+                {
+                    string aa = rdr.GetString(26);
+                    dd = DateTime.Parse(aa);
+                }
+                catch
+                {
+                    dd = null;
+                }
+                try
+                {
+                    string aa = rdr.GetString(27);
+                    dd2 = DateTime.Parse(aa);
+                }
+                catch
+                {
+                    dd2 = null;
+                }
+
+                DateTime? dd3 = null;
+                DateTime? dd4 = null;
+                DateTime? dd5 = null;
+
+                try
+                {
+                    string aa = rdr.GetString(43);
+                    dd3 = DateTime.Parse(aa);
+                }
+                catch
+                {
+                    dd3 = null;
+                }
+                try
+                {
+                    string aa = rdr.GetString(44);
+                    dd4 = DateTime.Parse(aa);
+                }
+                catch
+                {
+                    dd4 = null;
+                }
+                try
+                {
+                    string aa = rdr.GetString(45);
+                    dd5 = DateTime.Parse(aa);
+                }
+                catch
+                {
+                    dd5 = null;
+                }
+
+
+
+                a = new Clientes(rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetString(2), rdr.GetString(3), rdr.GetString(4), rdr.GetString(5), rdr.GetString(6), rdr.GetString(7), rdr.GetString(8), rdr.GetString(9), rdr.GetString(10), rdr.GetString(11), rdr.GetString(12), rdr.GetBoolean(13), rdr.GetString(14), rdr.GetString(15), rdr.GetString(16), rdr.GetString(17), rdr.GetString(18), rdr.GetString(19), rdr.GetString(20), rdr.GetString(21), rdr.GetString(22), rdr.GetString(23), rdr.GetString(24), rdr.GetBoolean(25), dd, dd2, rdr.GetInt32(28), rdr.GetInt32(29), rdr.GetString(30), rdr.GetString(31), rdr.GetString(32), rdr.GetString(33), rdr.GetValue(34).ToString(), rdr.GetValue(35).ToString(), rdr.GetValue(36).ToString(), "00:00", "00:00", rdr.GetString(39), rdr.GetString(40), rdr.GetString(41), rdr.GetString(42), dd3, dd4, dd5, rdr.GetString(46), rdr.GetString(47), rdr.GetString(50), rdr.GetString(51), rdr.GetString(52), rdr.GetString(53), rdr.GetString(49), rdr.GetString(54), rdr.GetString(55), rdr.GetString(56), rdr.GetString(57), rdr.GetString(58), rdr.GetString(59));
+
+                if (rdr.GetValue(38).ToString().Length > 0)
+                {
+                    a = new Clientes(rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetString(2), rdr.GetString(3), rdr.GetString(4), rdr.GetString(5), rdr.GetString(6), rdr.GetString(7), rdr.GetString(8), rdr.GetString(9), rdr.GetString(10), rdr.GetString(11), rdr.GetString(12), rdr.GetBoolean(13), rdr.GetString(14), rdr.GetString(15), rdr.GetString(16), rdr.GetString(17), rdr.GetString(18), rdr.GetString(19), rdr.GetString(20), rdr.GetString(21), rdr.GetString(22), rdr.GetString(23), rdr.GetString(24), rdr.GetBoolean(25), dd, dd2, rdr.GetInt32(28), rdr.GetInt32(29), rdr.GetString(30), rdr.GetString(31), rdr.GetString(32), rdr.GetString(33), rdr.GetString(34), rdr.GetString(35), rdr.GetString(36), rdr.GetString(37), rdr.GetString(38), rdr.GetString(39), rdr.GetString(40), rdr.GetString(41), rdr.GetString(42), dd3, dd4, dd5, rdr.GetString(46), rdr.GetString(47), rdr.GetString(50), rdr.GetString(51), rdr.GetString(52), rdr.GetString(53), rdr.GetString(49), rdr.GetString(54), rdr.GetString(55), rdr.GetString(56), rdr.GetString(57), rdr.GetString(58), rdr.GetString(59));
 
                 }
             }
@@ -565,6 +652,17 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
+        internal int CargarUltimaFactura()
+        {
+            string sql_Text = "SELECT Id FROM Factura ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                return rdr.GetInt32(0);
+            }
+                return 0;
+        }
         internal SQLiteDataReader CargarUsuario()
         {
             string sql_Text = "SELECT * FROM Usuario";
@@ -572,12 +670,85 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
-        internal SQLiteDataReader CargarUltimoUsuario()
+        internal SQLiteDataReader CargarTPV()
+        {
+            string sql_Text = "SELECT * FROM TPV";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            return rdr;
+        }
+        internal int CargarUltimoTPV()
+        {
+            string sql_Text = "SELECT * FROM TPV ORDER BY Id DESC Limit 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader(); 
+            while (rdr.Read())
+            {
+                return rdr.GetInt32(0);
+            }
+            return 0;
+        }
+        internal SQLiteDataReader CargarIndicesTPV()
+        {
+            string sql_Text = "SELECT * FROM TPV_Indices";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            return rdr;
+        }
+        internal int CargarUltimoIndicesTPV()
+        {
+            string sql_Text = "SELECT * FROM TPV_Indices ORDER BY Id DESC Limit 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                return rdr.GetInt32(0);
+            }
+            return 0;
+        }
+        
+        internal TPV_Indices CargarUltimoIndiceTPV()
+        {
+            string sql_Text = "SELECT * FROM TPV_Indices ORDER BY Id DESC Limit 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            TPV_Indices tpind = new TPV_Indices();
+            while (rdr.Read())
+            {
+                tpind = new TPV_Indices(rdr.GetInt32(0), rdr.GetString(1));
+            }
+            return tpind;
+        }
+        internal SQLiteDataReader CargaProductosTPV()
+        {
+            string sql_Text = "SELECT * FROM Productos_TPV";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            return rdr;
+        }
+        internal int CargarUltimoProductoTPV()
+        {
+            string sql_Text = "SELECT * FROM Productos_TPV ORDER BY Id DESC Limit 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            ProductosTPV tpind = new ProductosTPV();
+            while (rdr.Read())
+            {
+                tpind = new ProductosTPV(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetInt32(4), rdr.GetString(6), rdr.GetString(7), rdr.GetInt32(8));
+            }
+            if (tpind != null)
+                return tpind.Id;
+            else
+                return 0;
+        }
+        internal int CargarUltimoUsuario()
         {
             string sql_Text = "SELECT * FROM Usuario ORDER BY Id DESC LIMIT 1";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
-            return rdr;
+            while (rdr.Read())
+                return rdr.GetInt32(0);
+            return 0;
         }
         internal SQLiteDataReader CargarAlarma()
         {
@@ -586,12 +757,18 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
-        internal SQLiteDataReader CargarUltimaAlarma()
+        internal Alarma CargarUltimaAlarma()
         {
             string sql_Text = "SELECT * FROM Alarmas  ORDER BY Id DESC LIMIT 1";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
-            return rdr;
+            while (rdr.Read())
+            {
+
+                Alarma p = new Alarma(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetInt32(3), rdr.GetInt32(4));
+                return p;
+            }
+            return null;
         }
         internal SQLiteDataReader CargarDireccion()
         {
@@ -600,12 +777,38 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
+        internal Direcciones CargarUltimaDireccion()
+        {
+            string sql_Text = "SELECT * FROM Direcciones ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Direcciones d = new Direcciones(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetInt32(3), rdr.GetInt32(4));
+                return d;
+            }
+            
+            return null;
+        }
         internal SQLiteDataReader CargarEvento()
         {
             string sql_Text = "SELECT * FROM Evento";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
+        }
+        internal Eventos CargarUltimoEvento()
+        {
+            string sql_Text = "SELECT * FROM Evento ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Eventos e = new Eventos(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetString(4));
+                //levn.Add(e);
+                return e;
+            }
+            return null;
         }
         internal SQLiteDataReader CargarIVA()
         {
@@ -614,12 +817,17 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
-        internal SQLiteDataReader CargarUltimoIVA()
+        internal IVAs CargarUltimoIVA()
         {
             string sql_Text = "SELECT * FROM IVA ORDER BY Id DESC LIMIT 1";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
-            return rdr;
+            while (rdr.Read())
+            {
+                IVAs iva = new IVAs(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2));
+                return iva;
+            }
+                return null;
         }
         internal SQLiteDataReader CargarParcela()
         {
@@ -628,6 +836,15 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
+        internal int CargarUltimaParcela()
+        {
+            string sql_Text = "SELECT Id FROM Parcelas ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+                return rdr.GetInt32(0);
+            return 0;
+        }
         internal SQLiteDataReader CargarPotencia()
         {
             string sql_Text = "SELECT * FROM Contratos";
@@ -635,12 +852,17 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
-        internal SQLiteDataReader CargarUltimoPotencia()
+        internal Potencia CargarUltimoPotencia()
         {
             string sql_Text = "SELECT * FROM Contratos ORDER BY Id DESC LIMIT 1";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
-            return rdr;
+            while (rdr.Read())
+            {
+                Potencia p = new Potencia(rdr.GetInt32(0), rdr.GetString(1), rdr.GetInt32(2), Double.Parse(rdr.GetString(3)), null);
+                return p;
+            }
+            return null;
         }
         internal SQLiteDataReader CargarProducto()
         {
@@ -648,6 +870,71 @@ namespace SGC
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
+        }
+        internal int CargarUltimoProducto()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registro ORDER BY Id DESC Limit 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+                return rdr.GetInt32(0);
+            return 0;
+        }
+        internal int CargarUltimoProducto2()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registro2 ORDER BY Id DESC Limit 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Console.WriteLine(rdr.GetInt32(0));
+                return rdr.GetInt32(0);
+            }
+                
+            return 0;
+        }
+        internal SQLiteDataReader CargarProducto_TPV()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registro_TPV";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            return rdr;
+        }
+        internal int CargarUltimoProducto_TPV()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registro_TPV ORDER BY Id DESC Limit 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+                return rdr.GetInt32(0);
+            return 0;
+        }
+        internal int cargarIdProductoRegistroTPV(Producto_Registro_TPV p)
+        {
+            string sql_Text = "SELECT Id FROM Productos_Registro_TPV WHERE Nombre='"+p.Nombre_Producto+"' AND Cantidad=1 AND Precio='"+p.Precio+"' AND IVA="+p.IVA+" AND Id_Ticket="+p.Id_Ticket;
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                return rdr.GetInt32(0);
+            }
+            else
+                return -1;
+        }
+        internal int cargarIdProductoTPV(ProductosTPV p)
+        {
+            string sql_Text = "SELECT Id FROM Productos_TPV WHERE Nombre='"+p.Nombre+"' AND Precio='"+p.Precio+"' AND IVA="+p.IVA+" AND Image='"+p.Image+"'";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                return rdr.GetInt32(0);
+            }
+            else
+                return -1;
         }
         internal SQLiteDataReader CargarProducto2()
         {
@@ -663,12 +950,31 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
+        internal int CargarUltimoRegistrado()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registrados ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+                return rdr.GetInt32(0);
+
+            return 0;
+        }
         internal SQLiteDataReader CargarRecibo()
         {
             string sql_Text = "SELECT * FROM Recibo";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
+        }
+        internal int CargarUltimoRecibo()
+        {
+            string sql_Text = "SELECT * FROM Recibo ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+                return rdr.GetInt32(0);
+            return 0;
         }
         internal SQLiteDataReader CargarRol()
         {
@@ -677,12 +983,17 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
-        internal SQLiteDataReader CargarUltimoRol()
+        internal int CargarUltimoRol()
         {
             string sql_Text = "SELECT * FROM Rol ORDER BY Id DESC LIMIT 1";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
-            return rdr;
+
+            while (rdr.Read())
+            {
+                return rdr.GetInt32(0);
+            }
+            return 0;
         }
         internal SQLiteDataReader CargarTipo()
         {
@@ -698,12 +1009,27 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
-        internal SQLiteDataReader CargarUltimoVehiculo()
+        internal int CargarUltimoVehiculo()
         {
             string sql_Text = "SELECT * FROM Vehiculos ORDER BY Id DESC LIMIT 1";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
-            return rdr;
+            while (rdr.Read())
+                return rdr.GetInt32(0);
+            return 0;
+        }
+        internal List<int> CargarCrepusculo()
+        {
+            string sql_Text = "SELECT * FROM Crepusculo";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<int> list = new List<int>();
+            while (rdr.Read())
+            {
+                list.Add(rdr.GetInt32(1));    
+            
+            }
+            return list;
         }
         internal SQLiteDataReader CargarAcompañante()
         {
@@ -723,6 +1049,427 @@ namespace SGC
                 a = new Acompañantes(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetInt32(4), rdr.GetString(5), rdr.GetString(6), rdr.GetInt32(7), rdr.GetString(8), rdr.GetString(9), rdr.GetInt32(10));
             }
             return a;
+        }
+        internal DateTime CargarVersion()
+        {
+            string sql_Text = "SELECT * FROM Version ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionIva()
+        {
+            string sql_Text = "SELECT * FROM IVA_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionRol()
+        {
+            string sql_Text = "SELECT * FROM Rol_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionUsuario()
+        {
+            string sql_Text = "SELECT * FROM Usuario_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionAcompañante()
+        {
+            string sql_Text = "SELECT * FROM Acompañante_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionCamping()
+        {
+            string sql_Text = "SELECT * FROM Camping_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionCliente()
+        {
+            string sql_Text = "SELECT * FROM Cliente_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionContratos()
+        {
+            string sql_Text = "SELECT * FROM Contratos_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionEvento()
+        {
+            string sql_Text = "SELECT * FROM Evento_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionFactura()
+        {
+            string sql_Text = "SELECT * FROM Factura_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionParcelas()
+        {
+            string sql_Text = "SELECT * FROM Parcelas_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionProductos_Registrados()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registrados_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionTPV()
+        {
+            string sql_Text = "SELECT * FROM TPV_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionIndicesTPV()
+        {
+            string sql_Text = "SELECT * FROM TPV_Indices_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionProductosTPV()
+        {
+            string sql_Text = "SELECT * FROM Productos_TPV_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionProductos_Registro()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registro_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        
+        internal DateTime CargarVersionProductos_Registro2()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registro2_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionProductos_Registro_TPV()
+        {
+            string sql_Text = "SELECT * FROM Productos_Registro_TPV_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionRecibo()
+        {
+            string sql_Text = "SELECT * FROM Recibo_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
+        internal DateTime CargarVersionVehiculos()
+        {
+            string sql_Text = "SELECT * FROM Vehiculos_v ORDER BY Id DESC LIMIT 1";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+                
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
         }
 
         public void Close()
@@ -829,10 +1576,24 @@ namespace SGC
 
         internal SQLiteDataReader CargarLog(int id, DateTime now)
         {
-            string sql_Text = "SELECT * FROM Log WHERE IdCliente=" + id+" AND Fecha LIKE '%"+now.ToString("dd/MM/yyyy")+ "%' ORDER BY Id DESC";
+            string sql_Text = "SELECT * FROM Log WHERE IdCliente=" + id+" ORDER BY Id DESC";
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
+        }
+
+        internal int cargarIdIndiceTPV(TPV_Indices p)
+        {
+            string sql_Text = "SELECT Id FROM TPV_Indices WHERE Nombre='" + p.nom + "'";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                return rdr.GetInt32(0);
+            }
+            else
+                return -1;
         }
     }
 

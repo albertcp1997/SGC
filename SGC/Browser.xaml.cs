@@ -29,48 +29,96 @@ namespace SGC
         public PDF pdf;
         public List<PDF> lpdf;
         int pos = 0;
-        public Browser(int pos)
-        {   if (pos != -1)
-                this.pos = pos;
-            InitializeComponent();
-            cargarPdf();
-            source.Text= Properties.Settings.Default.DireccionFacturas2;
 
-            for(int i=0;i< pdf_name.Items.Count; i++)
+        Log oLog;
+        public Browser(int pos)
+        {
+            string path2 = Directory.GetCurrentDirectory();
+            string[] arr = path2.Split('\\');
+            path2 = arr[0] + "\\" + arr[1] + "\\" + arr[2] + "\\" + arr[3] + "\\" + arr[4] + "\\" + arr[5] + "\\" + arr[6];
+            oLog = new Log(path2 + "//pdf");
+            try
             {
-                if (pdf_name.Items[i].ToString().Contains("Recibos_plantilla.pdf"))
+
+                oLog.Add(Properties.Settings.Default.DireccionFacturas2);
+                oLog.Add("a1");
+                if (pos != -1)
+                    this.pos = pos;
+                InitializeComponent();
+
+                oLog.Add("2");
+                cargarPdf();
+
+                oLog.Add("3");
+                source.Text = Properties.Settings.Default.DireccionFacturas2;
+
+                oLog.Add("4");
+                for (int i = 0; i < pdf_name.Items.Count; i++)
                 {
-                    pdf_name.SelectedIndex = i;
+                    if (pdf_name.Items[i].ToString().Contains("Recibos_plantilla.pdf"))
+                    {
+                        pdf_name.SelectedIndex = i;
+                    }
+
                 }
 
-            }
+                oLog.Add("5");
 
-            if (source.Text.Length == 0)
-                addall2.IsEnabled = false;
+                if (source.Text.Length == 0)
+                    addall2.IsEnabled = false;
+
+                oLog.Add("6");
+            }catch(Exception ee)
+            {
+                oLog.Add(ee.Message);
+            }
         }
         public Browser(int pos, int h)
-        {   if (pos != -1)
-                this.pos = pos;
-            InitializeComponent();
-            cargarPdf();
-            for (int i = 0; i < pdf_name.Items.Count; i++)
+        {
+            string path2 = Directory.GetCurrentDirectory();
+            string[] arr = path2.Split('\\');
+            path2 = arr[0] + "\\" + arr[1] + "\\" + arr[2] + "\\" + arr[3] + "\\" + arr[4] + "\\" + arr[5] + "\\" + arr[6];
+            oLog = new Log(path2 + "//pdf");
+
+            try
             {
-                Console.WriteLine(((PDF)pdf_name.Items[i]).name);
-                if (((PDF)pdf_name.Items[i]).name.Contains("Recibos_plantilla.pdf"))
+
+                oLog.Add(Properties.Settings.Default.DireccionFacturas2);
+                if (pos != -1)
+                    this.pos = pos;
+                oLog.Add("1");
+                InitializeComponent();
+                cargarPdf();
+
+                oLog.Add("2");
+                for (int i = 0; i < pdf_name.Items.Count; i++)
                 {
-                    pdf_name.SelectedIndex = i;
+                    Console.WriteLine(((PDF)pdf_name.Items[i]).name);
+                    if (((PDF)pdf_name.Items[i]).name.Contains("Recibos_plantilla.pdf"))
+                    {
+                        pdf_name.SelectedIndex = i;
+                    }
+
                 }
 
-            }
+                oLog.Add("3");
 
-            source.Text= Properties.Settings.Default.DireccionFacturas2;
-            if (h == 1)
+                source.Text = Properties.Settings.Default.DireccionFacturas2;
+
+                oLog.Add("4");
+                if (h == 1)
+                {
+                    tipopdf.IsEnabled = false;
+                }
+
+                oLog.Add("5");
+                if (source.Text.Length == 0)
+                    addall2.IsEnabled = false;
+            }
+            catch (Exception ee)
             {
-                tipopdf.IsEnabled = false;
+                oLog.Add(ee.Message);
             }
-
-            if (source.Text.Length == 0)
-                addall2.IsEnabled = false;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -114,11 +162,11 @@ namespace SGC
             }
             else if (tipopdf.SelectedIndex == 1)
             {
-                    tipo.Content = "Recibo sin logo";
+                    tipo.Content = "Recibo estandar con información en el lateral";
             }
             else if (tipopdf.SelectedIndex == 2)
             {
-                    tipo.Content = "Documento propuesta precio";
+                    tipo.Content = "Documento propuesta precio sin logo";
             }
         }
 
@@ -147,34 +195,44 @@ namespace SGC
 
         private void cargarPdf()
         {
-            lpdf = new List<PDF>();
-            System.IO.FileInfo sf = null;
-            string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            pdf_name.ItemsSource = lpdf;
-            //Log oLog = new Log(path2);
-            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Directory.GetCurrentDirectory());
-
-            // This method assumes that the application has discovery permissions  
-            // for all folders under the specified path.  
-            IEnumerable<System.IO.FileInfo> fileList = dir.GetFiles("*.*", System.IO.SearchOption.TopDirectoryOnly);
-
-            //Create the query  
-            IEnumerable<System.IO.FileInfo> fileQuery =
-                from file in fileList
-                where file.Extension == ".pdf"
-                orderby file.Name
-                select file;
-
-            //Execute the query. This might write out a lot of files!  
-            foreach (System.IO.FileInfo fi in fileQuery)
+            try
             {
-                pdf = new PDF(fi.FullName);
+                lpdf = new List<PDF>();
+                System.IO.FileInfo sf = null;
+                string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                pdf_name.ItemsSource = lpdf;
+                //Log oLog = new Log(path2);
+                System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(Directory.GetCurrentDirectory());
 
-                lpdf.Add(pdf);
+                // This method assumes that the application has discovery permissions  
+                // for all folders under the specified path.  
+                IEnumerable<System.IO.FileInfo> fileList = dir.GetFiles("*.*", System.IO.SearchOption.TopDirectoryOnly);
 
-                Console.WriteLine(fi.FullName);
+                //Create the query  
+                IEnumerable<System.IO.FileInfo> fileQuery =
+                    from file in fileList
+                    where file.Extension == ".pdf"
+                    orderby file.Name
+                    select file;
+
+                //Execute the query. This might write out a lot of files!  
+                foreach (System.IO.FileInfo fi in fileQuery)
+                {
+                    pdf = new PDF(fi.FullName);
+
+                    lpdf.Add(pdf);
+
+                    Console.WriteLine(fi.FullName);
+                }
+                pdf_name.SelectedIndex = 0;
+            }catch(Exception ee)
+            {
+                string path2 = Directory.GetCurrentDirectory();
+                string[] arr = path2.Split('\\');
+                path2 = arr[0] + "\\" + arr[1] + "\\" + arr[2] + "\\" + arr[3] + "\\" + arr[4] + "\\" + arr[5] + "\\" + arr[6];
+               Log oLog = new Log(path2 + "//pdf");
+                oLog.Add(ee.Message);
             }
-            pdf_name.SelectedIndex = 0;
         }
 
     }

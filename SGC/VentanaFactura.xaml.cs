@@ -35,10 +35,6 @@ namespace SGC
         {
             InitializeComponent();
             Descuento.Text = "0";
-            Fecha_Factura.BlackoutDates.AddDatesInPast();
-            Fecha_Factura.BlackoutDates.Add(new CalendarDateRange(DateTime.Now.AddDays(-1)));
-            Fecha_Factura_ven.BlackoutDates.AddDatesInPast();
-            Fecha_Factura_ven.BlackoutDates.Add(new CalendarDateRange(DateTime.Now.AddDays(-1)));
             if (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height > 900)
             {
                 Properties.Settings.Default.Height = 40;
@@ -75,16 +71,7 @@ namespace SGC
             vp = new VentanaProducto(null, null, null, 0);
             if (c != null)
             {
-                /*Nombre_Cliente_Factura.Text = c.nombre_cliente + " " + c.apellidos_cliente;
-                DNI_Cliente_Factura.Text = c.dni;
-                Direccion_Cliente_Factura.Text = c.direccion+", "+c.Numero+", "+c.Piso+""+c.Puerta;
-                Poblacion_Cliente_Factura.Text = c.poblacio;
-                Codigo_Postal_Factura.Text = c.codigo_postal;
-                Provincia_Cliente_Factura.Text = c.Provincia;
-                Pais_Cliente.Text = c.Pais;
-                Telefono.Text = c.telefon1;
-                Mail.Text = c.mail;
-                clientes = c;*/
+                
                 list = c.Select(x => x).Where(x => !x.DeBaja).ToList();
 
                 if (p != null)
@@ -114,7 +101,9 @@ namespace SGC
                 li = liva;
             }
             Fecha_Factura.SelectedDate = DateTime.Now;
+            Fecha_Factura.BlackoutDates.AddDatesInPast();
             Fecha_Factura_ven.SelectedDate = DateTime.Now;
+            Fecha_Factura_ven.BlackoutDates.AddDatesInPast();
             this.Activate();
         }
 
@@ -168,7 +157,9 @@ namespace SGC
                 li = liva;
             }
             Fecha_Factura.SelectedDate = DateTime.Now;
+            Fecha_Factura.BlackoutDates.AddDatesInPast();
             Fecha_Factura_ven.SelectedDate = DateTime.Now;
+            Fecha_Factura_ven.BlackoutDates.AddDatesInPast();
             this.Activate();
             Nombre_Cliente_Factura.Text = nombre_completo;
         }
@@ -405,13 +396,17 @@ namespace SGC
             Console.WriteLine(Importe_Factura.Text.Replace(" €", ""));
             float t = float.Parse(Importe_Factura.Text.Replace(" €", ""));
             if (ddd == 1)
+            {
                 Lstg[7] = "";
+                //Lstg[8] = Lstg[10];
+            }
             
-            
-            Facturas c = new Facturas(Nombre_Cliente_Factura.Text, DNI_Cliente_Factura.Text, Direccion_Cliente_Factura.Text, Poblacion_Cliente_Factura.Text, Codigo_Postal_Factura.Text, Provincia_Cliente_Factura.Text, Pais_Cliente.Text, Fecha_Factura.SelectedDate.Value, float.Parse(Base_Imponible.Text.Replace(" €", "")), float.Parse(Cuota_IVA.Text.Replace(" €", "")), t, Direccion_Camping_Factura.Text, Poblacion_Camping_Factura.Text, Codigo_Postal_Camping_Facturacion.Text, Provincia_Camping_Factura.Text, Pais_Camping_Factura.Text, Empresa.Text, Telefono.Text, Mail.Text, Metodo_Pago.SelectedIndex, Telefono_Camping_Factura.Text, Fecha_Factura_ven.SelectedDate.Value, lp, int.Parse(Lstg[8]).ToString("000"), Descuento.Text, Vehiculo_cliente.Text, Matricula_cliente.Text, Iban_cliente2.Text);
+            //if()
+
+            Facturas c = new Facturas(Nombre_Cliente_Factura.Text, DNI_Cliente_Factura.Text, Direccion_Cliente_Factura.Text, Poblacion_Cliente_Factura.Text, Codigo_Postal_Factura.Text, Provincia_Cliente_Factura.Text, Pais_Cliente.Text, Fecha_Factura.SelectedDate.Value, float.Parse(Base_Imponible.Text.Replace(" €", "")), float.Parse(Cuota_IVA.Text.Replace(" €", "")), t, Direccion_Camping_Factura.Text, Poblacion_Camping_Factura.Text, Codigo_Postal_Camping_Facturacion.Text, Provincia_Camping_Factura.Text, Pais_Camping_Factura.Text, Empresa.Text, Telefono.Text, Mail.Text, Metodo_Pago.SelectedIndex, Telefono_Camping_Factura.Text, Fecha_Factura_ven.SelectedDate.Value, lp, int.Parse(Lstg[8]).ToString("000"), Descuento.Text, Vehiculo_cliente.Text, Matricula_cliente.Text, Iban_cliente2.Text,0);
 
             if (Lstg[7].Length>0)
-            c = new Facturas(Nombre_Cliente_Factura.Text, DNI_Cliente_Factura.Text, Direccion_Cliente_Factura.Text, Poblacion_Cliente_Factura.Text, Codigo_Postal_Factura.Text, Provincia_Cliente_Factura.Text,Pais_Cliente.Text, Fecha_Factura.SelectedDate.Value, float.Parse(Base_Imponible.Text.Replace(" €","")), float.Parse(Cuota_IVA.Text.Replace(" €", "")), t, Direccion_Camping_Factura.Text, Poblacion_Camping_Factura.Text, Codigo_Postal_Camping_Facturacion.Text, Provincia_Camping_Factura.Text, Pais_Camping_Factura.Text, Empresa.Text, Telefono.Text, Mail.Text, Metodo_Pago.SelectedIndex,Telefono_Camping_Factura.Text, Fecha_Factura_ven.SelectedDate.Value, lp, Lstg[7]+"_" + int.Parse(Lstg[8]).ToString("000"), Descuento.Text, Vehiculo_cliente.Text, Matricula_cliente.Text, Iban_cliente2.Text);
+            c = new Facturas(Nombre_Cliente_Factura.Text, DNI_Cliente_Factura.Text, Direccion_Cliente_Factura.Text, Poblacion_Cliente_Factura.Text, Codigo_Postal_Factura.Text, Provincia_Cliente_Factura.Text,Pais_Cliente.Text, Fecha_Factura.SelectedDate.Value, float.Parse(Base_Imponible.Text.Replace(" €","")), float.Parse(Cuota_IVA.Text.Replace(" €", "")), t, Direccion_Camping_Factura.Text, Poblacion_Camping_Factura.Text, Codigo_Postal_Camping_Facturacion.Text, Provincia_Camping_Factura.Text, Pais_Camping_Factura.Text, Empresa.Text, Telefono.Text, Mail.Text, Metodo_Pago.SelectedIndex,Telefono_Camping_Factura.Text, Fecha_Factura_ven.SelectedDate.Value, lp, Lstg[7]+"_" + int.Parse(Lstg[8]).ToString("000"), Descuento.Text, Vehiculo_cliente.Text, Matricula_cliente.Text, Iban_cliente2.Text,0);
             
 
 /*
@@ -601,17 +596,17 @@ namespace SGC
                             float dd = float.Parse(d) / 100;
                             total = total * (1 - dd);
                             total += tasa;
-                            string a = Math.Round(precio, 2).ToString("0.00") + " €";
+                            string a = Math.Round(precio,4).ToString("0.0000") + " €";
                             Console.WriteLine(a);
                             Base_Imponible.Text = a;
-                            Cuota_IVA.Text = Math.Round(impuesto, 2).ToString("0.00") + " €";
-                            Importe_Factura.Text = Math.Round(total, 2).ToString("0.00") + " €";
+                            Cuota_IVA.Text = Math.Round(impuesto,4).ToString("0.0000") + " €";
+                            Importe_Factura.Text = Math.Round(total,4).ToString("0.0000") + " €";
                         }
                         else
                         {
-                            Base_Imponible.Text = (0).ToString("0.00");
-                            Cuota_IVA.Text = (0).ToString("0.00");
-                            Importe_Factura.Text = (0).ToString("0.00");
+                            Base_Imponible.Text = (0).ToString("0.0000");
+                            Cuota_IVA.Text = (0).ToString("0.0000");
+                            Importe_Factura.Text = (0).ToString("0.0000");
                         }
                     }
                 if (ddd == 1)
@@ -648,10 +643,10 @@ namespace SGC
 
         private void add(Producto p)
         {            
-                p.Descuento = Math.Round(float.Parse(p.Descuento.Replace("€", "")),2).ToString("0.00");
-                p.Impuesto = Math.Round(float.Parse(p.Impuesto.Replace("€", "")), 2).ToString("0.00");
-                p.Precio = Math.Round(float.Parse(p.Precio.Replace("€", "")), 2).ToString("0.00");
-                p.Total = Math.Round(float.Parse(p.Total.Replace("€", "")), 2).ToString("0.00");
+                p.Descuento = Math.Round(float.Parse(p.Descuento.Replace("€", "")),4).ToString("0.0000");
+                p.Impuesto = Math.Round(float.Parse(p.Impuesto.Replace("€", "")),4).ToString("0.0000");
+                p.Precio = Math.Round(float.Parse(p.Precio.Replace("€", "")),4).ToString("0.0000");
+                p.Total = Math.Round(float.Parse(p.Total.Replace("€", "")),4).ToString("0.0000");
                 lp.Add(p);
                 Productos.Items.Add(p);
                 if (Productos.Items.Count > 17)
@@ -706,23 +701,23 @@ namespace SGC
                 float dd = float.Parse(d) / 100;
                 total = total * (1 - dd);
                      total += tasa;
-                string a = Math.Round(precio, 2).ToString("0.00") + " €";
+                string a = Math.Round(precio,4).ToString("0.0000") + " €";
                 Console.WriteLine(a);
                     Base_Imponible.Text = a;
-                    Cuota_IVA.Text = Math.Round(impuesto,2).ToString("0.00") + " €";
-                float prueba = (float)Math.Round(total, 2);
+                    Cuota_IVA.Text = Math.Round(impuesto,4).ToString("0.0000") + " €";
+                float prueba = (float)Math.Round(total,4);
                 Console.WriteLine(prueba);
-                string aa = prueba.ToString("0.00");
+                string aa = prueba.ToString("0.0000");
 
                 Console.WriteLine(aa);
                 Importe_Factura.Text = "";
-                Importe_Factura.Text = prueba.ToString("0.00") + " €";
+                Importe_Factura.Text = Math.Round(prueba, 2).ToString("0.00")+" €";
             }
                 else
                 {
-                Base_Imponible.Text = (0).ToString("0.00");
-                Cuota_IVA.Text = (0).ToString("0.00");
-                Importe_Factura.Text = (0).ToString("0.00");
+                Base_Imponible.Text = (0).ToString("0.0000");
+                Cuota_IVA.Text = (0).ToString("0.0000");
+                Importe_Factura.Text = (0).ToString("0.00") +" €";
                 }
             if (ddd == 1)
             {
@@ -765,9 +760,7 @@ namespace SGC
         private void PreviewKeyUp_EnhanceComboSearch(object sender, KeyEventArgs e)
         {
 
-        }
-
-    
+        }            
 
         private void Nombre_Cliente_Factura_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

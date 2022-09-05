@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SGC"
         mc:Ignorable="d"
-        Title="Guardar en..." MinHeight="200" MaxHeight="300" Height="300" MinWidth="500" MaxWidth="500" Width="500">
+        Title="Guardar en..." Topmost="True" MinHeight="200" MaxHeight="300" Height="300" MinWidth="500" MaxWidth="500" Width="500">
     <Border Background="White" BorderThickness="2" >
         <Grid>
             <Grid.ColumnDefinitions>
@@ -81,7 +81,7 @@
                 <Label x:Name="tipo" Content="Recibo estandar" FontFamily="helvetica neue" FontSize="10" Foreground="#00ba92" HorizontalAlignment="Center" Margin="0,0,10,5"></Label>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                     <Label IsEnabled="False" Height="25" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,-3,0,0">Mostrar datos cliente al pie de página</Label>
-                    <CheckBox Width="70" Height="20" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" Background="LightGray" x:Name="opcion"></CheckBox>
+                    <CheckBox Width="70" Height="20" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,0,0" Background="LightGray" x:Name="opcion" IsChecked="True"></CheckBox>
                 </StackPanel>
             </StackPanel>
             <Border BorderBrush="LightGray" BorderThickness="0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">

@@ -36,7 +36,9 @@ namespace SGC.Clases
             Id = (int)p["Id"];
             Nombre = (string)p["Nombre"];
             Amperios = (int)p["Amperios"];
-            Amperios_Max = (double)p["Amperios_Max"];
+            string a = (string)p["Amperios_Max"];
+            Console.WriteLine(a);
+            Amperios_Max = double.Parse(a);
         }
     }
 }

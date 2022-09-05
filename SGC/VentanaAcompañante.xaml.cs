@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +23,9 @@ namespace SGC.x86
     /// </summary>
     public partial class VentanaAcompañante : Window
     {
-        public delegate void NuevoAcompañante(Acompañantes c,int aa, int cid);
+        public delegate void NuevoAcompañante(Acompañantes c,int aa, int cid, Consulta cons);
         public event NuevoAcompañante refresh;
-        public delegate void NuevoAcompañante2(Acompañantes c, int b,string a);
+        public delegate void NuevoAcompañante2(Acompañantes c, int b,string a, Consulta cons);
         public event NuevoAcompañante2 refresh2;
         string dbb;
         int ii;
@@ -32,15 +33,36 @@ namespace SGC.x86
         int cid;
         public Acompañantes acomp;
         public static VentanaAcompañante le = new VentanaAcompañante();
+        CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+        RegionInfo region;
+        List<string> cultureList = new List<string>();
 
         public VentanaAcompañante()
         {
             InitializeComponent();
+
         }
-       
+
+        private void cargarPaises()
+        {
+            foreach(CultureInfo info in cultures)
+            {
+                region = new RegionInfo(info.LCID);
+                if (!(cultureList.Contains(region.DisplayName)))
+                {
+                    Console.WriteLine(region.NativeName);
+                    cultureList.Add(region.DisplayName);
+                    pais.Items.Add(region.DisplayName);
+                }
+            }
+
+        }
+
         public VentanaAcompañante(Acompañantes a, string db,int i, int clientid)
         {
             InitializeComponent();
+
+            cargarPaises();
             dbb = db;
             ii = i;
             cid = clientid;
@@ -87,12 +109,14 @@ namespace SGC.x86
             fechadni.Text = a.fecha_dni1;
             fecha.Text = a.fecha_n1;
             pais.Text = a.pais1;
+            Sexo.SelectedIndex = a.Sexo1;
 
         }
         public VentanaAcompañante(string db, int i, int clientid)
         {
             InitializeComponent();
 
+            cargarPaises();
             dbb = db;
             ii = i;
             cid = clientid;
@@ -102,6 +126,8 @@ namespace SGC.x86
         public VentanaAcompañante( int i)
         {
             InitializeComponent();
+
+            cargarPaises();
             nuevo = true;
             dbb = "";
             ii = i;
@@ -203,7 +229,7 @@ namespace SGC.x86
                 {
                     a = true;
                 }
-                if(pais.Text.Length==0|| fecha.Text.Length == 0 || apellido1.Text.Length == 0 || Nombre_Contrato.Text.Length == 0)
+                if(pais.Text.Length==0 || fecha.Text.Length == 0 || apellido1.Text.Length == 0 || Nombre_Contrato.Text.Length == 0)
                 {
                     a = false;
                 }
@@ -315,6 +341,10 @@ namespace SGC.x86
                     a = true;
                 }
 
+                if (pais.Text.Length == 0 || fecha.Text.Length == 0 || apellido1.Text.Length == 0 || Nombre_Contrato.Text.Length == 0)
+                {
+                    a = false;
+                }
                 if (a)
                 {
                     if (add_evento != null)
@@ -371,13 +401,14 @@ namespace SGC.x86
                         l.Add("Sexo1:" + acomp.Sexo1);
                         l.Add("fecha_n1:" + acomp.fecha_n1);
                         l.Add("pais1:" + acomp.pais1);
-                        l.Add("cliente:" + acomp.pais1);
+                        l.Add("cliente:" + acomp.Clienteid);
+                        consulta = new Consulta("Acompañante", l, "", "INSERT");
                         string sql_query = "INSERT INTO Acompañante(nombreacompañante1,apellido1compañante1,apellido2compañante1,tipo1,dniacompañante1,fecha_dni1,Sexo1,fecha_n1,pais1,cliente) VALUES ('" + acomp.nombreacompañante1 + "','" + acomp.apellido1compañante1 + "','" + acomp.apellido2compañante1 + "'," + acomp.tipo1 + ",'" + acomp.dniacompañante1 + "','" + acomp.fecha_dni1 + "'," + acomp.Sexo1 + ",'" + acomp.fecha_n1 + "','" + acomp.pais1 + "'," + acomp.Clienteid + ")";
                         SQLiteConnection cn = new SQLiteConnection(dbb);
                         if (cn.State != ConnectionState.Open) cn.Open();
                         SQLiteCommand sql_cmd = new SQLiteCommand(sql_query, cn);
                         sql_cmd.ExecuteNonQuery();
-                        le.refresh(acomp, ii, 0);
+                        le.refresh(acomp, ii, 0,consulta);
                     }
                 }
                 else
@@ -499,7 +530,8 @@ namespace SGC.x86
                         if (cn.State != ConnectionState.Open) cn.Open();
                         SQLiteCommand sql_cmd = new SQLiteCommand(sql_query, cn);
                         sql_cmd.ExecuteNonQuery();
-                        le.refresh(acomp, ii, 1);
+                         consulta = new Consulta("Acompañante", l, "Id:"+acomp.Id, "UPDATE");
+                        le.refresh(acomp, ii, 1,consulta);
 
                     }
                 }
@@ -536,14 +568,129 @@ namespace SGC.x86
                 l.Add("Sexo1:" + acomp.Sexo1);
                 l.Add("fecha_n1:" + acomp.fecha_n1);
                 l.Add("pais1:" + acomp.pais1);
-                l.Add("cliente:" + acomp.pais1);
+                l.Add("cliente:" + acomp.Clienteid);
                 string sql_query = "INSERT INTO Acompañante(nombreacompañante1,apellido1compañante1,apellido2compañante1,tipo1,dniacompañante1,fecha_dni1,Sexo1,fecha_n1,pais1,cliente) VALUES ('" + acomp.nombreacompañante1 + "','" + acomp.apellido1compañante1 + "','" + acomp.apellido2compañante1 + "'," + acomp.tipo1 + ",'" + acomp.dniacompañante1 + "','" + acomp.fecha_dni1 + "'," + acomp.Sexo1 + ",'" + acomp.fecha_n1 + "','" + acomp.pais1;
 
-                le.refresh2(acomp, ii, sql_query);
+                consulta = new Consulta("Acompañante", l, "", "INSERT");
+                le.refresh2(acomp, ii, sql_query,consulta);
 
             }
             
             this.Close();
+        }
+
+        private void Nombre_Cliente_Factura_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (acomp == null)
+            {
+                if (Nombre_Contrato.Text.Length > 0 && apellido1.Text.Length > 0 && (dni.Text.Length > 0 || pasaporte.Text.Length > 0 || carnetdeconducir.Text.Length > 0 || Permisoresidenciaespaña.Text.Length > 0 || Permisoresidenciaeuropa.Text.Length > 0) && fecha.Text.Length > 0 && pais.Text.Length > 0)
+                {
+                    if (add_evento != null)
+                        add_evento.IsEnabled = true;
+                }
+                else
+                {
+                    if (add_evento != null)
+                        add_evento.IsEnabled = false;
+                }
+            }
+            else
+            {
+                bool a = false;
+                if (!Nombre_Contrato.Text.Equals(acomp.nombreacompañante1) && Nombre_Contrato.Text.Length > 0)
+                {
+                    a = true;
+                }
+                if (!apellido1.Text.Equals(acomp.apellido1compañante1) && apellido1.Text.Length > 0)
+                {
+                    a = true;
+                }
+                if (!apellido2.Text.Equals(acomp.apellido2compañante1) && apellido2.Text.Length > 0)
+                {
+                    a = true;
+                }
+                if (Potencia.SelectedIndex != acomp.tipo1)
+                {
+                    a = true;
+                }
+                switch (Potencia.SelectedIndex)
+                {
+                    case 0:
+                        {
+                            if (!dni.Text.Equals(acomp.dniacompañante1) && dni.Text.Length > 0)
+                            {
+                                a = true;
+                            }
+                        }
+                        break;
+                    case 1:
+                        {
+                            if (!pasaporte.Text.Equals(acomp.dniacompañante1) && pasaporte.Text.Length > 0)
+                            {
+                                a = true;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            if (!carnetdeconducir.Text.Equals(acomp.dniacompañante1) && carnetdeconducir.Text.Length > 0)
+                            {
+                                a = true;
+                            }
+                        }
+                        break;
+                    case 3:
+                        {
+                            if (!Permisoresidenciaespaña.Text.Equals(acomp.dniacompañante1) && Permisoresidenciaespaña.Text.Length > 0)
+                            {
+                                a = true;
+                            }
+                        }
+                        break;
+                    case 4:
+                        {
+                            if (!Permisoresidenciaeuropa.Text.Equals(acomp.dniacompañante1) && Permisoresidenciaeuropa.Text.Length > 0)
+                            {
+                                a = true;
+                            }
+                        }
+                        break;
+
+                }
+                if (!fechadni.Text.Equals(acomp.fecha_dni1))
+                {
+                    a = true;
+                }
+                if (Sexo.SelectedIndex != acomp.Sexo1)
+                {
+                    a = true;
+                }
+                if (!fecha.Text.Equals(acomp.fecha_n1) && fecha.Text.Length > 0)
+                {
+                    a = true;
+                }
+                if (!pais.Text.Equals(acomp.pais1) && pais.Text.Length > 0)
+                {
+                    a = true;
+                }
+                if (pais.Text.Length == 0 || fecha.Text.Length == 0 || apellido1.Text.Length == 0 || Nombre_Contrato.Text.Length == 0)
+                {
+                    a = false;
+                }
+                if (a)
+                {
+                    if (add_evento != null)
+                        add_evento.IsEnabled = true;
+                }
+                else
+                {
+                    if (add_evento != null)
+                        add_evento.IsEnabled = false;
+                }
+            }
+        }
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        { 
         }
     }
 }

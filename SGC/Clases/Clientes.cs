@@ -12,7 +12,80 @@ namespace SGC.Clases
     {
         public Clientes()
         {
+            this.id = 0;
+            this.n_cliemte = 0;
+            this.n_plaza = "";
+            this.n_tarjeta = "";
+            this.nombre_cliente = "";
+            this.apellidos_cliente = "";
+            this.dni = "";
+            this.direccion = "";
+            this.poblacio = "";
+            this.telefon1 = "";
+            this.telefon2 = "";
+            this.codigo_postal = "";
+            this.mail = "";
+            this.asignado = false;
+            this.titular = "";
+            this.caducidad = "";
+            this.numero_secreto = "";
+            this.entidad_bacnaria = "";
+            this.iban = "";
+            this.swift = "";
+            Pais = "";
+            Numero = "";
+            Piso = "";
+            Puerta = "";
+            Provincia = "";
+            DeBaja = false;
+            Fecha_In = null;
+            Fecha_Out = null;
+            Potencia = 0;
+            Switch = 0;
+            Vehiculo1 = "";
+            this.matricula1 = "";
+            Numero_Bastidor1 = "";
+            Vehiculo2 = "";
+            this.matricula2 = "";
+            Numero_Bastidor2 = "";
+            Nota1 = "";
+            Lista_Parcelas = new List<Parcelas>();
 
+            Hora_entrada = "";
+            Hora_salida = "";
+
+            this.entidad_bacnaria2 = "";
+            this.iban2 = "";
+            this.swift2 = "";
+            this.mail2 = "";
+            nombre_completo = "" + " " + "";
+
+            fecha_entrada_estado = null;
+            fecha_contrato = null;
+            fecha_pago = null;
+
+            Medidas_Vehiculo1 = "";
+            Medidas_Vehiculo2 = "";
+            Vehiculo3 = "";
+            Vehiculo4 = "";
+            matricula3 = "";
+            matricula4 = "";
+            Nota2 = "";
+
+            visib = false;
+            lista_acompañantes = new Acompañantes[6];
+
+            Numero_Bastidor3 = "";
+            Numero_Bastidor4 = "";
+
+            Medidas_Vehiculo3 = "";
+            Medidas_Vehiculo4 = "";
+
+            N_tarjeta = "";
+            mostrarElec = false;
+            lstring = new List<string>();
+            nombrePlaza = "";
+            Semana = "";
         }
         public Clientes(JObject p)
         {
@@ -47,12 +120,14 @@ namespace SGC.Clases
             DateTime? dt1 = null;
             if (t1 != null)
             {
-                dt1 = DateTime.Parse(t1);
+                if (t1.Length > 0)
+                    dt1 = DateTime.Parse(t1);
             }
             DateTime? dt2 = null;
             if (t2 != null)
             {
-                dt2 = DateTime.Parse(t2);
+                if (t2.Length > 0)
+                    dt2 = DateTime.Parse(t2);
             }
 
             Fecha_In = dt1;
@@ -66,7 +141,7 @@ namespace SGC.Clases
             this.matricula2 = (string)p["Marticula2"];
             Numero_Bastidor2 = (string)p["Numero_Bastidor2"];
             Nota1 = (string)p["Nota1"];
-            Nota1 = (string)p["Nota2"];
+            Nota2 = (string)p["Nota2"];
             Lista_Parcelas = new List<Parcelas>();
 
             Hora_entrada = (string)p["Hora_entrada"];
@@ -80,21 +155,32 @@ namespace SGC.Clases
             string t3 = (string)p["Fecha_Entrada"];
             string t4 = (string)p["Fecha_Contratacion"];
             DateTime? dt3 = null;
-            if (t3 != null)
+            if (t3 != null )
             {
-                dt3 = DateTime.Parse(t3);
+                if (t3.Length > 0)
+                    dt3 = DateTime.Parse(t3);
             }
             DateTime? dt4 = null;
-            if (t4 != null)
+            if (t4 != null )
             {
+                if( t4.Length > 0)
                 dt4 = DateTime.Parse(t4);
             }
             fecha_entrada_estado = dt3;
             fecha_contrato = dt4;
-            fecha_pago = (DateTime?)p["Fecha_Pega"]; ;
+            dt4 = null;
+            t4 = (string)p["Fecha_Pega"];
+            if (t4 != null )
+            {   if(t4.Length > 0)
+                dt4 = DateTime.Parse(t4);
+            }
+            fecha_pago = dt4;
 
             Medidas_Vehiculo1 = (string)p["Medidas_Vehiculo1"]; ;
             Medidas_Vehiculo2 = (string)p["Medidas_Vehiculo2"]; ;
+
+            Numero_Bastidor3 = (string)p["Numero_Bastidor3"];
+            Numero_Bastidor4 = (string)p["Numero_Bastidor4"];
             Vehiculo3 = (string)p["Vehiculo3"]; ;
             Vehiculo4 = (string)p["Vehiculo4"]; ;
             matricula3 = (string)p["Matricula3"]; ;
@@ -106,6 +192,8 @@ namespace SGC.Clases
 
 
             lstring = new List<string>();
+            Semana = (string)p["Semana"];
+            
         }
 
         public Clientes(int n_cliemte, string n_tarjeta, string nombre_cliente, string apellidos_cliente, string dni, string direccion, string poblacio, string telefon1, string telefon2, string codigo_postal, string mail, string titular, string caducidad, string numero_secreto, string entidad_bacnaria, string iban, string swift, string pais, string numero, string piso, string puerta, string provincia, string entidad_bacnaria2, string iban2, string swift2, string m2, string tarjeta)
@@ -147,6 +235,8 @@ namespace SGC.Clases
             mostrarElec = false;
 
             lstring = new List<string>();
+
+            nombrePlaza = "";
 
         }
 
@@ -211,82 +301,93 @@ namespace SGC.Clases
 
             lstring = new List<string>();
 
+            nombrePlaza = "";
         }
 
-        public Clientes(int id, int n_cliemte, string n_plaza, string n_tarjeta, string nombre_cliente, string apellidos_cliente, string dni, string direccion, string poblacio, string telefon1, string telefon2, string codigo_postal, string mail, bool asignado, string titular, string caducidad, string numero_secreto, string entidad_bacnaria, string iban, string swift, string pais, string numero, string piso, string puerta, string provincia, bool deBaja, DateTime? fecha_In, DateTime? fecha_Out, int potencia, int switchh, string vehiculo1, string matricula1, string numero_Bastidor1, string vehiculo2, string matricula2, string numero_Bastidor2, string nota1, string e, string s, string entidad_bacnaria2, string iban2, string swift2, string m2, DateTime? d1, DateTime? d2, DateTime? d3, string mv1, string mv2, string vhc3, string mtc3, string vhc4, string mtc4, string nota2, string bastido3, string bastidor4, string medidas3, string medidas4, string tarjeta)
+        public Clientes(int id, int n_cliemte, string n_plaza, string n_tarjeta, string nombre_cliente, string apellidos_cliente, string dni, string direccion, string poblacio, string telefon1, string telefon2, string codigo_postal, string mail, bool asignado, string titular, string caducidad, string numero_secreto, string entidad_bacnaria, string iban, string swift, string pais, string numero, string piso, string puerta, string provincia, bool deBaja, DateTime? fecha_In, DateTime? fecha_Out, int potencia, int switchh, string vehiculo1, string matricula1, string numero_Bastidor1, string vehiculo2, string matricula2, string numero_Bastidor2, string nota1, string e, string s, string entidad_bacnaria2, string iban2, string swift2, string m2, DateTime? d1, DateTime? d2, DateTime? d3, string mv1, string mv2, string vhc3, string mtc3, string vhc4, string mtc4, string nota2, string bastido3, string bastidor4, string medidas3, string medidas4, string tarjeta, string semana)
         {
-            this.id = id;
-            this.n_cliemte = n_cliemte;
-            this.n_plaza = n_plaza;
-            this.n_tarjeta = n_tarjeta;
-            this.nombre_cliente = nombre_cliente;
-            this.apellidos_cliente = apellidos_cliente;
-            this.dni = dni;
-            this.direccion = direccion;
-            this.poblacio = poblacio;
-            this.telefon1 = telefon1;
-            this.telefon2 = telefon2;
-            this.codigo_postal = codigo_postal;
-            this.mail = mail;
-            this.asignado = asignado;
-            this.titular = titular;
-            this.caducidad = caducidad;
-            this.numero_secreto = numero_secreto;
-            this.entidad_bacnaria = entidad_bacnaria;
-            this.iban = iban;
-            this.swift = swift;
-            Pais = pais;
-            Numero = numero;
-            Piso = piso;
-            Puerta = puerta;
-            Provincia = provincia;
-            DeBaja = deBaja;
-            Fecha_In = fecha_In;
-            Fecha_Out = fecha_Out;
-            Potencia = potencia;
-            Switch = switchh;
-            Vehiculo1 = vehiculo1;
-            this.matricula1 = matricula1;
-            Numero_Bastidor1 = numero_Bastidor1;
-            Vehiculo2 = vehiculo2;
-            this.matricula2 = matricula2;
-            Numero_Bastidor2 = numero_Bastidor2;
-            Nota1 = nota1;
-            Lista_Parcelas = new List<Parcelas>();
+            try
+            {
+                this.id = id;
+                this.n_cliemte = n_cliemte;
+                this.n_plaza = n_plaza;
+                this.n_tarjeta = n_tarjeta;
+                this.nombre_cliente = nombre_cliente;
+                this.apellidos_cliente = apellidos_cliente;
+                this.dni = dni;
+                this.direccion = direccion;
+                this.poblacio = poblacio;
+                this.telefon1 = telefon1;
+                this.telefon2 = telefon2;
+                this.codigo_postal = codigo_postal;
+                this.mail = mail;
+                this.asignado = asignado;
+                this.titular = titular;
+                this.caducidad = caducidad;
+                this.numero_secreto = numero_secreto;
+                this.entidad_bacnaria = entidad_bacnaria;
+                this.iban = iban;
+                this.swift = swift;
+                Pais = pais;
+                Numero = numero;
+                Piso = piso;
+                Puerta = puerta;
+                Provincia = provincia;
+                DeBaja = deBaja;
+                Fecha_In = fecha_In;
+                Fecha_Out = fecha_Out;
+                Potencia = potencia;
+                Switch = switchh;
+                Vehiculo1 = vehiculo1;
+                this.matricula1 = matricula1;
+                Numero_Bastidor1 = numero_Bastidor1;
+                Vehiculo2 = vehiculo2;
+                this.matricula2 = matricula2;
+                Numero_Bastidor2 = numero_Bastidor2;
+                Nota1 = nota1;
+                Lista_Parcelas = new List<Parcelas>();
 
-            Hora_entrada = e;
-            Hora_salida = s;
+                Hora_entrada = e;
+                Hora_salida = s;
 
-            this.entidad_bacnaria2 = entidad_bacnaria2;
-            this.iban2 = iban2;
-            this.swift2 = swift2;
-            this.mail2 = m2;
-            nombre_completo = nombre_cliente + " " + apellidos_cliente;
+                this.entidad_bacnaria2 = entidad_bacnaria2;
+                this.iban2 = iban2;
+                this.swift2 = swift2;
+                this.mail2 = m2;
+                nombre_completo = nombre_cliente + " " + apellidos_cliente;
 
-            fecha_entrada_estado = d1;
-            fecha_contrato = d2;
-            fecha_pago = d3;
+                fecha_entrada_estado = d1;
+                fecha_contrato = d2;
+                fecha_pago = d3;
 
-            Medidas_Vehiculo1 = mv1;
-            Medidas_Vehiculo2 = mv2;
-            Vehiculo3 = vhc3;
-            Vehiculo4 = vhc4;
-            matricula3 = mtc3;
-            matricula4 = mtc4;
-            Nota2 = nota2;
+                Medidas_Vehiculo1 = mv1;
+                Medidas_Vehiculo2 = mv2;
+                Vehiculo3 = vhc3;
+                Vehiculo4 = vhc4;
+                matricula3 = mtc3;
+                matricula4 = mtc4;
+                Nota2 = nota2;
 
-            visib = false;
-            lista_acompañantes = new Acompañantes[6];
+                visib = false;
+                lista_acompañantes = new Acompañantes[6];
 
-            Numero_Bastidor3 = bastido3;
-            Numero_Bastidor4 = bastidor4;
+                Numero_Bastidor3 = bastido3;
+                Numero_Bastidor4 = bastidor4;
 
-            Medidas_Vehiculo3 = medidas3;
-            Medidas_Vehiculo4 = medidas4;
+                Medidas_Vehiculo3 = medidas3;
+                Medidas_Vehiculo4 = medidas4;
 
-            N_tarjeta = tarjeta;
-            mostrarElec = false;
-            lstring = new List<string>();
+                N_tarjeta = tarjeta;
+                mostrarElec = false;
+                lstring = new List<string>();
+                nombrePlaza = "";
+                Semana = semana;
+            }catch(Exception ee)
+            {
+                string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                Console.WriteLine(ee+" "+ line);
+            }
         }
 
         private void ObservarTodo2(object state)
@@ -391,8 +492,10 @@ namespace SGC.Clases
 
         public string nplaza { get; set; }
         public bool mostrarElec { get; set; }
+        public string nombrePlaza { get; set; }
 
         public List<String> lstring {get; set;}
+        public string Semana { get; set; }
 
         public System.Threading.Timer tiempo { get; set; }
         public delegate void temporizador();

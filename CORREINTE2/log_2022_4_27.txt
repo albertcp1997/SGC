@@ -1,0 +1,21 @@
+27/04/2022 10:50:28 - Mirar accion ojo True
+27/04/2022 10:50:28 - Mirar accion
+27/04/2022 10:50:28 - Mirar accion SGC.Clases.Direcciones
+27/04/2022 10:56:54 - Mirar accion ojo True
+27/04/2022 10:56:54 - Mirar accion
+27/04/2022 10:56:54 - Mirar accion SGC.Clases.Direcciones
+27/04/2022 12:23:58 - Mirar accion ojo True
+27/04/2022 12:23:58 - Mirar accion
+27/04/2022 12:23:58 - Mirar accion SGC.Clases.Direcciones
+27/04/2022 12:24:15 - Mirar accion ojo True
+27/04/2022 12:24:16 - Mirar accion
+27/04/2022 12:24:16 - Mirar accion SGC.Clases.Direcciones
+27/04/2022 12:29:42 - Mirar accion ojo True
+27/04/2022 12:29:42 - Mirar accion
+27/04/2022 12:29:42 - Mirar accion SGC.Clases.Direcciones
+27/04/2022 12:29:43 - Mirar accion ojo True
+27/04/2022 12:29:43 - Mirar accion
+27/04/2022 12:29:43 - Mirar accion SGC.Clases.Direcciones
+27/04/2022 12:33:48 - Mirar accion ojo True
+27/04/2022 12:33:48 - Mirar accion
+27/04/2022 12:33:48 - Mirar accion SGC.Clases.Direcciones

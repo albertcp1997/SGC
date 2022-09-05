@@ -1,0 +1,6 @@
+28/07/2022 13:06:03 - C:\Users\Adex-M\Desktop True False
+28/07/2022 13:06:03 - mirar System.Collections.Generic.List`1[SGC.Clases.Facturas]
+28/07/2022 13:06:03 - mirar2
+28/07/2022 13:07:10 - C:\Users\Adex-M\Desktop True False
+28/07/2022 13:07:10 - mirar System.Collections.Generic.List`1[SGC.Clases.Facturas]
+28/07/2022 13:07:10 - mirar2

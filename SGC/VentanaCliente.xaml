@@ -141,50 +141,47 @@
                                 <Border BorderThickness="0,0,0,1" BorderBrush="LightGray" Grid.ColumnSpan="2" Margin="5,0" VerticalAlignment="Top">
                                     <Label Content="Datos Personales" FontSize="13" FontFamily="helvetica neue"  HorizontalContentAlignment="Left"></Label>
                                 </Border>
-                                <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center">
-                                    <TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>
-                                    <Button Content="N. Cliente" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" Background="Transparent" BorderBrush="Transparent" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="2">
+                                
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
                                     <TextBlock Text="*" Foreground="Transparent" FontSize="9" ></TextBlock>
                                     <TextBlock VerticalAlignment="Center" Foreground="#838d99" Text="N. Plaza" FontFamily="Helvetica neue" FontSize="9" Grid.Row="2"/>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="3">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="2">
                                     <TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>
                                     <Button VerticalAlignment="Center" Foreground="#838d99" Content="Nombre" FontFamily="Helvetica neue" FontSize="9" Background="Transparent" BorderBrush="Transparent" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="4">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="3">
                                     <TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>
                                     <Button VerticalAlignment="Center" Foreground="#838d99" Content="Apellidos" FontFamily="Helvetica neue" FontSize="9" Grid.Row="4" Background="Transparent" BorderBrush="Transparent" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="5">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="4">
                                     <!--<TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>-->
                                     <Button VerticalAlignment="Center" Foreground="#838d99" Content="DNI" FontFamily="Helvetica neue" FontSize="9" Grid.Row="5" Background="Transparent" BorderBrush="Transparent" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="6">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="5">
                                     <!--<TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>-->
                                     <Button VerticalAlignment="Center" Foreground="#838d99" Content="Direccion" FontFamily="Helvetica neue" FontSize="9" Background="Transparent" BorderBrush="Transparent" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="7">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="6">
                                     <!--<TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>-->
                                     <Button VerticalAlignment="Center" Foreground="#838d99" Content="Poblacion" FontFamily="Helvetica neue" FontSize="9" Grid.Row="7" Background="Transparent" BorderBrush="Transparent" />
                                 </StackPanel>
 
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="8">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="7">
                                     <!--<TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>-->
                                     <Button VerticalAlignment="Center" Foreground="#838d99" Content="CP" FontFamily="Helvetica neue" FontSize="9" Grid.Row="8" Background="Transparent" BorderBrush="Transparent" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="9">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="8">
                                     <!--<TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>-->
                                     <Button VerticalAlignment="Center" Foreground="#838d99" Content="Provincia" FontFamily="Helvetica neue" FontSize="9" Grid.Row="9" Background="Transparent" BorderBrush="Transparent" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="10">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="9">
                                     <!--<TextBlock Text="*" Foreground="Red" FontSize="9" ></TextBlock>-->
                                     <Button VerticalAlignment="Center" Foreground="#838d99" Content="Pais" FontFamily="Helvetica neue" FontSize="9" Grid.Row="10" Background="Transparent" BorderBrush="Transparent" />
                                 </StackPanel>
 
-                                <TextBox Margin="0,2,25,2" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="numero_cliente_alta" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"></TextBox>
-                                <StackPanel Margin="0,2,0,2" Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+                                <TextBox Visibility="Hidden" IsEnabled="False" Margin="0,2,25,2" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="numero_cliente_alta" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"></TextBox>
+                                <StackPanel Margin="0,2,0,2" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                                     <ComboBox Margin="0,0,0,0" Height="25"  Width="{Binding Path=ActualWidth, ElementName=numero_cliente_alta}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c"  SelectionChanged="MirarFicha2" x:Name="numero_plaza_alta"  HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
@@ -206,14 +203,14 @@
                                         <Image Source="/iconos/cruz.png"></Image>
                                     </Button>
                                 </StackPanel>
-                                <TextBox  Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="nombre_cliente_alta" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch"></TextBox>
-                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="apellido_cliente_alta" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Stretch"></TextBox>
-                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="dni_cliente_alta" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Stretch"></TextBox>
-                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="direccion_cliente_alta" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Stretch"></TextBox>
-                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="poblacion_cliente_alta" Grid.Column="1" Grid.Row="7" HorizontalAlignment="Stretch"></TextBox>
-                                <TextBox PreviewTextInput="NumberValidationTextBox" Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="cp_cliente_alta" Grid.Column="1" Grid.Row="8" HorizontalAlignment="Stretch"></TextBox>
-                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="provincia_cliente_alta" Grid.Column="1" Grid.Row="9" HorizontalAlignment="Stretch"></TextBox>
-                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="pais_cliente_alta" Grid.Column="1" Grid.Row="10" HorizontalAlignment="Stretch"></TextBox>
+                                <TextBox  Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="nombre_cliente_alta" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch"></TextBox>
+                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="apellido_cliente_alta" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch"></TextBox>
+                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="dni_cliente_alta" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Stretch"></TextBox>
+                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="direccion_cliente_alta" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Stretch"></TextBox>
+                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="poblacion_cliente_alta" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Stretch"></TextBox>
+                                <TextBox PreviewTextInput="NumberValidationTextBox" Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="cp_cliente_alta" Grid.Column="1" Grid.Row="7" HorizontalAlignment="Stretch"></TextBox>
+                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="provincia_cliente_alta" Grid.Column="1" Grid.Row="8" HorizontalAlignment="Stretch"></TextBox>
+                                <TextBox Margin="0,0,25,0" Height="20"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" TextChanged="MirarFicha" x:Name="pais_cliente_alta" Grid.Column="1" Grid.Row="9" HorizontalAlignment="Stretch"></TextBox>
 
                             </Grid>
                         </Border>
@@ -637,9 +634,9 @@
 
 
                                 <Label VerticalAlignment="Center" Content="Potencia ON/OFF" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" Grid.Row="8" Visibility="Collapsed"/>
-                                <Label VerticalAlignment="Center" Content="Potencia" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" Grid.Row="8"/>
+                                <Label Visibility="Hidden" VerticalAlignment="Center" Content="Potencia" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" Grid.Row="8"/>
                                 <Label Visibility="Collapsed" VerticalAlignment="Center" Content="Importe" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="9" Grid.Row="10"/>
-                                <Border BorderBrush="#00ba91" BorderThickness="2" Margin="0,5,0,0" Grid.Row="9" Grid.ColumnSpan="2">
+                                <Border  Visibility="Hidden" BorderBrush="#00ba91" BorderThickness="2" Margin="0,5,0,0" Grid.Row="9" Grid.ColumnSpan="2">
                                     <StackPanel Orientation="Horizontal">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <Label Content="*" Foreground="Red" FontSize="9" ></Label>
@@ -661,7 +658,7 @@
                                 <Border  Visibility="Collapsed" Grid.Column="1" Grid.Row="8" HorizontalAlignment="Left" ToolTip="Editar/no editar el mapa"  Background="LightBlue" x:Name="on_off" CornerRadius="10" Width="40" Margin="0,5,25,0" MouseLeftButtonDown="FichaPotencia" BorderBrush="LightGray" BorderThickness="2" Height="20" VerticalAlignment="Top">
                                     <Border x:Name="on_off_border"  Width="20" CornerRadius="10" Background="White" HorizontalAlignment="Left"></Border>
                                 </Border>
-                                <StackPanel  Visibility="Visible" Grid.Column="1" Grid.Row="8" Orientation="Horizontal" Margin="0,0,0,0">
+                                <StackPanel  Visibility="Hidden" Grid.Column="1" Grid.Row="8" Orientation="Horizontal" Margin="0,0,0,0">
                                     <ComboBox Visibility="Visible" Margin="0,0,0,0" HorizontalAlignment="Left" Height="25" Width="{Binding Path=ActualWidth, ElementName=numero_cliente_alta}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="9" Foreground="#92959c" x:Name="Potencia_alta" SelectionChanged="Potencia_SelectionChanged">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>

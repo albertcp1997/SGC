@@ -14,13 +14,23 @@ namespace SGC.Clases
         }
         public ProductosRegistrados(JObject p)
         {
-            Id = (int)p["Id"];
-            Nombre = (string)p["Nombre"];
-            Referencia = (string)p["Referencia"];
-            Precio = (string)p["Precio"]; 
-            IVA = (int)p["IVA"]; 
-            Descuento = (string)p["Descuento"]; 
-            Descripcion = (string)p["Descripcion"]; 
+            try
+            {
+                Id = (int)p["Id"];
+
+                Console.WriteLine(Id + "");
+                Nombre = (string)p["Nombre"];
+                Referencia = (string)p["Referencia"];
+                Precio = (string)p["Precio"];
+                IVA = (int)p["IVA"];
+                Descuento = (string)p["Descuento"];
+                Descripcion = (string)p["Descripcion"];
+            }
+            catch
+            {
+
+                Console.WriteLine("ERROR "+Id + "");
+            }
         }
 
         public ProductosRegistrados(string nombre, string referencia, string precio, int iVA, string descuento, string descripcion, string nombre_IVA)

@@ -37,10 +37,12 @@ namespace SGC.Clases
                 Disponibilidad = "No";
             }
             else
-            {
+            {if(imagee!=null)
                 if (imagee.Equals("ON") || imagee.Equals("OFF") || imagee.Equals("ERROR"))
                     Disponibilidad = imagee;
                 else
+                    Disponibilidad = "Si";
+             else
                     Disponibilidad = "Si";
             }
 

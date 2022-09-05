@@ -1,0 +1,37 @@
+04/05/2022 9:38:41 - Mirar accion ojo on False
+04/05/2022 9:38:41 - Mirar accion
+04/05/2022 9:38:41 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:39:24 - Mirar accion ojo True
+04/05/2022 9:39:24 - Mirar accion
+04/05/2022 9:39:24 - Mirar accion 10/1/20
+04/05/2022 9:39:24 - Mirar accion 110/1/20/false
+04/05/2022 9:39:24 - Mirar accion 210/1/20/false
+04/05/2022 9:41:16 - Mirar accion ojo on False
+04/05/2022 9:41:16 - Mirar accion
+04/05/2022 9:41:16 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:43:27 - Mirar accion ojo False
+04/05/2022 9:43:27 - Mirar accion
+04/05/2022 9:43:27 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:45:50 - Mirar accion ojo on False
+04/05/2022 9:45:50 - Mirar accion
+04/05/2022 9:45:50 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:48:33 - Mirar accion ojo False
+04/05/2022 9:48:33 - Mirar accion
+04/05/2022 9:48:33 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:48:45 - Mirar accion ojo False
+04/05/2022 9:48:45 - Mirar accion
+04/05/2022 9:48:45 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:48:55 - Mirar accion ojo on False
+04/05/2022 9:48:55 - Mirar accion
+04/05/2022 9:48:55 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:49:11 - Mirar accion ojo False
+04/05/2022 9:49:11 - Mirar accion
+04/05/2022 9:49:11 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:49:24 - Mirar accion ojo False
+04/05/2022 9:49:24 - Mirar accion
+04/05/2022 9:49:24 - Mirar accion SGC.Clases.Direcciones
+04/05/2022 9:49:24 - Error 50374 El índice debe estar dentro de los límites de la lista.
+Nombre del parámetro: index
+04/05/2022 10:55:40 - Mirar accion ojo False
+04/05/2022 10:55:40 - Mirar accion
+04/05/2022 10:55:40 - Mirar accion SGC.Clases.Direcciones

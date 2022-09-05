@@ -1,0 +1,6 @@
+29/04/2022 10:08:46 - Mirar accion ojo True
+29/04/2022 10:08:46 - Mirar accion
+29/04/2022 10:08:46 - Mirar accion SGC.Clases.Direcciones
+29/04/2022 10:08:49 - Mirar accion ojo True
+29/04/2022 10:08:49 - Mirar accion
+29/04/2022 10:08:49 - Mirar accion SGC.Clases.Direcciones

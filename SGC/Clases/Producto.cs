@@ -21,8 +21,15 @@ namespace SGC.Clases
             IVA = (string)p["IVA"];
             Impuesto = (string)p["Impuesto"];
             Total = (string)p["Total"];
-            Id_Factura = (int)p["Id_Factura"];
-          
+            try
+            {
+                Id_Factura = (int)p["Id_Recibo"];
+            }
+            catch
+            {
+
+                Id_Factura = (int)p["Id_Factura"];
+            }
             Descuento = "0";
         }
         public Producto(string nombre_Producto, string cantidad, string precio, string iVA, string impuesto, string total, int id_Factura, string Iva, string desc)
@@ -35,6 +42,10 @@ namespace SGC.Clases
             Total = total;
             Id_Factura = id_Factura;
             nombre_IVA = Iva;
+            if(desc==null)
+                desc = "0";
+            if (desc.Length == 0)
+                desc = "0";
             Descuento = desc;
             Console.WriteLine((float)int.Parse(desc) / 100);
             Console.WriteLine(precio.Replace(" €", ""));
@@ -55,6 +66,8 @@ namespace SGC.Clases
             Total = total;
             Id_Factura = id_Factura;
             nombre_IVA = Iva;
+            if (desc.Length == 0)
+                desc = "0";
             Descuento = desc;
             float f = float.Parse(desc) / 100;
             descu = (Math.Round(float.Parse(precio.Replace(" €", "")) * int.Parse(cantidad) * f, 2)).ToString("0.00");

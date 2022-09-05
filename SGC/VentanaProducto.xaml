@@ -22,7 +22,7 @@
                 <TextBlock Margin="30,28,0,28" Grid.Column="1" x:Name="day" Text="Nuevo Producto" VerticalAlignment="Center" FontFamily="Helvetica neue" FontSize="24" Height="29"></TextBlock>
                 <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" HorizontalAlignment="Stretch">
                     <Label Foreground="#838d99" HorizontalAlignment="Left">Nombre</Label>
-                    <ComboBox  SelectionChanged="mirarFactura2" Height="40"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" IsEditable="True" IsTextSearchEnabled="True" x:Name="Nombre" Foreground="#92959c">
+                    <ComboBox  SelectionChanged="mirarFactura2" Height="40" MaxDropDownHeight="600" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" IsEditable="True" IsTextSearchEnabled="True" x:Name="Nombre" Foreground="#92959c">
                         <ComboBox.Style>
                             <Style>
                                 <EventSetter Event="TextBox.TextChanged" Handler="TextBox_TextChanged" />

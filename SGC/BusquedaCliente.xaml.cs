@@ -33,11 +33,31 @@ namespace SGC
             if (l != null)
             {
                 lcln = l;
-
-                foreach (Clientes c in l.Select(x => x).Where(x => x.DeBaja == false).ToList())
-                    Clientes.Items.Add(c);
+                List<int> lin = new List<int>();
+                foreach (Clientes c in l.Select(x => x).Where(x => x.DeBaja == false).OrderByDescending(x=>x.id).ToList())
+                {
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
+                }
 
                 nparcela.ItemsSource = lp.OrderByDescending(x=>x.ocupada);
+                column1.Visibility = Visibility.Collapsed;
+                column2.Visibility = Visibility.Collapsed;
+                column3.Visibility = Visibility.Collapsed;
+                column4.Visibility = Visibility.Collapsed;
+                foreach (Clientes cc in Clientes.Items)
+                {
+
+                    cc.visib = false;
+                }
+                Clientes.Items.Refresh();
+
+                brd1.HorizontalAlignment = HorizontalAlignment.Right;
+
+                mostrar.Background = Brushes.LightGray;
             }
         }
 
@@ -123,29 +143,33 @@ namespace SGC
         {
 
 
-
+            List<int> lin = new List<int>();
             switch (filtrar_cliente.SelectedIndex)
             {
                 case 0:
                     {
                         List<Clientes> lc = new List<Clientes>();
-                        string[] c = buscadorClientes.Text.Split(' ');
-                        if (c.Length > 1)
+                        string[] cc = buscadorClientes.Text.Split(' ');
+                        if (cc.Length > 1)
                         {
-                            lc = lcln.Select(sublist => sublist).Where(item => item.nombre_cliente.ToLower().Contains(c[0].ToLower()) && item.apellidos_cliente.ToLower().Contains(c[1].ToLower())).ToList();
+                            lc = lcln.Select(sublist => sublist).Where(item => item.nombre_cliente.ToLower().Contains(cc[0].ToLower()) && item.apellidos_cliente.ToLower().Contains(cc[1].ToLower())).ToList();
                         }
                         else
                         {
-                            lc = lcln.Select(sublist => sublist).Where(item => item.nombre_cliente.ToLower().Contains(c[0].ToLower()) || item.apellidos_cliente.ToLower().Contains(c[0].ToLower())).ToList();
+                            lc = lcln.Select(sublist => sublist).Where(item => item.nombre_cliente.ToLower().Contains(cc[0].ToLower()) || item.apellidos_cliente.ToLower().Contains(cc[0].ToLower())).ToList();
                         }
 
 
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -161,9 +185,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -179,9 +207,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -196,9 +228,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -213,9 +249,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -230,9 +270,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -247,9 +291,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -264,9 +312,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -281,9 +333,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -298,9 +354,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -315,9 +375,13 @@ namespace SGC
 
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -328,9 +392,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(item => item.Numero_Bastidor1.ToLower().Contains(buscadorClientes.Text.ToLower()) || item.Numero_Bastidor2.ToLower().Contains(buscadorClientes.Text.ToLower())).ToList();
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -341,9 +409,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(item => item.Fecha_In == buscadorClientes2.SelectedDate).ToList();
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -354,9 +426,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(item => item.fecha_entrada_estado == buscadorClientes2.SelectedDate).ToList();
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -367,9 +443,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(item => item.fecha_pago==buscadorClientes2.SelectedDate).ToList();
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -380,9 +460,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(item => item.n_plaza.Equals(p.id+"")).ToList();
 
                         Clientes.Items.Clear();
-                        foreach (Clientes cl in lc)
+                        foreach (Clientes c in lc)
                         {
-                            Clientes.Items.Add(cl);
+                            if (!lin.Contains(c.id))
+                            {
+                                lin.Add(c.id);
+                                Clientes.Items.Add(c);
+                            }
                         }
                     }
                     break;
@@ -438,13 +522,20 @@ namespace SGC
 
         private void estado_alta_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (alta_baja.HorizontalAlignment == HorizontalAlignment.Left)
             {
                 alta_baja.HorizontalAlignment = HorizontalAlignment.Right;
                 estado_alta.Background = Brushes.LightGray;
                 Clientes.Items.Clear();
                 foreach (Clientes c in lcln.Select(x => x).Where(x => x.DeBaja == true).ToList())
-                    Clientes.Items.Add(c);
+                {
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
+                }
 
             }
             else
@@ -453,12 +544,19 @@ namespace SGC
                 estado_alta.Background = Brushes.LightBlue;
                 Clientes.Items.Clear();
                 foreach (Clientes c in lcln.Select(x => x).Where(x => x.DeBaja == false).ToList())
-                    Clientes.Items.Add(c);
+                {
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
+                }
             }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 0)
             {
                 columna = 0;
@@ -468,9 +566,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.n_cliemte).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -483,9 +585,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -500,9 +606,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -512,9 +622,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.n_cliemte).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -522,6 +636,7 @@ namespace SGC
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 1)
             {
                 columna = 1;
@@ -531,9 +646,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.nombre_cliente.ToLower()).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -546,9 +665,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -563,9 +686,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -575,9 +702,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.nombre_cliente.ToLower()).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -585,6 +716,7 @@ namespace SGC
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 2)
             {
                 columna = 2;
@@ -594,9 +726,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.apellidos_cliente.ToLower()).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -609,9 +745,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -626,9 +766,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -638,9 +782,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.apellidos_cliente.ToLower()).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -648,6 +796,7 @@ namespace SGC
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 3)
             {
                 columna = 3;
@@ -657,9 +806,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.dni.ToLower()).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -672,9 +825,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -689,9 +846,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -701,9 +862,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.dni.ToLower()).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -711,18 +876,23 @@ namespace SGC
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 4)
             {
                 columna = 4;
                 cont = 1;
                 List<Clientes> lc = new List<Clientes>();
 
-                lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.poblacio.ToLower()).ToList();
+                lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Vehiculo1.ToLower()).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -731,13 +901,17 @@ namespace SGC
                 {
                     cont++;
                     List<Clientes> lc = new List<Clientes>();
-                    lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderByDescending(x => x.poblacio.ToLower()).ToList();
+                    lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderByDescending(x => x.Vehiculo1.ToLower()).ToList();
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -752,9 +926,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -762,11 +940,15 @@ namespace SGC
                     cont = 1;
                     List<Clientes> lc = new List<Clientes>();
 
-                    lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.poblacio.ToLower()).ToList();
+                    lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Vehiculo1.ToLower()).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -774,18 +956,23 @@ namespace SGC
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 5)
             {
                 columna = 5;
                 cont = 1;
                 List<Clientes> lc = new List<Clientes>();
 
-                lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Provincia.ToLower()).ToList();
+                lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.nombrePlaza.ToLower()).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -794,13 +981,17 @@ namespace SGC
                 {
                     cont++;
                     List<Clientes> lc = new List<Clientes>();
-                    lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderByDescending(x => x.Provincia.ToLower()).ToList();
+                    lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderByDescending(x => x.nombrePlaza.ToLower()).ToList();
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -815,9 +1006,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -825,11 +1020,15 @@ namespace SGC
                     cont = 1;
                     List<Clientes> lc = new List<Clientes>();
 
-                    lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Provincia.ToLower()).ToList();
+                    lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.nombrePlaza.ToLower()).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -837,6 +1036,7 @@ namespace SGC
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 6)
             {
                 columna = 6;
@@ -846,9 +1046,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Pais.ToLower()).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -861,9 +1065,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -878,9 +1086,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -890,9 +1102,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Pais.ToLower()).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -900,6 +1116,7 @@ namespace SGC
 
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 7)
             {
                 columna = 7;
@@ -909,9 +1126,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.telefon1.ToLower()).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -924,9 +1145,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -941,9 +1166,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -953,9 +1182,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.telefon1.ToLower()).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -963,6 +1196,7 @@ namespace SGC
 
         private void Button_Click_9(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 8)
             {
                 columna = 8;
@@ -972,9 +1206,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.matricula1.ToLower()).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -987,9 +1225,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -1004,9 +1246,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -1016,9 +1262,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.matricula1.ToLower()).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -1026,6 +1276,7 @@ namespace SGC
 
         private void column1_Click(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 9)
             {
                 columna = 9;
@@ -1035,9 +1286,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Fecha_In).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -1050,9 +1305,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -1067,9 +1326,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -1079,9 +1342,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Fecha_In).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -1089,6 +1356,7 @@ namespace SGC
 
         private void column2_Click(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 10)
             {
                 columna = 10;
@@ -1098,9 +1366,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Fecha_Out).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -1113,9 +1385,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -1130,9 +1406,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -1142,9 +1422,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.Fecha_Out).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -1152,6 +1436,7 @@ namespace SGC
 
         private void column3_Click(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 11)
             {
                 columna = 11;
@@ -1161,9 +1446,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.fecha_entrada_estado).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -1176,9 +1465,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -1193,9 +1486,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -1205,9 +1502,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.fecha_entrada_estado).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -1215,6 +1516,7 @@ namespace SGC
 
         private void column4_Click(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             if (columna != 12)
             {
                 columna = 12;
@@ -1224,9 +1526,13 @@ namespace SGC
                 lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.fecha_pago).ToList();
 
                 Clientes.Items.Clear();
-                foreach (Clientes cl in lc)
+                foreach (Clientes c in lc)
                 {
-                    Clientes.Items.Add(cl);
+                    if (!lin.Contains(c.id))
+                    {
+                        lin.Add(c.id);
+                        Clientes.Items.Add(c);
+                    }
                 }
             }
             else
@@ -1239,9 +1545,13 @@ namespace SGC
 
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else if (cont == 2)
@@ -1256,9 +1566,13 @@ namespace SGC
                         lc = lcln.Select(sublist => sublist).Where(x => x.DeBaja).ToList();
 
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
                 else
@@ -1268,9 +1582,13 @@ namespace SGC
 
                     lc = Clientes.Items.Cast<Clientes>().Select(x => x).OrderBy(x => x.fecha_pago).ToList();
                     Clientes.Items.Clear();
-                    foreach (Clientes cl in lc)
+                    foreach (Clientes c in lc)
                     {
-                        Clientes.Items.Add(cl);
+                        if (!lin.Contains(c.id))
+                        {
+                            lin.Add(c.id);
+                            Clientes.Items.Add(c);
+                        }
                     }
                 }
             }
@@ -1278,10 +1596,15 @@ namespace SGC
 
         private void Button_Click2(object sender, RoutedEventArgs e)
         {
+            List<int> lin = new List<int>();
             Clientes.Items.Clear();
-            foreach (Clientes cl in lcln)
+            foreach (Clientes c in lcln)
             {
-                Clientes.Items.Add(cl);
+                if (!lin.Contains(c.id))
+                {
+                    lin.Add(c.id);
+                    Clientes.Items.Add(c);
+                }
             }
         }
     }

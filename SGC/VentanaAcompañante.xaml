@@ -219,7 +219,13 @@
                     <Label Content="Fecha nacimiento" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
                     <TextBox Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="fecha"></TextBox>
                     <Label Content="Pais" Foreground="#838d99" FontFamily="Helvetica neue" FontSize="12"/>
-                    <TextBox Height="40" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" Foreground="#92959c" TextChanged="mirar" x:Name="pais"></TextBox>
+                    <ComboBox  SelectionChanged="Nombre_Cliente_Factura_SelectionChanged" Height="40"  BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="15" IsEditable="True" IsTextSearchEnabled="True" x:Name="pais" Foreground="#92959c">
+                        <ComboBox.Style>
+                            <Style>
+                                <EventSetter Event="TextBox.TextChanged" Handler="TextBox_TextChanged" />
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
                 </StackPanel>
 
                 <Border Grid.RowSpan="3" Background="#00ba91" CornerRadius="15,0,0,0"></Border>

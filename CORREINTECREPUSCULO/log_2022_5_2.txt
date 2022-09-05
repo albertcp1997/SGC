@@ -1,0 +1,137 @@
+02/05/2022 10:25:25 - Mirar accion ojo True
+02/05/2022 10:25:25 - Mirar accion
+02/05/2022 10:25:25 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:30:26 - Mirar accion ojo True
+02/05/2022 10:30:26 - Mirar accion
+02/05/2022 10:30:26 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:30:26 - Error 50374 El índice debe estar dentro de los límites de la lista.
+Nombre del parámetro: index
+02/05/2022 10:30:28 - Mirar accion ojo True
+02/05/2022 10:30:28 - Mirar accion
+02/05/2022 10:30:28 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:30:28 - Error 50374 El índice debe estar dentro de los límites de la lista.
+Nombre del parámetro: index
+02/05/2022 10:30:28 - Mirar accion ojo True
+02/05/2022 10:30:28 - Mirar accion
+02/05/2022 10:30:28 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:30:28 - Error 50374 El índice debe estar dentro de los límites de la lista.
+Nombre del parámetro: index
+02/05/2022 10:30:28 - Mirar accion ojo True
+02/05/2022 10:30:28 - Mirar accion
+02/05/2022 10:30:28 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:30:28 - Error 50374 El índice debe estar dentro de los límites de la lista.
+Nombre del parámetro: index
+02/05/2022 10:30:31 - Mirar accion ojo True
+02/05/2022 10:30:31 - Mirar accion
+02/05/2022 10:30:31 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:44:52 - Mirar accion ojo True
+02/05/2022 10:44:52 - Mirar accion
+02/05/2022 10:44:52 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:44:53 - Mirar accion ojo True
+02/05/2022 10:44:53 - Mirar accion
+02/05/2022 10:44:53 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:44:54 - Mirar accion ojo True
+02/05/2022 10:44:54 - Mirar accion
+02/05/2022 10:44:54 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:44:55 - Mirar accion ojo True
+02/05/2022 10:44:55 - Mirar accion
+02/05/2022 10:44:55 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:44:55 - Mirar accion ojo True
+02/05/2022 10:44:55 - Mirar accion
+02/05/2022 10:44:55 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:44:56 - Mirar accion ojo True
+02/05/2022 10:44:56 - Mirar accion
+02/05/2022 10:44:56 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:44:56 - Mirar accion ojo True
+02/05/2022 10:44:56 - Mirar accion
+02/05/2022 10:44:56 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:44:57 - Mirar accion ojo True
+02/05/2022 10:44:57 - Mirar accion
+02/05/2022 10:44:57 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:45:34 - Mirar accion ojo True
+02/05/2022 10:45:34 - Mirar accion
+02/05/2022 10:45:34 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:25 - Mirar accion ojo True
+02/05/2022 10:49:25 - Mirar accion
+02/05/2022 10:49:25 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:28 - Mirar accion ojo True
+02/05/2022 10:49:28 - Mirar accion
+02/05/2022 10:49:28 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:30 - Mirar accion ojo True
+02/05/2022 10:49:30 - Mirar accion
+02/05/2022 10:49:30 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:31 - Mirar accion ojo True
+02/05/2022 10:49:31 - Mirar accion
+02/05/2022 10:49:31 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:31 - Mirar accion ojo True
+02/05/2022 10:49:31 - Mirar accion
+02/05/2022 10:49:31 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:32 - Mirar accion ojo True
+02/05/2022 10:49:32 - Mirar accion
+02/05/2022 10:49:32 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:33 - Mirar accion ojo True
+02/05/2022 10:49:33 - Mirar accion
+02/05/2022 10:49:33 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:34 - Mirar accion ojo True
+02/05/2022 10:49:34 - Mirar accion
+02/05/2022 10:49:34 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:34 - Mirar accion ojo True
+02/05/2022 10:49:34 - Mirar accion
+02/05/2022 10:49:34 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:39 - Mirar accion ojo True
+02/05/2022 10:49:39 - Mirar accion
+02/05/2022 10:49:39 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:40 - Mirar accion ojo True
+02/05/2022 10:49:40 - Mirar accion
+02/05/2022 10:49:40 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:41 - Mirar accion ojo True
+02/05/2022 10:49:41 - Mirar accion
+02/05/2022 10:49:41 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:42 - Mirar accion ojo True
+02/05/2022 10:49:42 - Mirar accion
+02/05/2022 10:49:42 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:44 - Mirar accion ojo True
+02/05/2022 10:49:44 - Mirar accion
+02/05/2022 10:49:44 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:44 - Mirar accion ojo True
+02/05/2022 10:49:44 - Mirar accion
+02/05/2022 10:49:44 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:45 - Mirar accion ojo True
+02/05/2022 10:49:45 - Mirar accion
+02/05/2022 10:49:45 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:46 - Mirar accion ojo True
+02/05/2022 10:49:46 - Mirar accion
+02/05/2022 10:49:46 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:49:47 - Mirar accion ojo True
+02/05/2022 10:49:47 - Mirar accion
+02/05/2022 10:49:47 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:54:22 - Mirar accion ojo True
+02/05/2022 10:54:22 - Mirar accion
+02/05/2022 10:54:22 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:54:24 - Mirar accion ojo True
+02/05/2022 10:54:24 - Mirar accion
+02/05/2022 10:54:24 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:55:32 - Mirar accion ojo True
+02/05/2022 10:55:32 - Mirar accion
+02/05/2022 10:55:32 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:55:42 - Mirar accion ojo True
+02/05/2022 10:55:42 - Mirar accion
+02/05/2022 10:55:42 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:55:55 - Mirar accion ojo True
+02/05/2022 10:55:55 - Mirar accion
+02/05/2022 10:55:55 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:58:28 - Mirar accion ojo True
+02/05/2022 10:58:28 - Mirar accion
+02/05/2022 10:58:28 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 10:59:10 - Mirar accion ojo True
+02/05/2022 10:59:10 - Mirar accion
+02/05/2022 10:59:10 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 12:01:10 - Mirar accion ojo True
+02/05/2022 12:01:10 - Mirar accion
+02/05/2022 12:01:10 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 12:01:14 - Mirar accion ojo True
+02/05/2022 12:01:14 - Mirar accion
+02/05/2022 12:01:14 - Mirar accion SGC.Clases.Direcciones
+02/05/2022 12:01:35 - Mirar accion ojo True
+02/05/2022 12:01:35 - Mirar accion
+02/05/2022 12:01:35 - Mirar accion SGC.Clases.Direcciones

@@ -28,10 +28,16 @@ namespace SGC
         private Sql s;
         private MainWindow w;
         Login l;
+        private List<Dbs> lista_Db;
+
         public Login()
         {
             s = new Sql();
             InitializeComponent();
+
+            //Properties.Settings.Default.DB = "";
+            //Properties.Settings.Default.Save();
+            CargarDb();
             try
             {
                 Console.WriteLine(Screen.PrimaryScreen.Bounds.Height + "-" + Screen.PrimaryScreen.Bounds.Size);
@@ -212,7 +218,73 @@ namespace SGC
             }
         }
 
-       
+        private void copiasDb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Dbs dbs = (Dbs)copiasDb.SelectedItem;
+            if (dbs != null)
+            {
+                if (!dbs.path.Equals(Properties.Settings.Default.DB))
+                {
+                    Properties.Settings.Default.DB = dbs.path;
+                    Properties.Settings.Default.Save();
+                    //BuscarDB();
+                    //CargarEmpresa();
+                    s = new Sql();
+                }
+            }
+        }
+        private void CargarDb()
+        {
 
+            //conexiondb = Directory.GetCurrentDirectory();
+
+            System.IO.FileInfo sf = null;
+            string path2 = Directory.GetCurrentDirectory();
+            string[] arr = path2.Split('\\');
+            path2 = arr[0] + "\\" + arr[1] + "\\" + arr[2] + "\\" + arr[3] + "\\" + arr[4] + "\\" + arr[5] + "\\" + arr[6] + "\\DbCamping_copia";
+            if (!Directory.Exists(path2))
+                Directory.CreateDirectory(path2);
+            //Log oLog = new Log(path2);
+            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(path2);
+            lista_Db = new List<Dbs>();
+            // This method assumes that the application has discovery permissions  
+            // for all folders under the specified path.  
+            IEnumerable<System.IO.FileInfo> fileList = dir.GetFiles("*.*", System.IO.SearchOption.TopDirectoryOnly);
+
+            //Create the query  
+            IEnumerable<System.IO.FileInfo> fileQuery =
+                from file in fileList
+                where file.Name.Contains(".db")
+                orderby file.Name
+                select file;
+            Dbs dbs = null;
+            //Execute the query. This might write out a lot of files!  
+            foreach (System.IO.FileInfo fi in fileQuery)
+            {
+                ////Console.writeLine(fi.FullName);
+                sf = fi;
+                //conexiondb = sf.FullName;
+                lista_Db.Add(new Dbs(sf.FullName, sf.CreationTime, sf.Name));
+                Console.WriteLine(sf.FullName + " = " + Properties.Settings.Default.DB);
+                if (sf.FullName.Equals(Properties.Settings.Default.DB))
+                    dbs = new Dbs(sf.FullName, sf.CreationTime, sf.Name);
+            }
+            Console.WriteLine(lista_Db[0].name);
+            lista_Db = lista_Db.Select(x => x).OrderByDescending(x => x.date_time).ToList();
+
+            Console.WriteLine(lista_Db[0].name + " " + lista_Db.IndexOf(dbs));
+
+            copiasDb.ItemsSource = lista_Db;
+            if (dbs != null)
+                copiasDb.SelectedItem = lista_Db.Find(x => x.name.Equals(dbs.name));
+            copiasDb.Items.Refresh();
+
+            // Create and execute a new query by using the previous
+            // query as a starting point. fileQuery is not
+            // executed again until the call to Last()  
+
+
+
+        }
     }
 }

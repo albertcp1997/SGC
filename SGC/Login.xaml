@@ -31,6 +31,21 @@
                         <RowDefinition Height="513"></RowDefinition>
                         <RowDefinition Height="230*"></RowDefinition>
                     </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="2" Grid.Column="2" Margin="40" >
+                        <Label Foreground="#838d99" HorizontalAlignment="Left" Content="Base de datos"/>
+                        <ComboBox HorizontalAlignment="Stretch" SelectionChanged="copiasDb_SelectionChanged" Height="40" x:Name="copiasDb">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+
+                                        <Label Content="{Binding name}"></Label>
+
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                   
                     <Grid Grid.Row="1" Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>

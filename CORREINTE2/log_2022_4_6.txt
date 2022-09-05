@@ -1,0 +1,4 @@
+06/04/2022 12:59:17 - Mirar accion 
+06/04/2022 13:01:31 - Mirar accion ERROR
+06/04/2022 13:01:36 - Mirar accion ERROR
+06/04/2022 13:04:33 - Mirar accion ERROR

@@ -23,7 +23,7 @@ namespace SGC.Clases
             Provincia_Cliente = (string)p["Provincia_Cliente"];
             Pais_Cliente = (string)p["Pais_Cliente"];
 
-            this.fecha = (DateTime)p["Fecha"];
+            this.fecha = DateTime.Parse((string)p["Fecha"]);
             Console.WriteLine(((string)p["Bi"]).Replace(",", "."));
             Console.WriteLine(((string)p["Cuota_IVA"]).Replace(",", "."));
             Console.WriteLine(((string)p["Importe"]).Replace(",", "."));
@@ -45,13 +45,13 @@ namespace SGC.Clases
             Mail = (string)p["Mail"];
             Metodo_Pago = (int)p["Metodo_Pago"];
             Telefono_Camping = (string)p["Telefono_Camping"];
-            this.fecha_ven = (DateTime)p["Fecha_ven"];
+            this.fecha_ven = DateTime.Parse((string)p["Fecha_ven"]);
             //Lista_productos = lista_productos;
             Numero_Factura = (string)p["Numero_Factura"];
 
         }
 
-        public Recibos(string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban)
+        public Recibos(string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban, int tipo)
         {
             Nombre_Cliente = nombre_Cliente;
             DNI_CIF = dNI_CIF;
@@ -83,9 +83,10 @@ namespace SGC.Clases
             Vehiculo = veh;
             Matricula = mat;
             IBAN = iban;
+            Tipo = tipo;
         }
 
-        public Recibos(int id, string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban)
+        public Recibos(int id, string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban, int tipo, int ticket)
         {
             Id = id;
             Nombre_Cliente = nombre_Cliente;
@@ -116,6 +117,8 @@ namespace SGC.Clases
             Vehiculo = veh;
             Matricula = mat;
             IBAN = iban;
+            Tipo = tipo;
+            Id_Ticket = ticket;
         }
 
         public int Id { get; set; }
@@ -149,5 +152,14 @@ namespace SGC.Clases
         public string IBAN { get; set; }
 
         public string Descuento { get; set; }
+        public int Tipo { get; set; }
+        public int Id_Ticket { get; set; }
+
+        public string ToString()
+        {
+            return Id + " " + Numero_Factura + " " + fecha;
+        }
+
     }
+
 }

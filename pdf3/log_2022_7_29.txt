@@ -1,0 +1,8 @@
+29/07/2022 12:07:43 - hola
+29/07/2022 12:07:43 - hola 1 System.Collections.Generic.List`1[SGC.Clases.Facturas]
+29/07/2022 12:12:08 - hola
+29/07/2022 12:12:08 - hola 1 System.Collections.Generic.List`1[SGC.Clases.Facturas]
+29/07/2022 12:13:41 - hola
+29/07/2022 12:13:41 - hola 1 System.Collections.Generic.List`1[SGC.Clases.Facturas]
+29/07/2022 12:14:08 - hola
+29/07/2022 12:14:08 - hola 1 System.Collections.Generic.List`1[SGC.Clases.Facturas]

@@ -22,7 +22,8 @@ namespace SGC
     /// </summary>
     public partial class VentanaCliente : Window
     {
-        public delegate void UsuarioNuevo(Clientes c, List<string> qur);
+        List<Consulta> l_consultas = new List<Consulta>();
+        public delegate void UsuarioNuevo(Clientes c, List<string> qur, List<Consulta> cs);
         public event UsuarioNuevo refresh;
         public List<string> query=new List<string>();
 
@@ -34,7 +35,7 @@ namespace SGC
         public VentanaCliente(int v, List<Clientes> lcln, List<Parcelas> lprc, List<Potencia> lptc, List<Vehiculos> lvhc)
         {
             InitializeComponent();
-            
+            l_consultas = new List<Consulta>();
             this.Activate();
             lvh = new List<string>();
             Clientes_HoraEntrada_alta.Text = new DateTime(1, 1, 1, 12, 0, 0).ToString("HH:mm:ss");
@@ -375,12 +376,12 @@ namespace SGC
 
             }
             c.importe = importe_alta.Text.Replace("€", "");
-
-
+            if(numero_plaza_alta.SelectedItem==null)
+                c.n_plaza = "0";
             c.Nota1 = nota1_alta.Text;
             c.Nota2 = nota1_alta2.Text;
             //Clientes c = new Clientes(int.Parse(numero_cliente.Text), numero_tarjeta.Text, nombre_cliente.Text, apellidos_cliente.Text, dni.Text, direccion_cliente.Text, poblacion_cliente.Text, telefonos_cliente.Text, telefonos_cliente2.Text, CP.Text, mail_cliente.Text,titular_tarjeta.Text, caducidad.Text+"/"+caducidad1.Text,numero_secreto.Text, entidad_bancaria.Text,Iban.Text, Swift.Text, pais.Text, numero.Text, piso.Text, puerta.Text, provincia.Text, entidad_bancaria2.Text, Iban2.Text, Swift2.Text, mail_cliente2.Text);
-            le.refresh(c, query);
+            le.refresh(c, query, l_consultas);
             this.Close();
         }
 
@@ -614,8 +615,9 @@ namespace SGC
             VentanaAcompañante.le.refresh2 += new VentanaAcompañante.NuevoAcompañante2(Refreshacp);
         }
 
-        private void Refreshacp(Acompañantes ac, int b, string a)
+        private void Refreshacp(Acompañantes ac, int b, string a, Consulta cs)
         {
+            l_consultas.Add(cs);
             switch (b)
             {   
                 case 0:

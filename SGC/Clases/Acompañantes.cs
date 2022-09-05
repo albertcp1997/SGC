@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,21 @@ namespace SGC.Clases
     {
         public Acompañantes()
         {
+        }
+        
+        public Acompañantes(JObject p)
+        {
+            Id = (int)p["Id"];
+            this.nombreacompañante1 = (string)p["nombreacompañante1"];
+            this.apellido1compañante1 = (string)p["apellido1compañante1"];
+            this.apellido2compañante1 = (string)p["apellido2compañante1"]; ;
+            this.tipo1 = (int)p["tipo1"];
+            this.dniacompañante1 = (string)p["dniacompañante1"];
+            this.fecha_dni1 = (string)p["fecha_dni1"];
+            Sexo1 = (int)p["Sexo1"];
+            this.fecha_n1 = (string)p["fecha_n1"];
+            this.pais1 = (string)p["pais1"];
+            Clienteid = int.Parse((string)p["Cliente"]);
         }
 
         public Acompañantes(string nombreacompañante1, string apellido1compañante1, string apellido2compañante1, int tipo1, string dniacompañante1, string fecha_dni1, int sexo1, string fecha_n1, string pais1, int c)

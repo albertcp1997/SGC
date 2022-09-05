@@ -91,7 +91,7 @@ namespace SGC.KNXLib
             }
             catch (SocketException ex)
             {
-                throw new ConnectionErrorException(ConnectionConfiguration, ex);
+                
             }
 
             if (KnxReceiver == null || KnxSender == null)

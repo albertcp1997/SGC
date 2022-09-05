@@ -22,23 +22,27 @@ namespace SGC.Clases
         public Log(string Path, int a)
         {
             this.Path = Path;
-            Name = "arxiu."+a.ToString("000") + ".txt";
+            Name = "ID50003440." + a.ToString("000") + ".txt";
             aa = 1;
         }
 
         public void Add(string sLog)
         {
-            CreateDirectory();
-            string nombre = Name;
-            string cadena = "";
-            if(aa==0)
-                cadena += DateTime.Now + " - " + sLog + Environment.NewLine;
-            else
-                cadena += sLog + Environment.NewLine;
+            try
+            {
+                CreateDirectory();
+                string nombre = Name;
+                string cadena = "";
+                if (aa == 0)
+                    cadena += DateTime.Now + " - " + sLog + Environment.NewLine;
+                else
+                    cadena += sLog + Environment.NewLine;
 
-            StreamWriter sw = new StreamWriter(Path + "/" + nombre, true);
-            sw.Write(cadena);
-            sw.Close();
+                StreamWriter sw = new StreamWriter(Path + "/" + nombre, true);
+                sw.Write(cadena);
+                sw.Close();
+            }
+            catch { }
 
         }
         public string getpathname()

@@ -180,26 +180,26 @@ namespace SGC
 
                 
 
-               if (!Descunto.Text.Equals("0"))
+               if (!Descunto.Text.Equals("0")&&!Descunto.Text.Equals(""))
                 {
-                    Console.WriteLine((Math.Round((1 + bi) * d, 2) * n).ToString("0.00"));
-                    Console.WriteLine(((Math.Round((1 + bi) * d, 2) * n) * float.Parse(Descunto.Text) / 100));
-                    desc = Math.Round(((Math.Round((d * n), 2) * float.Parse(Descunto.Text) / 100)), 2).ToString("0.00");
-                    total.Text = ((Math.Round(d, 2) * n) - (Math.Round(d, 2) * n * float.Parse(Descunto.Text) / 100)).ToString("0.00");
+                    Console.WriteLine((Math.Round((1 + bi) * d, 4) * n).ToString("0.0000"));
+                    Console.WriteLine(((Math.Round((1 + bi) * d, 4) * n) * float.Parse(Descunto.Text) / 100));
+                    desc = Math.Round(((Math.Round((d * n), 4) * float.Parse(Descunto.Text) / 100)), 4).ToString("0.0000");
+                    total.Text = ((Math.Round(d, 4) * n) - (Math.Round(d, 4) * n * float.Parse(Descunto.Text) / 100)).ToString("0.0000");
                 }
                 else
                 {
                     desc = "0";
-                    Console.WriteLine((Math.Round((1 + bi) * d, 2) * n).ToString("0.00"));
-                    total.Text = (Math.Round(d, 2) * n).ToString("0.00");
+                    Console.WriteLine((Math.Round((1 + bi) * d, 4) * n).ToString("0.0000"));
+                    total.Text = (Math.Round(d, 4) * n).ToString("0.0000");
                 }
                 if (Nombre.Text.ToLower().Contains("tasa turistica"))
                 {
                     float f = float.Parse(total.Text);
-                    total.Text = (Math.Round((double)f, 1)).ToString("0.00");
+                    total.Text = (Math.Round((double)f, 1)).ToString("0.0000");
 
                 }
-                Impuestos.Text = Math.Round(float.Parse(total.Text)*bi,2).ToString("0.00");
+                Impuestos.Text = Math.Round(float.Parse(total.Text)*bi,4).ToString("0.0000");
 
             }
             else
@@ -233,24 +233,24 @@ namespace SGC
 
                if (!Descunto.Text.Equals("0"))
                 {
-                    Console.WriteLine((Math.Round((1 + bi) * d, 2) * n).ToString("0.00"));
-                    Console.WriteLine(((Math.Round((1 + bi) * d, 2) * n) * float.Parse(Descunto.Text) / 100));
-                    desc = Math.Round(((Math.Round((d * n), 2) * float.Parse(Descunto.Text) / 100)), 2).ToString("0.00");
-                    total.Text = ((Math.Round(d, 2) * n) - (Math.Round(d, 2) * n * float.Parse(Descunto.Text) / 100)).ToString("0.00");
+                    Console.WriteLine((Math.Round((1 + bi) * d, 4) * n).ToString("0.0000"));
+                    Console.WriteLine(((Math.Round((1 + bi) * d, 4) * n) * float.Parse(Descunto.Text) / 100));
+                    desc = Math.Round(((Math.Round((d * n), 4) * float.Parse(Descunto.Text) / 100)), 4).ToString("0.0000");
+                    total.Text = ((Math.Round(d, 4) * n) - (Math.Round(d, 4) * n * float.Parse(Descunto.Text) / 100)).ToString("0.0000");
                 }
                 else
                 {
                     desc = "0";
-                    Console.WriteLine((Math.Round((1 + bi) * d, 2) * n).ToString("0.00"));
-                    total.Text = (Math.Round(d, 2) * n).ToString("0.00");
+                    Console.WriteLine((Math.Round((1 + bi) * d, 4) * n).ToString("0.0000"));
+                    total.Text = (Math.Round(d, 4) * n).ToString("0.0000");
                 }
                 if (Nombre.Text.ToLower().Contains("tasa turistica"))
                 {
                     float f = float.Parse(total.Text);
-                    total.Text = (Math.Round((double)f, 1)).ToString("0.00");
+                    total.Text = (Math.Round((double)f, 1)).ToString("0.0000");
 
                 }
-                Impuestos.Text = Math.Round(float.Parse(total.Text) * bi, 2).ToString("0.00");
+                Impuestos.Text = Math.Round(float.Parse(total.Text) * bi, 4).ToString("0.0000");
 
             }
             else
@@ -287,7 +287,7 @@ namespace SGC
 
 
                 var cmbx = sender as ComboBox;
-                List<string> list3 = lp.Select(x => x).Where(x => x.ToLower().StartsWith(Nombre.Text.ToLower())).ToList();
+                List<string> list3 = lp.Select(x => x).Where(x => x.ToLower().Contains(Nombre.Text.ToLower())).ToList();
                 Nombre.ItemsSource = list3;
 
 
@@ -298,15 +298,16 @@ namespace SGC
 
                     cmbx.IsDropDownOpen = true;
                     c = list2.Find(x => x.Nombre == list3[0]);
-
+                    TextBox tb = (TextBox)Nombre.Template.FindName("PART_EditableTextBox", Nombre);
+                    tb.Select(tb.Text.Length, 0);
                 }
                 if (c != null)
                 {
 
                     //Precio.Text = float.Parse(c.Precio) * (1 - int.Parse(c.Descuento) / 100) + "";
-                    Precio.Text = float.Parse(c.Precio).ToString("0.00") +"";
+                    Precio.Text = float.Parse(c.Precio).ToString("0.0000") +"";
                     IVA.SelectedItem = liv.Find(x => x.Id == c.IVA);
-                    Nombre.SelectedItem = c.Nombre;
+                    //Nombre.SelectedItem = c.Nombre;
                     if (c.Descuento.Length > 0)
                         Descunto.Text = c.Descuento;
                     else
@@ -345,25 +346,25 @@ namespace SGC
 
                 if (!(Descunto.Text.Equals("0")))
                 {
-                    Console.WriteLine((Math.Round((1 + bi) * d, 2) * n).ToString("0.00"));
-                    Console.WriteLine(((Math.Round((1 + bi) * d, 2) * n) * float.Parse(Descunto.Text) / 100));
-                    desc = Math.Round(((Math.Round((d * n), 2) * float.Parse(Descunto.Text) / 100)), 2).ToString("0.00");
-                    total.Text = ((Math.Round(d, 2) * n) - (Math.Round(d, 2) * n * float.Parse(Descunto.Text) / 100)).ToString("0.00");
+                    Console.WriteLine((Math.Round((1 + bi) * d, 4) * n).ToString("0.0000"));
+                    Console.WriteLine(((Math.Round((1 + bi) * d, 4) * n) * float.Parse(Descunto.Text) / 100));
+                    desc = Math.Round(((Math.Round((d * n), 4) * float.Parse(Descunto.Text) / 100)), 4).ToString("0.0000");
+                    total.Text = ((Math.Round(d, 2) * n) - (Math.Round(d, 4) * n * float.Parse(Descunto.Text) / 100)).ToString("0.0000");
                 }
                 else
                 {
                     desc = "0";
-                    Console.WriteLine((Math.Round((1 + bi) * d, 2) * n).ToString("0.00"));
-                    total.Text = (Math.Round(d, 2) * n).ToString("0.00");
+                    Console.WriteLine((Math.Round((1 + bi) * d, 4) * n).ToString("0.0000"));
+                    total.Text = (Math.Round(d, 4) * n).ToString("0.0000");
                 }
                 if (Nombre.Text.ToLower().Contains("tasa turistica"))
                 {
                     float f = float.Parse(total.Text);
-                    total.Text = (Math.Round((double)f, 1)).ToString("0.00");
+                    total.Text = (Math.Round((double)f, 1)).ToString("0.0000");
 
                 }
-                Console.WriteLine(((Math.Round(d, 2) * n) - (Math.Round(d, 2) * n * (float.Parse(Descunto.Text) / 100))) * bi);
-                Impuestos.Text = Math.Round(((Math.Round(d, 2) * n) - (Math.Round(d, 2) * n * float.Parse(Descunto.Text) / 100)) * bi, 2).ToString("0.00");
+                Console.WriteLine(((Math.Round(d, 4) * n) - (Math.Round(d, 4) * n * (float.Parse(Descunto.Text) / 100))) * bi);
+                Impuestos.Text = Math.Round(((Math.Round(d, 4) * n) - (Math.Round(d, 4) * n * float.Parse(Descunto.Text) / 100)) * bi, 4).ToString("0.0000");
 
             }
             else

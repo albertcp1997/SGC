@@ -1,0 +1,2 @@
+01/08/2022 9:34:12 - hola
+01/08/2022 9:34:12 - hola 1 System.Collections.Generic.List`1[SGC.Clases.Facturas]

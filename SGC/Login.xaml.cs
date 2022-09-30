@@ -35,13 +35,13 @@ namespace SGC
             s = new Sql();
             InitializeComponent();
 
+           // MessageBoxResult result = System.Windows.MessageBox.Show(Directory.GetCurrentDirectory(), "Estado", MessageBoxButton.OK);
             //Properties.Settings.Default.DB = "";
             //Properties.Settings.Default.Save();
             CargarDb();
             try
             {
                 Console.WriteLine(Screen.PrimaryScreen.Bounds.Height + "-" + Screen.PrimaryScreen.Bounds.Size);
-                //MessageBoxResult result = System.Windows.MessageBox.Show(Directory.GetCurrentDirectory(), "Estado", MessageBoxButton.OK);
                 l = this;
                 string path2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 Log oLog = new Log(path2);

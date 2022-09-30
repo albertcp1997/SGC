@@ -49,6 +49,8 @@ namespace SGC.Clases
             //Lista_productos = lista_productos;
             Numero_Factura = (string)p["Numero_Factura"];
 
+            Tipo = (int)p["Tipo"];
+            Id_Ticket = (int)p["Id_Ticket"];
         }
 
         public Recibos(string nombre_Cliente, string dNI_CIF, string direccion_Cliente, string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List<Producto> lista_productos, string num, string desc, string veh, string mat, string iban, int tipo)

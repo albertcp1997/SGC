@@ -15,7 +15,7 @@ namespace SGC.Clases
         public Producto_Registro_TPV(JObject p)
         {
             Id = (int)p["Id"];
-            Nombre_Producto = (string)p["Nombre_Producto"];           
+            Nombre_Producto = (string)p["Nombre"];           
             Cantidad = (string)p["Cantidad"];
             Precio = (string)p["Precio"];
             IVA = (int)p["IVA"];

@@ -27,7 +27,7 @@ namespace SGC
         List<TPV_Indices> lind;
         NuevoProductoTPV npt;
         Sql s;
-        public delegate void comidaRefresh(ProductosTPV p);
+        public delegate void comidaRefresh(object p, object p2);
         public event comidaRefresh refresh;
         public static ComidaTpvConfiguracion le = new ComidaTpvConfiguracion(null, null,null);
 
@@ -48,9 +48,12 @@ namespace SGC
             NuevoProductoTPV.le.refresh += new NuevoProductoTPV.AñadirComida(añadir);
         }
 
-        private void añadir(ProductosTPV p)
-        {  
-                le.refresh(p);
+        private void añadir(object p)
+        {
+            if (p is ProductosTPV)
+                le.refresh((ProductosTPV)p, null);
+            else
+                le.refresh(p, null);
             Thread.Sleep(200);
             cargarProductosTPV();
 
@@ -128,10 +131,10 @@ namespace SGC
 
             s.EjecutarQuery("DELETE FROM Productos_TPV WHERE Id=" + p.Id);
 
+            le.refresh(null, p);
             Thread.Sleep(200);
             lpdct.Remove(p);
             Comida.Items.Refresh();
-            le.refresh(null);
         }
 
         private void Label_SizeChanged_Clientes(object sender, SizeChangedEventArgs e)

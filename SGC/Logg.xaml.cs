@@ -21,7 +21,18 @@ namespace SGC
     {
         public Logg()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            }
+            catch
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    InitializeComponent();
+                }
+                );
+            }
         }
     }
 }

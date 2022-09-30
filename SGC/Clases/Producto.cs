@@ -15,7 +15,7 @@ namespace SGC.Clases
         public Producto(JObject p)
         {
             Id = (int)p["Id"]; 
-            Nombre_Producto = (string)p["Cantidad"];
+            Nombre_Producto = (string)p["Nombre"];
             Cantidad = (string)p["Cantidad"];
             Precio = (string)p["Precio"];
             IVA = (string)p["IVA"];

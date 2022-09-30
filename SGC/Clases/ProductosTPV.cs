@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,17 @@ namespace SGC.Clases
             Precio = (string)p["Precio"];
             IVA = (int)p["IVA"];
             Descripcion = (string)p["Descripcion"];
-            this.Image = (string)p["Image"];
+            if (((string)p["Image"]).Contains("C:"))
+            {
+                this.Image = (string)p["Image"];
+            }
+            else
+            {
+                string path2 = Directory.GetCurrentDirectory();
+                string[] arr = path2.Split('\\');
+                path2 = arr[0] + "\\" + arr[1] + "\\" + arr[2] + "\\" + arr[3] + "\\" + arr[4] + "\\" + arr[5] + "\\" + arr[6];
+                this.Image = path2 + "/" + (string)p["Image"];
+            }
             Tipo = (int)p["Tipo"];
 
         }
@@ -32,7 +43,18 @@ namespace SGC.Clases
             Precio = precio;
             IVA = iVA;
             Descripcion = descripcion;
-            this.Image = img;
+            Console.WriteLine(Directory.GetCurrentDirectory());
+            if (img.Contains("C:"))
+            {
+                this.Image = img;
+            }
+            else
+            {
+                string path2 = Directory.GetCurrentDirectory();
+                string[] arr = path2.Split('\\');
+                path2 = arr[0] + "\\" + arr[1] + "\\" + arr[2] + "\\" + arr[3] + "\\" + arr[4] + "\\" + arr[5] + "\\" + arr[6];
+                this.Image = path2 + "/" + img;
+            }
             Tipo = tipo;
         }
 
@@ -45,6 +67,18 @@ namespace SGC.Clases
             IVA = iVA;
             Descripcion = descripcion;
             this.Image = img;
+            Console.WriteLine(Directory.GetCurrentDirectory());
+            if (img.Contains("C:"))
+            {
+                this.Image = img;
+            }
+            else
+            {
+                string path2 = Directory.GetCurrentDirectory();
+                string[] arr = path2.Split('\\');
+                path2 = arr[0] + "\\" + arr[1] + "\\" + arr[2] + "\\" + arr[3] + "\\" + arr[4] + "\\" + arr[5] + "\\" + arr[6];
+                this.Image = path2 + "/" + img;
+            }
             Tipo = tipo;
         }
 

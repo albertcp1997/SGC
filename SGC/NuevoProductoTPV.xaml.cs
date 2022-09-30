@@ -24,7 +24,7 @@ namespace SGC
     /// </summary>
     public partial class NuevoProductoTPV : Window
     {
-        public delegate void AñadirComida(ProductosTPV p);
+        public delegate void AñadirComida(object p);
         public event AñadirComida refresh;
         public static NuevoProductoTPV le = new NuevoProductoTPV(null, null);
         private ProductosTPV productosTPV;
@@ -51,6 +51,7 @@ namespace SGC
                 Precio.Text = productosTPV.Precio;
                 IVA.SelectedItem = liva.Find(x => x.Id == productosTPV.IVA) as IVAs;
                 Tipo.SelectedItem = lind.Find(x => x.Id == productosTPV.Tipo) as TPV_Indices;
+                Descripcion.Text = productosTPV.Image;
                 if (!File.Exists(productosTPV.Image))
                     productosTPV.Image = Directory.GetCurrentDirectory()+ "\\vacio.jpg";
                 try
@@ -113,42 +114,61 @@ namespace SGC
                 List<string> l = new List<string>();
                 //Factura factura = new Factura();
                 Boolean a = false;
-
+                List<string> lst = new List<string>();
+                
 
 
                 if (!Nombre.Text.Equals(ptpv.Nombre))
                 {
 
                     sql_query += "Nombre='" + Nombre.Text + "', ";
+                    lst.Add("Nombre:"+Nombre.Text);
                     a = true;
                 }
                 if (!Referencia.Text.Equals(ptpv.Referencia))
                 {
 
                     sql_query += "Referencia='" + Referencia.Text + "', ";
+                    lst.Add("Referencia:" + Referencia.Text);
                     a = true;
                 }
                 if (!Precio.Text.Equals(ptpv.Precio))
                 {
 
                     sql_query += "Precio='" + Precio.Text + "', ";
+                    lst.Add("Precio:" + Precio.Text);
                     a = true;
                 }
                 if ((IVA.SelectedItem as IVAs).Id != ptpv.IVA)
                 {
 
                     sql_query += "IVA='" + (IVA.SelectedItem as IVAs).Id + "', ";
+                    lst.Add("IVA:" + (IVA.SelectedItem as IVAs).Id);
                     a = true;
                 }
                 if ((Tipo.SelectedItem as TPV_Indices).Id != ptpv.Tipo)
                 {
 
                     sql_query += "Tipo='" + (Tipo.SelectedItem as TPV_Indices).Id + "', ";
+                    lst.Add("Tipo:" + (Tipo.SelectedItem as TPV_Indices).Id);
                     a = true;
                 }
                 if (!(Imagen.Source as BitmapImage).UriSource.AbsolutePath.Equals(ptpv.Image))
                 {
-                    sql_query += "Image='" + (Imagen.Source as BitmapImage).UriSource.AbsolutePath + "', ";
+                    List<string> lss = (Imagen.Source as BitmapImage).UriSource.AbsolutePath.Split('/').ToList();
+                    string path = "";
+                    try
+                    {
+                        for (int i=7;i< lss.Count();i++)
+                            path += "/"+lss[i];
+                    }
+                    catch
+                    {
+
+                    }
+                    sql_query += "Image='" + path + "', ";
+                    MessageBoxResult resultt = System.Windows.MessageBox.Show(path, "¡Alerta!", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+                    lst.Add("Image:" + path);
                     a = true;
                 }
 
@@ -162,15 +182,28 @@ namespace SGC
 
                         Sql s = new Sql();
                         s.EjecutarQuery(sql_query);
+                        Consulta c = new Consulta("Productos_TPV", lst, "Id:" + ptpv.Id, "UPDATE");
+                        le.refresh(c);
                     }
                     Thread.Sleep(100);
-                    le.refresh(null);
                     this.Close();
                 }
             }
             else
             {
-                ProductosTPV ptv = new ProductosTPV(Nombre.Text, Referencia.Text, Precio.Text.ToString(), ((IVAs)IVA.SelectedItem).Id, Descripcion.Text, (Imagen.Source as BitmapImage).UriSource.AbsolutePath, ((TPV_Indices)Tipo.SelectedItem).Id);
+                List<string> lss = (Imagen.Source as BitmapImage).UriSource.AbsolutePath.Split('/').ToList();
+                string path = "";
+                try
+                {
+                    for (int i = 7; i < lss.Count(); i++)
+                        path += "/" + lss[i];
+                }
+                catch
+                {
+
+                }
+               
+                ProductosTPV ptv = new ProductosTPV(Nombre.Text, Referencia.Text, Precio.Text.ToString(), ((IVAs)IVA.SelectedItem).Id, Descripcion.Text, path, ((TPV_Indices)Tipo.SelectedItem).Id);
                 le.refresh(ptv);
                 this.Close();
             }

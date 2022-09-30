@@ -43,6 +43,7 @@ using System.Windows.Threading;
 using SpreadsheetLight;
 using System.Management;
 using System.Windows.Media.Animation;
+using GemBox.Spreadsheet;
 
 namespace SGC
 {//(LocalDB)\MSSQLLocalDB
@@ -71,16 +72,31 @@ namespace SGC
         public bool mirarRecibos = true;
         public bool mirarProduto = true;
         public bool mirarCliente = true;
+        public bool mirarCliente_registro = true;
         public bool mirarProduto_reg1 = true;
+        public bool mirarProduto_reg1_registro = true;
         public bool mirarProduto_reg2 = true;
+        public bool mirarProduto_reg2_registro = true;
         public bool mirarProduto_reg_tpv = true;
+        public bool mirarProduto_reg_tpv_registro = true;
         public bool mirartpv_indices = true;
         public bool mirartpv_productos = true;
         public bool mirar_tpv = true;
         public bool mirarAcompañante = true;
+        public bool mirarAcompañante_registro = true;
+        public bool mirarCrepusculo = true;
+        public bool mirarSincronizacion = false;
         public bool conversor = false;
-
+        public bool esperarConsultas = false;
+        public Logg llogg = new Logg();
+        public bool cargandoCliente = false;
+        public bool cargandoAcompañantes = false;
+        public bool timepo = false;
+        public Task taskSinc;
+        
         public DateTime? tiempo_desconectado;
+        public DateTime? tiempo_espera=null;
+
         public bool mostrarTiempo_Desconectado=true;
 
         public int filtrarFechas_tpv = 0;
@@ -393,6 +409,7 @@ namespace SGC
         private bool mirado;
         private int timepocnt = 0;
         private BackgroundWorker backgroundWorker2;
+       // private object tiempo_espera;
 
         public MainWindow(string user, Login l)
         {
@@ -408,6 +425,8 @@ namespace SGC
                 MessageBoxManager.Yes = "Efectivo";
                 MessageBoxManager.No = "Tarjeta";
                 MessageBoxManager.Register();
+
+                
                 cargartiempos();
                 //MessageBoxResult result = MessageBox.Show("El registro se modifico recienteminete, ¿Seguro que quieres cambiarlo?", "Atención!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
 
@@ -568,8 +587,13 @@ namespace SGC
                 try
                 {
                     lista_Db = new List<Dbs>();
+                    //MessageBox.Show("1");
                     CargarDb();
+
+                    //MessageBox.Show("2");
                     BuscarDB();
+
+                    //MessageBox.Show("3");
                 }
                 catch (Exception ee)
                 {
@@ -579,6 +603,7 @@ namespace SGC
                 ////////olog.add(localIP);
                ////olog.add("P9");
                 CargarEmpresa();
+               // MessageBox.Show("3");
                 try
                 {
                     _connection = new KnxConnectionTunneling(Properties.Settings.Default.IP, 3671, localIP, 3671) { Debug = false };
@@ -586,8 +611,9 @@ namespace SGC
                     _connection.KnxDisconnectedDelegate += Disconnected;
                     _connection.KnxEventDelegate += Event;
                     _connection.KnxStatusDelegate += Status;
+                    
                     _connection.Connect();
-                    _connection.SetLockIntervalMs(0);
+                    _connection.SetLockIntervalMs(1000);
 
                 }
                 catch (ConnectionErrorException ee)
@@ -600,6 +626,7 @@ namespace SGC
 
                 }
 
+               // MessageBox.Show("3");
                 modulo_ele.Content = "Desconectado";
 
                 modulo_ele.Foreground = Brushes.Red;
@@ -615,6 +642,8 @@ namespace SGC
                 evento_borrado = new Border();
                 p = new Point();
                 Lista_consultas = new List<Consulta>();
+
+                Lista_consultas = s.CargarQuerys();
                 levn = new List<Eventos>();
                 editando = false;
                 index = -1;
@@ -680,7 +709,8 @@ namespace SGC
                     var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                     Peta(ee, line + "");
                 }
-               ////olog.add("P12");
+                // MessageBox.Show("3");
+                ////olog.add("P12");
                 //result = System.Windows.MessageBox.Show("Cargar Usuarios", "¡Alerta!", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
                 try
                 {
@@ -692,7 +722,8 @@ namespace SGC
                     var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                     Peta(ee, line + "");
                 }
-               ////olog.add("P13");
+                // MessageBox.Show("3");
+                ////olog.add("P13");
                 try
                 {
                     gridNoGrid_Click(gridNoGrid, RoutedEventArgs);
@@ -716,7 +747,8 @@ namespace SGC
                     var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                     Peta(ee, line + "");
                 }
-               ////olog.add("P15");
+                // MessageBox.Show("3");
+                ////olog.add("P15");
                 permisos = rol_log.Permisos_bin.ToArray();
                 try
                 {
@@ -730,6 +762,7 @@ namespace SGC
                     var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                     Peta(ee, line + "");
                 }
+                //  MessageBox.Show("3");
                 CargarIva();
                 cargarIndicesTPV();
                 CargarTPV();
@@ -738,8 +771,10 @@ namespace SGC
                     ((Button)botones_indice.Children[0]).Background = Brushes.LightGreen;
 
 
+                // MessageBox.Show("3");
                 cargarProductosTPV();
-               ////olog.add("P16");
+                //  MessageBox.Show("3");
+                ////olog.add("P16");
                 try
                 {
 
@@ -751,6 +786,7 @@ namespace SGC
                     if(lcln==null)
                         cargarClientes();
                     CargarCrepusculo();
+                    // MessageBox.Show("3");
 
                     backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(backgroundWorker1_DoWork);
                     //backgroundWorkercorriente.DoWork += new System.ComponentModel.DoWorkEventHandler(backgroundCorriente_DoWork);
@@ -1167,8 +1203,9 @@ namespace SGC
 
                 
                 inactividad = new System.Threading.Timer(new TimerCallback(ObservarTodo), null, timer, timer);
-                querys = new System.Threading.Timer(new TimerCallback(ObservarTodo2), null, 500, 500);
+               querys = new System.Threading.Timer(new TimerCallback(ObservarTodo2), null, 500, 500);
 
+                //    MessageBox.Show("3");
                 try
                 {
                     CargarEmpresa();
@@ -1287,12 +1324,12 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='TPV_Indices'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                     }
                                 }
                             }
-                            mirar_tpv = true;
+                            mirar_tpv = true; timepo = false;
                             cargartiempos();
 
 
@@ -1301,7 +1338,7 @@ namespace SGC
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
-                            mirartpv_indices = true;
+                            mirartpv_indices = true; timepo = false;
                         };
                     }
                 }
@@ -1311,7 +1348,7 @@ namespace SGC
                 Console.WriteLine(ee.Message);
             }
             lindice = new List<TPV_Indices>();
-            mirartpv_indices = true;
+            mirartpv_indices = true; timepo = false;
             try
             {
                 SQLiteDataReader reader = s.CargarIndicesTPV();
@@ -1325,6 +1362,7 @@ namespace SGC
             }
             catch
             {
+                lindice = new List<TPV_Indices>();
                 this.Dispatcher.Invoke(() =>
                 {
                     SQLiteDataReader reader = s.CargarIndicesTPV();
@@ -1459,12 +1497,12 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Productos_TPV'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                     }
                                 }
                             }
-                            mirar_tpv = true;
+                            mirar_tpv = true; timepo = false;
                             cargartiempos();
 
 
@@ -1473,7 +1511,7 @@ namespace SGC
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
-                            mirartpv_indices = true;
+                            mirartpv_indices = true; timepo = false;
                         };
                     }
                 }
@@ -1487,7 +1525,7 @@ namespace SGC
             lpdct = new List<ProductosTPV>();
             try
             {
-                mirartpv_productos = true;
+                mirartpv_productos = true; timepo = false;
                 SQLiteDataReader rdr = s.CargaProductosTPV();
 
                 while (rdr.Read())
@@ -1508,7 +1546,7 @@ namespace SGC
                     lpdct.Add(tpv);
 
                 }
-
+               // lpdctactual = new List<ProductosTPV>();
                 if (lindice.Count > 0)
                     lpdctactual = lpdct.Select(x => x).Where(x => x.Tipo == lindice[indice_TPV].Id).ToList();
                 else
@@ -1516,8 +1554,9 @@ namespace SGC
                 CargarBotonesProductos();
             }
             catch
-            {this.Dispatcher.Invoke(() => { 
-                 mirartpv_productos = true;
+            {this.Dispatcher.Invoke(() => {
+                lpdct = new List<ProductosTPV>();
+                mirartpv_productos = true; timepo = false;
                 SQLiteDataReader rdr = s.CargaProductosTPV();
 
                 while (rdr.Read())
@@ -1539,6 +1578,7 @@ namespace SGC
 
                 }
 
+                //lpdctactual = new List<ProductosTPV>();
                 if (lindice.Count > 0)
                     lpdctactual = lpdct.Select(x => x).Where(x => x.Tipo == lindice[indice_TPV].Id).ToList();
                 else
@@ -1551,81 +1591,98 @@ namespace SGC
 
         private void CargarBotonesProductos()
         {
-
-           
-                int posi = 0;
-                int rows = lpdctactual.Count / 5 + 1;
-                botones_producto.Children.RemoveRange(0, botones_producto.Children.Count);
-                botones_producto.RowDefinitions.Clear();
-            if (lpdctactual.Count > 0)
+            try
             {
-                for (int i = 0; i < rows; i++)
+
+                int posi = 0;
+                int n = s.CargaNProductosTPV(lindice[indice_TPV].Id);
+                Console.WriteLine(n);
+                int rows = n / 5 + 1;
+                int count = botones_producto.Children.Count;
+                if (n != count)
                 {
-                    RowDefinition rd = new RowDefinition();
-                    rd.Height = new GridLength(160);
-                    botones_producto.RowDefinitions.Add(rd);
-                    for (int j = 0; j < 5; j++)
+                    botones_producto.Children.RemoveRange(0, count);
+                    botones_producto.RowDefinitions.Clear();
+                    // botones_producto = new Grid();
+                    // ColumnDefinition rd = new ColumnDefinition();
+
+
+                    if (lpdctactual.Count > 0)
                     {
-                        if (posi != lpdctactual.Count)
+                        for (int i = 0; i < rows; i++)
                         {
-                            Button but = new Button();
-                            but.FontWeight = FontWeights.DemiBold;
-                            but.HorizontalAlignment = HorizontalAlignment.Stretch;
-                            but.FontSize = 14;
-                            but.Margin = new Thickness(10);
+                            RowDefinition rd = new RowDefinition();
+                            rd.Height = new GridLength(160);
+                            botones_producto.RowDefinitions.Add(rd);
+                            for (int j = 0; j < 5; j++)
+                            {
+                                if (posi != n)
+                                {
+                                    Button but = new Button();
+                                    but.FontWeight = FontWeights.DemiBold;
+                                    but.HorizontalAlignment = HorizontalAlignment.Stretch;
+                                    but.FontSize = 14;
+                                    but.Margin = new Thickness(10);
 
-                            Grid grid_producto = new Grid();
-                            grid_producto.HorizontalAlignment = HorizontalAlignment.Stretch;
-                            RowDefinition rdd = new RowDefinition();
-                            rdd.Height= new GridLength(3,GridUnitType.Star);
-                            grid_producto.RowDefinitions.Add(rdd);
-                            rdd = new RowDefinition();
-                            rdd.Height= new GridLength(1,GridUnitType.Star);
-                            grid_producto.RowDefinitions.Add(rdd);
-                            ColumnDefinition cd = new ColumnDefinition();
-                            cd.Width = new GridLength(2, GridUnitType.Star);
-                            grid_producto.ColumnDefinitions.Add(cd); 
-                            cd = new ColumnDefinition();
-                            grid_producto.ColumnDefinitions.Add(cd);
-                            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
-                            img.Source= new BitmapImage(new Uri(lpdctactual[posi].Image, UriKind.RelativeOrAbsolute));
-                            img.Width = 150;
-                            
-                            Grid.SetRow(img, 0);
-                            Grid.SetColumnSpan(img, 2);
+                                    Grid grid_producto = new Grid();
+                                    grid_producto.HorizontalAlignment = HorizontalAlignment.Stretch;
+                                    RowDefinition rdd = new RowDefinition();
+                                    rdd.Height = new GridLength(3, GridUnitType.Star);
+                                    grid_producto.RowDefinitions.Add(rdd);
+                                    rdd = new RowDefinition();
+                                    rdd.Height = new GridLength(1, GridUnitType.Star);
+                                    grid_producto.RowDefinitions.Add(rdd);
+                                    ColumnDefinition cd = new ColumnDefinition();
+                                    cd.Width = new GridLength(2, GridUnitType.Star);
+                                    grid_producto.ColumnDefinitions.Add(cd);
+                                    cd = new ColumnDefinition();
+                                    grid_producto.ColumnDefinitions.Add(cd);
+                                    System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                                    img.Source = new BitmapImage(new Uri(lpdctactual[posi].Image, UriKind.RelativeOrAbsolute));
+                                    img.Width = 150;
 
-                            TextBlock l = new TextBlock();
-                            l.Text = lpdctactual[posi].Nombre;
-                            l.FontSize = 14;                            
-                            Grid.SetRow(l, 1);
-                            Grid.SetColumn(l, 0);
+                                    Grid.SetRow(img, 0);
+                                    Grid.SetColumnSpan(img, 2);
 
-                            TextBlock l2 = new TextBlock();
-                            l2.Text = Math.Round(double.Parse(lpdctactual[posi].Precio) * (1 + (double.Parse(liva.Find(x => x.Id == lpdctactual[posi].IVA).Porcentaje) / 100)), 2).ToString("0.00") + " €";
-                            l2.FontSize = 14;
-                            
-                            l2.HorizontalAlignment = HorizontalAlignment.Right;
-                            Grid.SetRow(l2, 1);
-                            Grid.SetColumn(l2, 1);
+                                    TextBlock l = new TextBlock();
+                                    l.Text = lpdctactual[posi].Nombre;
+                                    l.FontSize = 14;
+                                    Grid.SetRow(l, 1);
+                                    Grid.SetColumn(l, 0);
+
+                                    TextBlock l2 = new TextBlock();
+                                    l2.Text = Math.Round(double.Parse(lpdctactual[posi].Precio) * (1 + (double.Parse(liva.Find(x => x.Id == lpdctactual[posi].IVA).Porcentaje) / 100)), 2).ToString("0.00") + " €";
+                                    l2.FontSize = 14;
+
+                                    l2.HorizontalAlignment = HorizontalAlignment.Right;
+                                    Grid.SetRow(l2, 1);
+                                    Grid.SetColumn(l2, 1);
 
 
-                            grid_producto.Children.Add(img);
-                            grid_producto.Children.Add(l);
-                            grid_producto.Children.Add(l2);
-                            but.Content = grid_producto;
-                            but.Click+=new RoutedEventHandler(añadir_Prodcuto_Ticket);
-                            but.Tag= lpdctactual[posi].Id;
-                            Grid.SetColumn(but, j);
-                            Grid.SetRow(but, i);
-                            botones_producto.Children.Add(but);
-                            posi++;
+                                    grid_producto.Children.Add(img);
+                                    grid_producto.Children.Add(l);
+                                    grid_producto.Children.Add(l2);
+                                    but.Content = grid_producto;
+                                    but.Click += new RoutedEventHandler(añadir_Prodcuto_Ticket);
+                                    but.Tag = lpdctactual[posi].Id;
+                                    Grid.SetColumn(but, j);
+                                    Grid.SetRow(but, i);
+                                    botones_producto.Children.Add(but);
+                                    posi++;
 
+                                }
+                                else
+                                    break;
+
+                            }
+                            botones_producto.UpdateLayout();
                         }
-                        else
-                            break;
-
                     }
                 }
+            }
+            catch
+            {
+
             }
         }
 
@@ -1682,10 +1739,9 @@ namespace SGC
                     float f = float.Parse(ptpv.Precio) * 1 * (float.Parse(liva.Find(x => x.Id == ptpv.IVA).Porcentaje) / 100);
                     float f2 = float.Parse(ptpv.Precio) * 1 * (1 + float.Parse(liva.Find(x => x.Id == ptpv.IVA).Porcentaje) / 100);
                     Producto_Registro_TPV prgt = new Producto_Registro_TPV(ptpv.Nombre, "1", ptpv.Precio, ptpv.IVA, f + "", ptpv.Tipo, f2 + "", tpv.Id, ptpv.Descuento);
-                    prgt.nombre_IVA = liva.Find(x => x.Id == prgt.IVA).Tipo;
-                    tpv.Lista_productos.Add(prgt); 
-                    s.EjecutarQuery("INSERT INTO Productos_Registro_TPV(Nombre,Cantidad,Precio,IVA,Impuesto,Tipo,Total,Id_ticket) VALUES('" + prgt.Nombre_Producto + "','" + prgt.Cantidad + "','" + prgt.Precio + "','" + prgt.IVA + "','" + prgt.Impuesto + "'," + prgt.tipo + ",'" + prgt.Total + "'," + prgt.Id_Ticket + ")");
+                    prgt.nombre_IVA = liva.Find(x => x.Id == prgt.IVA).Tipo; 
                     tpv.Total = f2;
+                    tpv.Lista_productos.Add(prgt);
                     List<string> lstring = new List<string>();
                     lstring.Add("Cantidad:" + tpv.Lista_productos[pos].Cantidad);
                     lstring.Add("Nombre:" + tpv.Lista_productos[pos].Nombre_Producto);
@@ -1694,17 +1750,23 @@ namespace SGC
                     lstring.Add("Tipo:" + tpv.Lista_productos[pos].tipo);
                     lstring.Add("Id_ticket:" + tpv.Lista_productos[pos].Id_Ticket);
                     lstring.Add("Impuesto:" + tpv.Lista_productos[pos].Impuesto);
-                    lstring.Add("Total:" + tpv.Lista_productos[pos].Total);
+                    lstring.Add("Total:" + tpv.Lista_productos[pos].Total); 
+                    s.EjecutarQuery("INSERT INTO Productos_Registro_TPV(Nombre,Cantidad,Precio,IVA,Impuesto,Tipo,Total,Id_ticket) VALUES('" + prgt.Nombre_Producto + "','" + prgt.Cantidad + "','" + prgt.Precio + "','" + prgt.IVA + "','" + prgt.Impuesto + "'," + prgt.tipo + ",'" + prgt.Total + "'," + prgt.Id_Ticket + ")");
 
                     while (observartodotoken) { }
                     Lista_consultas.Add(new Consulta("Productos_Registro_TPV", lstring, "Id:" + tpv.Lista_productos[pos].Id, "INSERT"));
+                    Thread.Sleep(500);
+
+
                 }
 
                 RecibosTPV.Items.Refresh();
                 ProductosRecibosTPV.Items.Refresh();
 
-                cargarTotal(tpv.Lista_productos,tpv);
-                }
+                CargarTPV();
+
+                cargarTotal(tpv.Lista_productos, tpv);
+            }
 
 
         }
@@ -1717,8 +1779,10 @@ namespace SGC
                 int posi = 0;
                 int rows = lindice.Count / 7 + 1;
                 botones_indice.Children.RemoveRange(0,botones_indice.Children.Count);
+                botones_indice.Children.Clear();
                 botones_indice.RowDefinitions.Clear();
-                
+                botones_indice.UpdateLayout();
+
                 for (int i = 0; i < rows; i++)
                 {
                     RowDefinition rd = new RowDefinition();
@@ -1737,6 +1801,7 @@ namespace SGC
                             but.Content = lindice[posi].nom;
                             Grid.SetColumn(but, j);
                             Grid.SetRow(but, i);
+                            
                             botones_indice.Children.Add(but);
                             posi++;
 
@@ -1745,8 +1810,10 @@ namespace SGC
                             break;
 
                     }
+                botones_indice.UpdateLayout();
                 }
             }
+
         }
 
         private void botonesIndiceClick(object sender, RoutedEventArgs e)
@@ -1761,138 +1828,382 @@ namespace SGC
           
         }
 
-        private void CargarCrepusculo()
+        private async void CargarCrepusculo()
         {
-            listaCrepusculo = s.CargarCrepusculo();
+            try
+            {
+                //SQLiteConnection cn2 = new SQLiteConnection(conexiondb);
 
-            if (listaCrepusculo[0] == 0)
-            {
-                bdesc1.HorizontalAlignment = HorizontalAlignment.Left;
-                vial1.IsEnabled = false;
-                vialdesc1.Background = Brushes.Red;
-                namev1.Foreground = Brushes.Red;
-            }
-            else
-            {
-                bdesc1.HorizontalAlignment = HorizontalAlignment.Right;
-                vial1.IsEnabled = true;
-                vialdesc1.Background = Brushes.LightGreen;
+                bool actualizar = true;
 
-                namev1.Foreground = Brushes.LightGreen;
-            }
-            if (listaCrepusculo[1] == 0)
-            {
-                bdesc2.HorizontalAlignment = HorizontalAlignment.Left;
-                vial2.IsEnabled = false;
-                vialdesc2.Background = Brushes.Red;
-                namev2.Foreground = Brushes.Red;
-            }
-            else
-            {
-                bdesc2.HorizontalAlignment = HorizontalAlignment.Right;
-                vial2.IsEnabled = true;
-                vialdesc2.Background = Brushes.LightGreen;
-                namev2.Foreground = Brushes.LightGreen;
-            }
-            if (listaCrepusculo[2] == 0)
-            {
-                bdesc3.HorizontalAlignment = HorizontalAlignment.Left;
-                vial3.IsEnabled = false;
-                vialdesc3.Background = Brushes.Red;
-                namev3.Foreground = Brushes.Red;
-            }
-            else
-            {
-                bdesc3.HorizontalAlignment = HorizontalAlignment.Right;
-                vial3.IsEnabled = true;
-                vialdesc3.Background = Brushes.LightGreen;
-                namev3.Foreground = Brushes.LightGreen;
-            }
-            if (listaCrepusculo[3] == 0)
-            {
-                bdesc4.HorizontalAlignment = HorizontalAlignment.Left;
-                vial4.IsEnabled = false;
-                vialdesc4.Background = Brushes.Red;
-                namev4.Foreground = Brushes.Red;
-            }
-            else
-            {
-                bdesc4.HorizontalAlignment = HorizontalAlignment.Right;
-                vial4.IsEnabled = true;
-                vialdesc4.Background = Brushes.LightGreen;
-                namev4.Foreground = Brushes.LightGreen;
-            }
-            if (listaCrepusculo[4] == 0)
-            {
-                bdesc5.HorizontalAlignment = HorizontalAlignment.Left;
-                vial5.IsEnabled = false;
-                vialdesc5.Background = Brushes.Red;
-                namev5.Foreground = Brushes.Red;
-            }
-            else
-            {
-                bdesc5.HorizontalAlignment = HorizontalAlignment.Right;
-                vial5.IsEnabled = true;
-                vialdesc5.Background = Brushes.LightGreen;
-                namev5.Foreground = Brushes.LightGreen;
-            }
-            if (listaCrepusculo[5] == 0)
-            {
-                bdesc6.HorizontalAlignment = HorizontalAlignment.Left;
-                vial6.IsEnabled = false;
-                vialdesc6.Background = Brushes.Red;
-                namev6.Foreground = Brushes.Red;
-            }
-            else
-            {
-                bdesc6.HorizontalAlignment = HorizontalAlignment.Right;
-                vial6.IsEnabled = true;
-                vialdesc6.Background = Brushes.LightGreen;
-                namev6.Foreground = Brushes.LightGreen;
-            }
-            if (listaCrepusculo[6] == 0)
-            {
-                bdesc7.HorizontalAlignment = HorizontalAlignment.Left;
-                vial7.IsEnabled = false;
-                vialdesc7.Background = Brushes.Red;
-                namev7.Foreground = Brushes.Red;
-            }
-            else
-            {
-                bdesc7.HorizontalAlignment = HorizontalAlignment.Right;
-                vial7.IsEnabled = true;
-                vialdesc7.Background = Brushes.LightGreen;
-                namev7.Foreground = Brushes.LightGreen;
-            }
-            if (listaCrepusculo[7] == 0)
-            {
-                bdesc8.HorizontalAlignment = HorizontalAlignment.Left;
-                vial8.IsEnabled = false;
-                vialdesc8.Background = Brushes.Red;
-                namev8.Foreground = Brushes.Red;
-            }
-            else
-            {
-                bdesc8.HorizontalAlignment = HorizontalAlignment.Right;
-                vial8.IsEnabled = true;
-                vialdesc8.Background = Brushes.LightGreen;
-                namev8.Foreground = Brushes.LightGreen;
-            }
-            if (listaCrepusculo[8] == 0)
-            {
-                bvDE.HorizontalAlignment = HorizontalAlignment.Left;
-                vialEn.IsEnabled = false;
-                vialDE.Background = Brushes.Red;
-                namevE.Foreground = Brushes.Red;
-            }
-            else
-            {
-                vialDE.HorizontalAlignment = HorizontalAlignment.Right;
-                vialEn.IsEnabled = true;
-                vialDE.Background = Brushes.LightGreen;
-                namevE.Foreground = Brushes.LightGreen;
-            }
+                DateTime time = lista_tiempos[21];
+                //DateTime.TryParse(mycontent, out time);
+                string sql_Text2 = "SELECT * FROM Productos_TPV_v";
+               // cn2.Open();
+               // SQLiteCommand cmd2 = new SQLiteCommand(sql_Text2, cn2);
+                //SQLiteDataReader rdr2 = cmd2.ExecuteReader();
+                List<string> ImportedFiles2 = new List<string>();
 
+                DateTime? b = s.CargarVersionCrepusculo();
+                
+                //rdr2.Close();
+
+                if (b != null)
+                {
+                    if (DateTime.Compare((DateTime)b, time) == -1)
+                    {
+                        try
+                        {
+                            string uri = string.Format("http://app.adex-integracio.com/sgc/index2.php");
+                            //SGC.Clases.Version v = new Version();
+                            //Debug.WriteLine("Hola ");
+                            //byteArray = Encoding.UTF8.GetBytes("tabla = Version");
+                            IEnumerable<KeyValuePair<string, string>> queries = new List<KeyValuePair<string, string>>()
+                                {
+                                    new KeyValuePair<string, string>("tabla", "Crepusculo"),
+                                    new KeyValuePair<string, string>("action", "Select")
+                                };
+                            //Uri = new Uri(uri);
+                            HttpContent h = new FormUrlEncodedContent(queries);
+                            using (HttpClient client2 = new HttpClient())
+                            {
+                                using (HttpResponseMessage resp2 = await client2.PostAsync(uri, h))
+                                {
+                                    using (HttpContent content22 = resp2.Content)
+                                    {
+                                        string mycontent = await content22.ReadAsStringAsync();
+                                        HttpContentHeaders hch = content22.Headers;
+                                        //Console.writeLine(mycontent);
+                                        //v = new Version(mycontent);
+                                        //Debug.WriteLine("IsSuccessStatusCode");
+
+                                        List<Clientes> lst = new List<Clientes>();
+                                        JArray jay = new JArray();
+                                        try
+                                        {
+                                            jay = JArray.Parse(mycontent);
+                                        }
+                                        catch { }
+                                        //if (cn2.State != ConnectionState.Open) cn2.Open();
+                                        //DataTable tb = new DataTable();
+                                        string sql_Text3 = "DELETE FROM Crepusculo";
+
+                                        //SQLiteCommand cmd3 = new SQLiteCommand(sql_Text3, cn2);
+                                        //cmd3.ExecuteNonQuery();
+                                        s.EjecutarQuery(sql_Text3);
+                                        //lst.Remove(lst[0]);
+                                        int idd = 0;
+                                        foreach (JObject s in jay)
+                                        {
+                                            Crepusculo p = new Clases.Crepusculo(s);
+
+                                            string sql_query3 = "INSERT INTO Crepusculo(Id,Estado) VALUES(" + p.Id + "," + p.Estado + ")";
+                                            this.s.EjecutarQuery(sql_query3);
+                                            //Console.WriteLine("INSERT INTO Factura([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura],[Descuento],[Vehiculo],[Matricula],[IBAN]) VALUES (" + f.Id + ",'" + f.Nombre_Cliente + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente.Replace("'", "$") + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura.Replace("__", "_") + "','" + f.Descuento + "','" + f.Vehiculo + "','" + f.Matricula + "','" + f.IBAN + "')");
+
+                                            //cmd3 = new SQLiteCommand(sql_query3, cn2);
+                                            //cmd3.ExecuteNonQuery();
+                                            idd = p.Id;
+                                        }
+                                        string sql_query4 = "UPDATE Crepusculo_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
+
+                                        //cmd3 = new SQLiteCommand(sql_query4, cn2);
+                                        //cmd3.ExecuteNonQuery();
+                                        s.EjecutarQuery(sql_query4);
+                                        idd++;
+                                        //sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Productos_TPV'";
+
+                                        //cmd3 = new SQLiteCommand(sql_query4, cn2);
+                                        //cmd3.ExecuteNonQuery();
+
+                                    }
+                                }
+                            }
+                            mirarCrepusculo = true; timepo = false;
+                            cargartiempos();
+
+
+                        }
+                        catch (Exception ee)
+                        {
+                            var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                            Peta(ee, line + "");
+                            mirarCrepusculo = true; timepo = false;
+                        };
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                Console.WriteLine(ee.Message);
+            }
+            try
+            {
+                listaCrepusculo = s.CargarCrepusculo();
+
+                if (listaCrepusculo[0] == 0)
+                {
+                    bdesc1.HorizontalAlignment = HorizontalAlignment.Left;
+                    vial1.IsEnabled = false;
+                    vialdesc1.Background = Brushes.Red;
+                    namev1.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    bdesc1.HorizontalAlignment = HorizontalAlignment.Right;
+                    vial1.IsEnabled = true;
+                    vialdesc1.Background = Brushes.LightGreen;
+
+                    namev1.Foreground = Brushes.LightGreen;
+                }
+                if (listaCrepusculo[1] == 0)
+                {
+                    bdesc2.HorizontalAlignment = HorizontalAlignment.Left;
+                    vial2.IsEnabled = false;
+                    vialdesc2.Background = Brushes.Red;
+                    namev2.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    bdesc2.HorizontalAlignment = HorizontalAlignment.Right;
+                    vial2.IsEnabled = true;
+                    vialdesc2.Background = Brushes.LightGreen;
+                    namev2.Foreground = Brushes.LightGreen;
+                }
+                if (listaCrepusculo[2] == 0)
+                {
+                    bdesc3.HorizontalAlignment = HorizontalAlignment.Left;
+                    vial3.IsEnabled = false;
+                    vialdesc3.Background = Brushes.Red;
+                    namev3.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    bdesc3.HorizontalAlignment = HorizontalAlignment.Right;
+                    vial3.IsEnabled = true;
+                    vialdesc3.Background = Brushes.LightGreen;
+                    namev3.Foreground = Brushes.LightGreen;
+                }
+                if (listaCrepusculo[3] == 0)
+                {
+                    bdesc4.HorizontalAlignment = HorizontalAlignment.Left;
+                    vial4.IsEnabled = false;
+                    vialdesc4.Background = Brushes.Red;
+                    namev4.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    bdesc4.HorizontalAlignment = HorizontalAlignment.Right;
+                    vial4.IsEnabled = true;
+                    vialdesc4.Background = Brushes.LightGreen;
+                    namev4.Foreground = Brushes.LightGreen;
+                }
+                if (listaCrepusculo[4] == 0)
+                {
+                    bdesc5.HorizontalAlignment = HorizontalAlignment.Left;
+                    vial5.IsEnabled = false;
+                    vialdesc5.Background = Brushes.Red;
+                    namev5.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    bdesc5.HorizontalAlignment = HorizontalAlignment.Right;
+                    vial5.IsEnabled = true;
+                    vialdesc5.Background = Brushes.LightGreen;
+                    namev5.Foreground = Brushes.LightGreen;
+                }
+                if (listaCrepusculo[5] == 0)
+                {
+                    bdesc6.HorizontalAlignment = HorizontalAlignment.Left;
+                    vial6.IsEnabled = false;
+                    vialdesc6.Background = Brushes.Red;
+                    namev6.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    bdesc6.HorizontalAlignment = HorizontalAlignment.Right;
+                    vial6.IsEnabled = true;
+                    vialdesc6.Background = Brushes.LightGreen;
+                    namev6.Foreground = Brushes.LightGreen;
+                }
+                if (listaCrepusculo[6] == 0)
+                {
+                    bdesc7.HorizontalAlignment = HorizontalAlignment.Left;
+                    vial7.IsEnabled = false;
+                    vialdesc7.Background = Brushes.Red;
+                    namev7.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    bdesc7.HorizontalAlignment = HorizontalAlignment.Right;
+                    vial7.IsEnabled = true;
+                    vialdesc7.Background = Brushes.LightGreen;
+                    namev7.Foreground = Brushes.LightGreen;
+                }
+                if (listaCrepusculo[7] == 0)
+                {
+                    bdesc8.HorizontalAlignment = HorizontalAlignment.Left;
+                    vial8.IsEnabled = false;
+                    vialdesc8.Background = Brushes.Red;
+                    namev8.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    bdesc8.HorizontalAlignment = HorizontalAlignment.Right;
+                    vial8.IsEnabled = true;
+                    vialdesc8.Background = Brushes.LightGreen;
+                    namev8.Foreground = Brushes.LightGreen;
+                }
+                if (listaCrepusculo[8] == 0)
+                {
+                    bvDE.HorizontalAlignment = HorizontalAlignment.Left;
+                    vialEn.IsEnabled = false;
+                    vialDE.Background = Brushes.Red;
+                    namevE.Foreground = Brushes.Red;
+                }
+                else
+                {
+                    vialDE.HorizontalAlignment = HorizontalAlignment.Right;
+                    vialEn.IsEnabled = true;
+                    vialDE.Background = Brushes.LightGreen;
+                    namevE.Foreground = Brushes.LightGreen;
+                }
+            }
+            catch
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    listaCrepusculo = s.CargarCrepusculo();
+
+                    if (listaCrepusculo[0] == 0)
+                    {
+                        bdesc1.HorizontalAlignment = HorizontalAlignment.Left;
+                        vial1.IsEnabled = false;
+                        vialdesc1.Background = Brushes.Red;
+                        namev1.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        bdesc1.HorizontalAlignment = HorizontalAlignment.Right;
+                        vial1.IsEnabled = true;
+                        vialdesc1.Background = Brushes.LightGreen;
+
+                        namev1.Foreground = Brushes.LightGreen;
+                    }
+                    if (listaCrepusculo[1] == 0)
+                    {
+                        bdesc2.HorizontalAlignment = HorizontalAlignment.Left;
+                        vial2.IsEnabled = false;
+                        vialdesc2.Background = Brushes.Red;
+                        namev2.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        bdesc2.HorizontalAlignment = HorizontalAlignment.Right;
+                        vial2.IsEnabled = true;
+                        vialdesc2.Background = Brushes.LightGreen;
+                        namev2.Foreground = Brushes.LightGreen;
+                    }
+                    if (listaCrepusculo[2] == 0)
+                    {
+                        bdesc3.HorizontalAlignment = HorizontalAlignment.Left;
+                        vial3.IsEnabled = false;
+                        vialdesc3.Background = Brushes.Red;
+                        namev3.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        bdesc3.HorizontalAlignment = HorizontalAlignment.Right;
+                        vial3.IsEnabled = true;
+                        vialdesc3.Background = Brushes.LightGreen;
+                        namev3.Foreground = Brushes.LightGreen;
+                    }
+                    if (listaCrepusculo[3] == 0)
+                    {
+                        bdesc4.HorizontalAlignment = HorizontalAlignment.Left;
+                        vial4.IsEnabled = false;
+                        vialdesc4.Background = Brushes.Red;
+                        namev4.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        bdesc4.HorizontalAlignment = HorizontalAlignment.Right;
+                        vial4.IsEnabled = true;
+                        vialdesc4.Background = Brushes.LightGreen;
+                        namev4.Foreground = Brushes.LightGreen;
+                    }
+                    if (listaCrepusculo[4] == 0)
+                    {
+                        bdesc5.HorizontalAlignment = HorizontalAlignment.Left;
+                        vial5.IsEnabled = false;
+                        vialdesc5.Background = Brushes.Red;
+                        namev5.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        bdesc5.HorizontalAlignment = HorizontalAlignment.Right;
+                        vial5.IsEnabled = true;
+                        vialdesc5.Background = Brushes.LightGreen;
+                        namev5.Foreground = Brushes.LightGreen;
+                    }
+                    if (listaCrepusculo[5] == 0)
+                    {
+                        bdesc6.HorizontalAlignment = HorizontalAlignment.Left;
+                        vial6.IsEnabled = false;
+                        vialdesc6.Background = Brushes.Red;
+                        namev6.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        bdesc6.HorizontalAlignment = HorizontalAlignment.Right;
+                        vial6.IsEnabled = true;
+                        vialdesc6.Background = Brushes.LightGreen;
+                        namev6.Foreground = Brushes.LightGreen;
+                    }
+                    if (listaCrepusculo[6] == 0)
+                    {
+                        bdesc7.HorizontalAlignment = HorizontalAlignment.Left;
+                        vial7.IsEnabled = false;
+                        vialdesc7.Background = Brushes.Red;
+                        namev7.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        bdesc7.HorizontalAlignment = HorizontalAlignment.Right;
+                        vial7.IsEnabled = true;
+                        vialdesc7.Background = Brushes.LightGreen;
+                        namev7.Foreground = Brushes.LightGreen;
+                    }
+                    if (listaCrepusculo[7] == 0)
+                    {
+                        bdesc8.HorizontalAlignment = HorizontalAlignment.Left;
+                        vial8.IsEnabled = false;
+                        vialdesc8.Background = Brushes.Red;
+                        namev8.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        bdesc8.HorizontalAlignment = HorizontalAlignment.Right;
+                        vial8.IsEnabled = true;
+                        vialdesc8.Background = Brushes.LightGreen;
+                        namev8.Foreground = Brushes.LightGreen;
+                    }
+                    if (listaCrepusculo[8] == 0)
+                    {
+                        bvDE.HorizontalAlignment = HorizontalAlignment.Left;
+                        vialEn.IsEnabled = false;
+                        vialDE.Background = Brushes.Red;
+                        namevE.Foreground = Brushes.Red;
+                    }
+                    else
+                    {
+                        vialDE.HorizontalAlignment = HorizontalAlignment.Right;
+                        vialEn.IsEnabled = true;
+                        vialDE.Background = Brushes.LightGreen;
+                        namevE.Foreground = Brushes.LightGreen;
+                    }
+                });
+            }
 
         }
 
@@ -8000,6 +8311,43 @@ namespace SGC
 
 
         }
+
+        private List<Consulta> mirarListaConsulta(List<Consulta> list)
+        {
+            List<Consulta> newList = new List<Consulta>();
+            List<Consulta> productsList = new List<Consulta>();
+
+            foreach(Consulta c in list)
+            {if (!c.Tabla.Equals("Productos_Registro_TPV"))
+                    newList.Add(c);
+                else
+                {
+                    productsList.Add(c);
+                }
+            }
+            productsList.Reverse();
+            newList.AddRange(productsList);
+                return newList;
+
+        }
+
+        public async Task<bool> consultasSinConexion()
+        {
+            this.Dispatcher.Invoke(() => {
+
+                List<Consulta> list = Lista_consultas;
+                new VentanaConsultas(list).Show();
+
+            });
+            await Task.Factory.StartNew(() =>
+            {
+                while (esperarConsultas)
+                {
+
+                }
+            });
+            return false;
+        }
         private async void ObservarTodo2(object state)
         {
 
@@ -8012,15 +8360,33 @@ namespace SGC
                 List<Consulta> Lista_consultas_borrar = new List<Consulta>();
                 List<Consulta> lista_c = new List<Consulta>();
                 lista_c = Lista_consultas;
-            
-                    Console.WriteLine("MIrando observartodo: " + observartodo);
+                List<int> listaints = new List<int>();
+                try
+                {
+                    for(int i=0; i<lista_c.Count();i++)
+                    {
+                        if(lista_c[i].Action.Equals("INSERT")|| lista_c[i].Action.Equals("UPDATE"))
+                        {
+                            if (!lista_c[i].paramen.Contains(":"))
+                                listaints.Add(i);
+
+                        }
+                    }
+                   
+                }
+                catch { }
+                foreach (int ccs in listaints)                   
+                        Lista_consultas.RemoveAt(ccs);
+
+
+                Console.WriteLine("MIrando observartodo: " + observartodo);
                
                 //escondes la pantalla de cargando, tu imagen o barra de progreso.
-                if (!observartodo)
+                if (!observartodo&& !esperarConsultas)
                 {
                     Console.WriteLine("OBSERVAR TODO 1");
                     observartodo = true;
-
+                    tiempo_espera = null;
                     Dispatcher.InvokeAsync(() =>
                     {
                         //pictureBox.Visibility = Visibility.Visible;
@@ -8061,7 +8427,7 @@ namespace SGC
                                     {
                                         if (resp.IsSuccessStatusCode)
                                         {
-                                            Dispatcher.InvokeAsync(() =>
+                                            Dispatcher.InvokeAsync(async () =>
                                             {
                                                 if (conexion_bd.Foreground == Brushes.Red)
                                                 {
@@ -8074,12 +8440,35 @@ namespace SGC
                                                             if (Lista_consultas.Count > 0)
                                                                 if (tp.TotalSeconds > 7)
                                                                 {
-                                                                    MessageBox.Show("Tiempo desconectado " + tp.TotalSeconds, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+                                                                    MessageBoxResult mr= MessageBox.Show("Tiempo desconectado " + tp.TotalSeconds, "Alerta!", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                                                                    if(mr== MessageBoxResult.OK)
+                                                                    {
+                                                                        esperarConsultas = true;
+                                                                        querys.Change(-1, -1);
 
+                                                                        querys.Dispose();
+                                                                        await Task.Factory.StartNew(consultasSinConexion);
+
+                                                                        //Task.WaitAll(t);
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                    }
+                                                                    mostrarTiempo_Desconectado = true;
+                                                                    tiempo_desconectado = null;
                                                                 }
-                                                            tiempo_desconectado = null;
+                                                                else
+                                                                {
+                                                                    mostrarTiempo_Desconectado = true;
+                                                                    tiempo_desconectado = null;
+                                                                }
+                                                            // observartodotoken = false;
+                                                        }
+                                                        else
+                                                        {
                                                             mostrarTiempo_Desconectado = true;
-                                                            observartodotoken = false;
+                                                            tiempo_desconectado = null;
                                                         }
                                                     }
                                                 }
@@ -8090,6 +8479,20 @@ namespace SGC
                                             HttpContentHeaders hch = content.Headers;
                                             ////Console.writeLine(mycontent);
                                             v = new Version(mycontent);
+                                        }
+                                        else
+                                        {
+                                            if (tiempo_desconectado == null)
+                                            {
+                                                tiempo_desconectado = DateTime.Now;
+                                                mostrarTiempo_Desconectado = true;
+                                                Dispatcher.InvokeAsync(() =>
+                                                {
+                                                    conexion_bd.Content = "Desconectado!";
+                                                    conexion_bd.Foreground = Brushes.Red;
+                                                });
+                                                //observartodotoken = true;
+                                            }
                                         }
                                     }
                                 }
@@ -8107,612 +8510,1126 @@ namespace SGC
                                 }
                                 conexion_bd.Content = "Desconectado";
                                     conexion_bd.Foreground = Brushes.Red;
-                                
+                               // observartodotoken = true;
+
                             });
                         }
+                        Thread.Sleep(500);
                         //uri = string.Format("http://app.adex-integracio.com/sgc/post.php");
-                        try
-                        {
-                            if(!observartodotoken)
-                            if (Lista_consultas.Count != 0)
+
+                       
+                            if (tiempo_desconectado == null)
                             {
-                                    List<int> lista_cambios = new List<int>();
-                                    int posicion = -1;
-                                    List<Consulta> l_consultas = new List<Consulta>();
-                                    foreach (Consulta c in lista_c)
+                                try
                                 {
-                                    observartodotoken = true;
-                                    try
-                                    {
-                                            posicion++;
-                                            string ss = "";
-                                            Consulta cons = c;
-                                        if (c.Action.Equals("INSERT"))
-                                            {
-                                                
-                                                if (lista_cambios.Contains(posicion))
-                                                {
-
-                                                    cons = l_consultas[lista_cambios.IndexOf(posicion)];
-                                                }
-                                                
-                                            string query = "INSERT INTO `" + cons.Tabla + "`(";
-                                            foreach (string s in c.Parametros)
-                                            {
-                                                query += (s.Split(':')[0]).Replace("#", ":") + ", ";
-
-                                            }
-
-                                            query = query.Remove(query.Length - 2);
-                                            query += ") VALUES (";
-                                            foreach (string s in cons.Parametros)
-                                            {
-                                                if (s.Contains("Parcelas"))
-                                                {
-                                                    if (s.Contains(":"))
-                                                        query += "'" + (s.Split(':')[1]).Replace("#", ":") + "', ";
-                                                    else
-                                                        query += "'', ";
-
-                                                    query.Replace('#', ':');
-                                                }
-                                                else if (s.Contains("Hora"))
-                                                {
-                                                    if (s.Contains(":"))
-                                                        query += "'" + (s.Split(':')[1]).Replace("*", ":") + "', ";
-                                                    else
-                                                        query += "'', ";
-
-                                                    query.Replace('*', ':');
-
-                                                }
-                                                else
-                                               if (s.Contains(":"))
-                                                    query += "'" + (s.Split(':')[1]).Replace("#", ":") + "', ";
-                                                else
-                                                    query += "'', ";
-
-
-
-
-                                            }
-                                            query = query.Remove(query.Length - 2);
-                                            query += ");";
-                                            ss = query;
-                                        }
-                                        if (cons.Action.Equals("DELETE"))
+                                    bool fallo = false;
+                                    if (!observartodotoken && !esperarConsultas)
+                                        if (Lista_consultas.Count != 0)
                                         {
-                                            string query = "DELETE FROM " + cons.Tabla + " WHERE ";
-                                            string[] filtro = cons.Filtro.Split(':');
-                                            query += filtro[0] + "='" + filtro[1] + "'";
+                                            List<int> lista_cambios = new List<int>();
+                                            int posicion = -1;
+                                            List<Consulta> l_consultas = new List<Consulta>();
+                                            int position = 0;
+                                            List<string> List_productos_tpv = new List<string>();
+                                            List<string> List_acopañantes = new List<string>();
+                                            List<string> List_prd_rgt = new List<string>();
+                                            //lista_c= mirarListaConsulta(lista_c);
 
-
-                                            ss = query;
-                                        }
-
-                                        if (cons.Action.Equals("UPDATE"))
-                                        {
-                                            string query = "UPDATE " + cons.Tabla + " SET ";
-                                            foreach (string s in cons.Parametros)
+                                            foreach (Consulta c in lista_c)
                                             {
-                                                if (s.Contains(":"))
-                                                    query += s.Split(':')[0] + "='" + (s.Split(':')[1]).Replace("*", ":") + "', ";
-                                                else
-                                                    query += s.Split(':')[0] + "='', ";
+                                                fallo = false;
+                                                observartodotoken = true;
+                                                try
+                                                {
+                                                    posicion++;
+                                                    string ss = "";
+                                                    Consulta cons = c;
+                                                    if (!lista_c[position].Equals(Lista_consultas[position]))
+                                                        cons = Lista_consultas[position];
+                                                    position++;
+                                                    if (c.Action.Equals("INSERT"))
+                                                    {
+
+                                                        if (lista_cambios.Contains(posicion))
+                                                        {
+
+                                                            cons = l_consultas[lista_cambios.IndexOf(posicion)];
+                                                        }
+
+                                                        string query = "INSERT INTO `" + cons.Tabla + "`(";
+                                                        foreach (string s in c.Parametros)
+                                                        {
+                                                            query += (s.Split(':')[0]).Replace("#", ":") + ", ";
+
+                                                        }
+
+                                                        query = query.Remove(query.Length - 2);
+                                                        query += ") VALUES (";
+                                                        foreach (string s in cons.Parametros)
+                                                        {
+                                                            if (s.Contains("Parcelas"))
+                                                            {
+                                                                if (s.Contains(":"))
+                                                                    query += "'" + (s.Split(':')[1]).Replace("#", ":") + "', ";
+                                                                else
+                                                                    query += "'', ";
+
+                                                                query.Replace('#', ':');
+                                                            }
+                                                            else if (s.Contains("Hora"))
+                                                            {
+                                                                if (s.Contains(":"))
+                                                                    query += "'" + (s.Split(':')[1]).Replace("*", ":") + "', ";
+                                                                else
+                                                                    query += "'', ";
+
+                                                                query.Replace('*', ':');
+
+                                                            }
+                                                            else
+                                                           if (s.Contains(":"))
+                                                                query += "'" + (s.Split(':')[1]).Replace("#", ":") + "', ";
+                                                            else
+                                                                query += "'', ";
 
 
-                                            }
 
-                                            query = query.Remove(query.Length - 2);
-                                            query += " WHERE Id='" + cons.Filtro.Split(':')[1] + "'";
 
-                                            ss = query;
-                                        }
-                                        uri = string.Format("http://app.adex-integracio.com/sgc/index2.php");
-                                        queries = new List<KeyValuePair<string, string>>()
+                                                        }
+                                                        query = query.Remove(query.Length - 2);
+                                                        query += ");";
+                                                        ss = query;
+                                                    }
+                                                    if (cons.Action.Equals("DELETE"))
+                                                    {
+                                                        string query = "DELETE FROM " + cons.Tabla + " WHERE ";
+                                                        string[] filtro = cons.Filtro.Split(':');
+                                                        query += filtro[0] + "='" + filtro[1] + "'";
+
+
+                                                        ss = query;
+                                                    }
+
+                                                    if (cons.Action.Equals("UPDATE"))
+                                                    {
+                                                        string query = "UPDATE " + cons.Tabla + " SET ";
+                                                        foreach (string s in cons.Parametros)
+                                                        {
+                                                            if (s.Contains(":"))
+                                                                query += s.Split(':')[0] + "='" + (s.Split(':')[1]).Replace("*", ":") + "', ";
+                                                            else
+                                                                query += s.Split(':')[0] + "='', ";
+
+
+                                                        }
+
+                                                        query = query.Remove(query.Length - 2);
+                                                        query += " WHERE Id='" + cons.Filtro.Split(':')[1] + "'";
+
+                                                        ss = query;
+                                                    }
+                                                    uri = string.Format("http://app.adex-integracio.com/sgc/index2.php");
+                                                    Console.WriteLine(ss);
+
+                                                    Log log = new Log(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "//LOGSS");
+                                                    log.Add(DateTime.Now + " " + ss);
+                                                    queries = new List<KeyValuePair<string, string>>()
                                          {
                                              new KeyValuePair<string, string>("tabla", cons.Tabla),
                                              new KeyValuePair<string, string>("action", cons.Action),
                                              new KeyValuePair<string, string>("parametros", ss)
 
                                          };
-                                            if (!Lista_consultas_borrar.Contains(c))
-                                            {                                         //Uri = new Uri(uri);
-                                                HttpContent h = new FormUrlEncodedContent(queries);
-                                                using (HttpClient client = new HttpClient())
-                                                {
-                                                    using (HttpResponseMessage resp = await client.PostAsync(uri, h))
-                                                    {
-                                                        using (HttpContent content = resp.Content)
+                                                    if (!Lista_consultas_borrar.Contains(c))
+                                                    {                                         //Uri = new Uri(uri);
+                                                        HttpContent h = new FormUrlEncodedContent(queries);
+                                                        using (HttpClient client = new HttpClient())
                                                         {
-                                                            string mycontent = await content.ReadAsStringAsync();
-                                                            HttpContentHeaders hch = content.Headers;
-                                                            //Console.writeLine(mycontent);
-                                                            if (cons.Action.Equals("INSERT"))
+                                                            using (HttpResponseMessage resp = await client.PostAsync(uri, h))
                                                             {
-                                                                JObject jobt = new JObject();
-                                                               
-                                                                    jobt = JObject.Parse(mycontent);
-
-                                                                //Console.WriteLine(evt.id);
-                                                                int id = 0; int num = 0;
-                                                                int busqueda = 0;
-                                                                switch (cons.Tabla)
+                                                                using (HttpContent content = resp.Content)
                                                                 {
-                                                                    case "Evento":
-                                                                        id = s.CargarUltimoEvento().id;
-                                                                        Eventos evt = new Eventos(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != evt.id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
+                                                                    string mycontent = await content.ReadAsStringAsync();
+                                                                    HttpContentHeaders hch = content.Headers;
+                                                                    //Console.writeLine(mycontent);
+                                                                    if (cons.Action.Equals("INSERT"))
+                                                                    {
+                                                                        JObject jobt = new JObject();
+
+                                                                        jobt = JObject.Parse(mycontent);
+
+                                                                        //Console.WriteLine(evt.id);
+                                                                        int id = 0; int num = 0;
+                                                                        int busqueda = 0;
+                                                                        switch (cons.Tabla)
+                                                                        {
+                                                                            case "Evento":
+                                                                                id = s.CargarUltimoEvento().id;
+                                                                                Eventos evt = new Eventos(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != evt.id)
                                                                                     {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + evt.id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + evt.id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (evt.id + 1) + " WHERE name='" + c.Tabla + "'");
-
-                                                                                cargarEventos();
-
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "Alarma":
-                                                                        id = s.CargarUltimaAlarma().Id;
-                                                                        Alarma alr = new Alarma(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != alr.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + alr.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + alr.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (alr.Id + 1) + " WHERE name='" + c.Tabla + "'");
-
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "Cliente":
-                                                                        id = s.CargarUltimoCliente().id;
-                                                                        //id = s.CargarUltimoEvento().id;
-                                                                        Clientes cln = new Clientes(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != cln.id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + cln.id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + cln.id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (cln.id + 1) + " WHERE name='" + c.Tabla + "'");
-
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "Contratos":
-                                                                        id = s.CargarUltimoPotencia().Id;
-                                                                        Potencia cnt = new Potencia(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != cnt.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + cnt.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + cnt.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (cnt.Id + 1) + " WHERE name='" + c.Tabla + "'");
-                                                                                CargarContratos();
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "Direcciones":
-                                                                        id = s.CargarUltimaDireccion().Id;
-                                                                        Direcciones dir = new Direcciones(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != dir.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + dir.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + dir.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (dir.Id + 1) + " WHERE name='" + c.Tabla + "'");
-
-                                                                                cargarDirecciones();
-                                                                            }
-                                                                        break;
-
-                                                                    case "Factura":
-                                                                        id = s.CargarUltimaFactura();
-                                                                        Facturas fct = new Facturas(jobt);
-
-                                                                        if (id != 0)
-                                                                            if (id != fct.Id)
-                                                                            {
-                                                                                num = 0;
-                                                                                busqueda = 0;
-                                                                                foreach (Consulta cc in Lista_consultas) 
-                                                                                { 
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        int i = 0;
-                                                                                        if (cc.Tabla.Equals("Productos_Registro"))
-                                                                                            foreach (string a in cc.Parametros)
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
                                                                                             {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + evt.id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + evt.id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (evt.id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Evento_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
 
-                                                                                                if (a.Contains("Id_Factura"))
-                                                                                                {
-                                                                                                    lista_cambios.Add(busqueda);
-                                                                                                    Consulta consulta_nueva = cc;
-                                                                                                    consulta_nueva.Parametros[i] = cc.Parametros[i].Replace("Id_Factura:" + id, "Id_Factura:" + fct.Id);
-                                                                                                    
-                                                                                                            l_consultas.Add(consulta_nueva);
-                                                                                                    break;
-                                                                                                }
-                                                                                                i++;
+                                                                                        }
+                                                                                        cargarEventos();
+
+
+                                                                                    }
+                                                                                break;
+
+                                                                            case "Alarma":
+                                                                                id = s.CargarUltimaAlarma().Id;
+                                                                                Alarma alr = new Alarma(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != alr.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + alr.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + alr.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (alr.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Alarma_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+
+                                                                                            timepo = true;
+                                                                                        }
+
+
+                                                                                    }
+                                                                                break;
+
+                                                                            case "Cliente":
+                                                                                id = s.CargarUltimoCliente().id;
+                                                                                //id = s.CargarUltimoEvento().id;
+                                                                                Clientes cln = new Clientes(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != cln.id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                        
+                                                                                            {
+                                                                                                if (cc.Tabla.Equals("Acompañante"))
+
+                                                                                                    cc.Parametros[cc.Parametros.Count() - 1] = cc.Parametros[cc.Parametros.Count() - 1].Replace("cliente:" + id, "cliente:" + cln.id);
 
                                                                                             }
-                                                                                        //cc = cc.Parametros[i].Replace("Id_Factura:" + id, "Id_Factura:" + fct.Id);
-                                                                                        //Lista_consultas
-                                                                                    }
-                                                                                    busqueda++;
-                                                                                }
-
-                                                                                Facturas fact = lfct.Find(x => x.Id == id);
-                                                                                foreach (Producto pp in fact.Lista_productos)
-                                                                                {
-                                                                                    fact.Id = fct.Id;
-                                                                                    pp.Id_Factura = fct.Id;
-                                                                                    s.EjecutarQuery("UPDATE Productos_Registro SET Id_Factura=" + fact.Id + " WHERE Id=" + pp.Id);
-
-                                                                                }
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + fct.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (fct.Id + 1) + " WHERE name='" + c.Tabla + "'");
-                                                                                CargarFacturas();
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "IVA":
-                                                                        id = s.CargarUltimoIVA().Id;
-                                                                        IVAs iva = new IVAs(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != iva.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + iva.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + iva.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (iva.Id + 1) + " WHERE name='" + c.Tabla + "'");
-
-                                                                                CargarIva();
-                                                                            }
-                                                                        break;
-
-                                                                    case "Parcelas":
-                                                                        id = s.CargarUltimaParcela();
-                                                                        Parcelas prc = new Parcelas(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != prc.id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + prc.id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + prc.id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (prc.id + 1) + " WHERE name='" + c.Tabla + "'");
-
-                                                                                CargarParcela();
-                                                                            }
-                                                                        break;
-
-                                                                    case "Productos_Registrados":
-                                                                        id = s.CargarUltimoRegistrado();
-                                                                        ProductosRegistrados pdrr = new ProductosRegistrados(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != pdrr.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + pdrr.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + pdrr.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (pdrr.Id + 1) + " WHERE name='" + c.Tabla + "'");
-                                                                                cargarProductosNuevos();
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "Productos_Registro":
-                                                                        id = s.CargarUltimoProducto();
-                                                                        Producto pr1 = new Producto(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != pr1.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + pr1.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + pr1.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (pr1.Id + 1) + " WHERE name='" + c.Tabla + "'");
-                                                                                CargarFacturas();
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "Productos_Registro2":
-                                                                        id = s.CargarUltimoProducto2();
-                                                                        Producto pr2 = new Producto(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != pr2.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + pr2.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + pr2.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (pr2.Id + 1) + " WHERE name='" + c.Tabla + "'");
-                                                                                CargarRecibos();
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "Productos_Registro_TPV":
-                                                                        id = s.CargarUltimoProducto_TPV();
-                                                                        Producto_Registro_TPV prtpv2 = new Producto_Registro_TPV(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != prtpv2.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + prtpv2.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + prtpv2.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (prtpv2.Id + 1) + " WHERE name='" + c.Tabla + "'");
-
-                                                                                CargarTPV();
-
-                                                                            }
-                                                                        break;
-
-                                                                    case "Productos_TPV":
-                                                                        id = s.CargarUltimoProductoTPV();
-                                                                        Producto_Registro_TPV prtpv = new Producto_Registro_TPV(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != prtpv.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
-                                                                                    {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + prtpv.Id);
-                                                                                    }
-
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + prtpv.Id + " WHERE Id=" + id);
-
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (prtpv.Id + 1) + " WHERE name='" + c.Tabla + "'");
-                                                                                cargarProductosTPV();
-                                                                            }
-                                                                        break;
-
-                                                                    case "Recibo":
-                                                                        id = s.CargarUltimoRecibo();
-                                                                        Recibos rcb = new Recibos(jobt);
-                                                                        num = 0;
-                                                                        busqueda = 0;
-                                                                        foreach (Consulta cc in Lista_consultas)
-                                                                        {
-                                                                            if (cc.Action.Equals("INSERT"))
-                                                                            {
-                                                                                int i = 0;
-                                                                                if (cc.Tabla.Equals("Productos_Registro2"))
-                                                                                    foreach (string a in cc.Parametros)
-                                                                                    {
-
-                                                                                        if (a.Contains("Id_Recibo"))
+                                                                                        try
                                                                                         {
-                                                                                            lista_cambios.Add(busqueda);
-                                                                                            Consulta consulta_nueva = cc;
-                                                                                            consulta_nueva.Parametros[i] = cc.Parametros[i].Replace("Id_Recibo:" + id, "Id_Recibo:" + rcb.Id);
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + cln.id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (cln.id) + " WHERE name='CLIENTE'");
 
-                                                                                            l_consultas.Add(consulta_nueva);
-                                                                                            break;
+                                                                                            SQLiteDataReader sd = s.CargarAcompañantes_Cliente(id);
+
+                                                                                            while (sd.Read())
+                                                                                            {
+                                                                                                Acompañantes aa = new Acompañantes(sd.GetInt32(0), sd.GetString(1), sd.GetString(2), sd.GetString(3), sd.GetInt32(4), sd.GetString(5), sd.GetString(6), sd.GetInt32(7), sd.GetString(8), sd.GetString(9), sd.GetInt32(10));
+                                                                                                s.EjecutarQuery("UPDATE Acompañante SET cliente=" + cln.id + " WHERE Id=" + aa.Id);
+
+                                                                                            }
                                                                                         }
-                                                                                        i++;
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Cliente_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        //for(int j = 0; j < 100000000;j++) { }
+                                                                                        
 
+
+                                                                                        Dispatcher.InvokeAsync(() =>
+                                                                                        {
+                                                                                            Clientes.Items.Refresh();
+                                                                                        });
+
+                                                                                        //s.EjecutarQuery("UPDATE Acompañante_v SET Time='1800-01-01 00:00:00' WHERE Id=1");
                                                                                     }
-                                                                                //cc = cc.Parametros[i].Replace("Id_Factura:" + id, "Id_Factura:" + fct.Id);
-                                                                                //Lista_consultas
-                                                                            }
-                                                                            busqueda++;
-                                                                        }
+                                                                                break;
 
-                                                                        if (lrcb.Count() == 0)
-                                                                            CargarRecibos();
-                                                                        Recibos rec = lrcb.Find(x => x.Id == id);
-                                                                        foreach (Producto pp in rec.Lista_productos)
-                                                                        {
-                                                                            rec.Id = rcb.Id;
-                                                                            pp.Id_Factura = rcb.Id;
-                                                                            s.EjecutarQuery("UPDATE Productos_Registro2 SET Id_Recibo=" + rec.Id + " WHERE Id=" + pp.Id);
-
-                                                                        }
-                                                                        s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + rcb.Id + " WHERE Id=" + id);
-
-                                                                        s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (rcb.Id + 1) + " WHERE name='" + c.Tabla + "'");
-                                                                        CargarRecibos();
-                                                                        break;
-
-                                                                    case "Rol":
-                                                                        id = s.CargarUltimoRol();
-                                                                        Roles rol = new Roles(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != rol.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
+                                                                            case "Contratos":
+                                                                                id = s.CargarUltimoPotencia().Id;
+                                                                                Potencia cnt = new Potencia(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != cnt.Id)
                                                                                     {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + rol.Id);
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + cnt.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + cnt.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (cnt.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Contratos_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarContratos();
+
                                                                                     }
-                                                                              
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + rol.Id + " WHERE Id=" + id);
+                                                                                break;
 
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (rol.Id + 1) + " WHERE name='" + c.Tabla + "'");
-                                                                                CargarRoles();
-                                                                            }
-                                                                        break;
-
-                                                                    case "TPV":
-                                                                        id = s.CargarUltimoTPV();
-                                                                        TicketTPV tick = new TicketTPV(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != tick.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
+                                                                            case "Direcciones":
+                                                                                id = s.CargarUltimaDireccion().Id;
+                                                                                Direcciones dir = new Direcciones(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != dir.Id)
                                                                                     {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + tick.Id);
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + dir.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + dir.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (dir.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Direcciones_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        cargarDirecciones();
                                                                                     }
+                                                                                break;
 
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + tick.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (tick.Id + 1)+" WHERE name='"+ c.Tabla+"'");
-                                                                                CargarTPV();
-                                                                            }
-                                                                        break;
+                                                                            case "Factura":
+                                                                                id = s.CargarUltimaFactura();
+                                                                                Facturas fct = new Facturas(jobt);
 
-                                                                    case "Usuario":
-                                                                        id = s.CargarUltimoUsuario();
-                                                                        Usuarios usr = new Usuarios(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != usr.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
+                                                                                if (id != 0)
+                                                                                    if (id != fct.Id)
                                                                                     {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + usr.Id);
+                                                                                        num = 0;
+                                                                                        busqueda = 0;
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                        {
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                int i = 0;
+                                                                                                if (cc.Tabla.Equals("Productos_Registro"))
+                                                                                                    foreach (string a in cc.Parametros)
+                                                                                                    {
+
+                                                                                                        if (a.Contains("Id_Factura"))
+                                                                                                        {
+                                                                                                            lista_cambios.Add(busqueda);
+                                                                                                            Consulta consulta_nueva = cc;
+                                                                                                            consulta_nueva.Parametros[i] = cc.Parametros[i].Replace("Id_Factura:" + id, "Id_Factura:" + fct.Id);
+
+                                                                                                            l_consultas.Add(consulta_nueva);
+                                                                                                            break;
+                                                                                                        }
+                                                                                                        i++;
+
+                                                                                                    }
+                                                                                                //cc = cc.Parametros[i].Replace("Id_Factura:" + id, "Id_Factura:" + fct.Id);
+                                                                                                //Lista_consultas
+                                                                                            }
+                                                                                            busqueda++;
+                                                                                        }
+
+                                                                                        Facturas fact = lfct.Find(x => x.Id == id);
+                                                                                        foreach (Producto pp in fact.Lista_productos)
+                                                                                        {
+                                                                                            fact.Id = fct.Id;
+                                                                                            pp.Id_Factura = fct.Id;
+                                                                                            s.EjecutarQuery("UPDATE Productos_Registro SET Id_Factura=" + fact.Id + " WHERE Id=" + pp.Id);
+
+                                                                                        }
+
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + fct.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (fct.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Productos_Registro_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarFacturas();
+
                                                                                     }
+                                                                                break;
 
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + usr.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (usr.Id + 1) + " WHERE name='" + c.Tabla + "'");
-
-                                                                                CargarUsuarios();
-                                                                            }
-                                                                        break;
-
-                                                                    case "Vehiculos":
-                                                                        id = s.CargarUltimoVehiculo();
-                                                                        Vehiculos vhc = new Vehiculos(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != vhc.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
+                                                                            case "IVA":
+                                                                                id = s.CargarUltimoIVA().Id;
+                                                                                IVAs iva = new IVAs(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != iva.Id)
                                                                                     {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + vhc.Id);
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + iva.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + iva.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (iva.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE IVA_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarIva();
                                                                                     }
+                                                                                break;
 
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + vhc.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (vhc.Id + 1) + " WHERE name='" + c.Tabla + "'");
-
-                                                                                CargarVehiculos();
-                                                                            }
-                                                                        break;
-                                                                    case "Acompañante":
-                                                                        id = s.CargarUltimoAcompañante().Id;
-                                                                        Console.WriteLine(s.CargarUltimoAcompañante().Clienteid);
-                                                                        Acompañantes acm = new Acompañantes(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != acm.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
+                                                                            case "Parcelas":
+                                                                                id = s.CargarUltimaParcela();
+                                                                                Parcelas prc = new Parcelas(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != prc.id)
                                                                                     {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + acm.Id);
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + prc.id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + prc.id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (prc.id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Parcelas_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarParcela();
                                                                                     }
+                                                                                break;
 
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + acm.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (acm.Id + 1) + " WHERE name='" + c.Tabla + "'");
+                                                                            case "Productos_Registrados":
+                                                                                id = s.CargarUltimoRegistrado();
+                                                                                ProductosRegistrados pdrr = new ProductosRegistrados(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != pdrr.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + pdrr.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + pdrr.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (pdrr.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Productos_Registrados_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        cargarProductosNuevos();
 
-                                                                                Clientes cl = lcln.Find(x => x.id == s.CargarUltimoAcompañante().Clienteid);
-                                                                                for (int i = 0; i < cl.lista_acompañantes.Count(); i++)
-                                                                                    if (cl.lista_acompañantes[i] == null)
-                                                                                        cl.lista_acompañantes[i] = (Acompañantes)acm;
+                                                                                    }
+                                                                                break;
 
-                                                                                Dispatcher.InvokeAsync(() =>
+                                                                            case "Productos_Registro":
+                                                                                Producto pr1 = new Producto(jobt);
+                                                                                id = s.cargarIdProductoRegistro1(pr1);
+                                                                                if (id != 0)
                                                                                 {
-                                                                                    Clientes.Items.Refresh();
-                                                                                });
-
-                                                                                cargarAcompañantes();
-
-                                                                            }
-                                                                        break;
-                                                                    case "TPV_Indices":
-                                                                        id = s.CargarUltimoIndicesTPV();
-                                                                        Console.WriteLine(s.CargarUltimoIndicesTPV());
-                                                                        TPV_Indices indi = new TPV_Indices(jobt);
-                                                                        if (id != 0)
-                                                                            if (id != indi.Id)
-                                                                            {
-                                                                                foreach (Consulta cc in Lista_consultas)
-                                                                                    if (cc.Action.Equals("INSERT"))
+                                                                                    if (id != pr1.Id)
                                                                                     {
-                                                                                        cc.Filtro.Replace("Id:" + id, "Id:" + indi.Id);
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + pr1.Id);
+                                                                                            }
+                                                                                        List_prd_rgt.Add("UPDATE " + c.Tabla + " SET Id=" + pr1.Id + " WHERE Id=" + id);
+                                                                                        //s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (pr1.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        //CargarFacturas();
+
                                                                                     }
+                                                                                }
+                                                                                else timepo = true;
+                                                                                break;
 
-                                                                                s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + indi.Id + " WHERE Id=" + id);
-                                                                                s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (indi.Id + 1) + " WHERE name='" + c.Tabla + "'");
+                                                                            case "Productos_Registro2":
+                                                                                Producto pr2 = new Producto(jobt);
+                                                                                id = s.cargarIdProductoRegistro2(pr2);
+                                                                                if (id != 0)
+                                                                                {
+                                                                                    if (id != pr2.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + pr2.Id);
+                                                                                            }
 
-                                                                                cargarIndicesTPV();
+                                                                                        List_prd_rgt.Add("UPDATE " + c.Tabla + " SET Id=" + pr2.Id + " WHERE Id=" + id);
+                                                                                        //s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (pr2.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        //CargarRecibos();
 
-                                                                            }
-                                                                        break;
-                                                                   
+                                                                                    }
+                                                                                }
+                                                                                else timepo = true;
+                                                                                break;
 
+                                                                            case "Productos_Registro_TPV":
+                                                                                Producto_Registro_TPV prtpv2 = new Producto_Registro_TPV(jobt);
+                                                                                id = s.cargarIdProductoRegistroTPV(prtpv2);
+                                                                                if (id != 0)
+                                                                                {
+                                                                                    if (id != prtpv2.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + prtpv2.Id);
+                                                                                            }
+                                                                                        List_productos_tpv.Add("UPDATE " + c.Tabla + " SET Id=" + (prtpv2.Id) + " WHERE Id=" + id);
+                                                                                        s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (prtpv2.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        //s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + prtpv2.Id + " WHERE Id=" + id);
+
+
+                                                                                    }
+                                                                                }
+                                                                                else timepo = true;
+                                                                                break;
+
+                                                                            case "Productos_TPV":
+                                                                                id = s.CargarUltimoProductoTPV();
+                                                                                ProductosTPV prtpv = new ProductosTPV(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != prtpv.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + prtpv.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + prtpv.Id + " WHERE Id=" + id);
+
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (prtpv.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Productos_TPV_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        cargarProductosTPV();
+                                                                                    }
+                                                                                break;
+
+                                                                            case "Recibo":
+                                                                                id = s.CargarUltimoRecibo();
+                                                                                Recibos rcb = new Recibos(jobt);
+                                                                                num = 0;
+                                                                                busqueda = 0; if (id != 0)
+                                                                                    if (id != rcb.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                        {
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                int i = 0;
+                                                                                                if (cc.Tabla.Equals("Productos_Registro2"))
+                                                                                                    foreach (string a in cc.Parametros)
+                                                                                                    {
+
+                                                                                                        if (a.Contains("Id_Recibo"))
+                                                                                                        {
+                                                                                                            lista_cambios.Add(busqueda);
+                                                                                                            Consulta consulta_nueva = cc;
+                                                                                                            consulta_nueva.Parametros[i] = cc.Parametros[i].Replace("Id_Recibo:" + id, "Id_Recibo:" + rcb.Id);
+
+                                                                                                            l_consultas.Add(consulta_nueva);
+                                                                                                            break;
+                                                                                                        }
+                                                                                                        i++;
+
+                                                                                                    }
+                                                                                                //cc = cc.Parametros[i].Replace("Id_Factura:" + id, "Id_Factura:" + fct.Id);
+                                                                                                //Lista_consultas
+                                                                                            }
+                                                                                            busqueda++;
+                                                                                        }
+
+                                                                                        if (lrcb.Count() == 0)
+                                                                                            CargarRecibos();
+                                                                                        Recibos rec = lrcb.Find(x => x.Id == id);
+                                                                                        foreach (Producto pp in rec.Lista_productos)
+                                                                                        {
+                                                                                            rec.Id = rcb.Id;
+                                                                                            pp.Id_Factura = rcb.Id;
+                                                                                            s.EjecutarQuery("UPDATE Productos_Registro2 SET Id_Recibo=" + rec.Id + " WHERE Id=" + pp.Id);
+
+                                                                                        }
+
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + rcb.Id + " WHERE Id=" + id);
+
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (rcb.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Recibo_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarRecibos();
+                                                                                    }
+                                                                                break;
+
+                                                                            case "Rol":
+                                                                                id = s.CargarUltimoRol();
+                                                                                Roles rol = new Roles(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != rol.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + rol.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + rol.Id + " WHERE Id=" + id);
+
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (rol.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Rol_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarRoles();
+                                                                                    }
+                                                                                break;
+
+                                                                            case "TPV":
+                                                                                id = s.CargarUltimoTPV();
+                                                                                TicketTPV tick = new TicketTPV(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != tick.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + tick.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + tick.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (tick.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE TPV_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarTPV();
+                                                                                    }
+                                                                                break;
+
+                                                                            case "Usuario":
+                                                                                id = s.CargarUltimoUsuario();
+                                                                                Usuarios usr = new Usuarios(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != usr.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + usr.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + usr.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (usr.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Usuario_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarUsuarios();
+                                                                                    }
+                                                                                break;
+
+                                                                            case "Vehiculos":
+                                                                                id = s.CargarUltimoVehiculo();
+                                                                                Vehiculos vhc = new Vehiculos(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != vhc.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + vhc.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + vhc.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (vhc.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE Vehiculos_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        CargarVehiculos();
+                                                                                    }
+                                                                                break;
+                                                                            case "Acompañante":
+                                                                                Acompañantes acm = new Acompañantes(jobt);
+                                                                                id = s.CargarUltimoAcompañante(acm.nombreacompañante1, acm.apellido1compañante1, acm.dniacompañante1, acm.Clienteid).Id;
+                                                                                Console.WriteLine(s.CargarUltimoAcompañante().Clienteid);
+                                                                                if (id != 0)
+                                                                                {
+                                                                                    if (id != acm.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + acm.Id);
+                                                                                            }
+                                                                                        List_acopañantes.Add("UPDATE " + c.Tabla + " SET Id=" + (acm.Id) + ",cliente=" + acm.Clienteid + " WHERE Id=" + id);
+
+
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    timepo = true;
+
+                                                                                }
+                                                                                break;
+                                                                            case "TPV_Indices":
+                                                                                id = s.CargarUltimoIndicesTPV();
+                                                                                Console.WriteLine(s.CargarUltimoIndicesTPV());
+                                                                                TPV_Indices indi = new TPV_Indices(jobt);
+                                                                                if (id != 0)
+                                                                                    if (id != indi.Id)
+                                                                                    {
+                                                                                        foreach (Consulta cc in Lista_consultas)
+                                                                                            if (cc.Action.Equals("INSERT"))
+                                                                                            {
+                                                                                                cc.Filtro.Replace("Id:" + id, "Id:" + indi.Id);
+                                                                                            }
+                                                                                        try
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE " + c.Tabla + " SET Id=" + indi.Id + " WHERE Id=" + id);
+                                                                                            s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (indi.Id) + " WHERE name='" + c.Tabla + "'");
+                                                                                        }
+                                                                                        catch
+                                                                                        {
+                                                                                            s.EjecutarQuery("UPDATE TPV_Indices_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                                                            timepo = true;
+                                                                                        }
+                                                                                        cargarIndicesTPV();
+
+                                                                                    }
+                                                                                break;
+
+
+                                                                        }
+
+
+                                                                    }
+                                                                    //cargartiempos
                                                                 }
-
-
                                                             }
-                                                            //cargartiempos
                                                         }
-                                                    }
-                                                }
-                                                queries = new List<KeyValuePair<string, string>>()
+
+
+                                                        if (!timepo)
+                                                        {
+                                                            queries = new List<KeyValuePair<string, string>>()
                                          {
                                              new KeyValuePair<string, string>("tabla", c.Tabla),
                                              new KeyValuePair<string, string>("action", "tiempo"),
                                              new KeyValuePair<string, string>("parametros", ss)
 
                                          };
+                                                            //Uri = new Uri(uri);
+                                                            h = new FormUrlEncodedContent(queries);
+                                                            using (HttpClient client = new HttpClient())
+                                                            {
+                                                                using (HttpResponseMessage resp = await client.PostAsync(uri, h))
+                                                                {
+                                                                    using (HttpContent content = resp.Content)
+                                                                    {
+                                                                        string mycontent = await content.ReadAsStringAsync();
+                                                                        Console.WriteLine(mycontent);
+
+                                                                        s.EjecutarQuery("UPDATE " + c.Tabla + "_v SET Time='" + mycontent + "' WHERE Id=1");
+                                                                        DateTime dt = DateTime.Parse(mycontent);
+                                                                        /*
+                                               0. CLIENTES
+                                        1. ALARMAS
+                                        2- USUARIOS
+                                        3. EVENTOS
+                                        4.FACTURAS
+                                        5.PRODUCTOS FACTURA                                        
+                                        6. Vehiculos
+                                        7. Rol
+                                        8- Recibo
+                                        9.productosregistrados
+                                        10.parcelas
+                                        11- IVA
+                                        12. Direcciones
+                                        13.Contratos
+                                        14.Camping
+                                        15. Acompañante
+                                        16. PRODUCTOS RECIBOS
+                                        17. Productos_tpv
+                                        18. Productos_Registro_TPV
+                                        19. TPV
+                                        20. TPV Indices
+                                                 */
+                                                                        switch (c.Tabla)
+                                                                        {
+                                                                            case "Cliente":
+                                                                                lista_tiempos[0] = dt;
+                                                                                break;
+
+                                                                            case "Alarma":
+                                                                                lista_tiempos[1] = dt;
+                                                                                break;
+
+                                                                            case "Usuario":
+                                                                                lista_tiempos[2] = dt;
+                                                                                break;
+
+                                                                            case "Evento":
+                                                                                lista_tiempos[3] = dt;
+                                                                                break;
+
+                                                                            case "Factura":
+                                                                                lista_tiempos[4] = dt;
+                                                                                break;
+
+                                                                            case "Productos_Registro":
+                                                                                lista_tiempos[5] = dt;
+                                                                                break;
+
+                                                                            case "Vehiculos":
+                                                                                lista_tiempos[6] = dt;
+                                                                                break;
+
+                                                                            case "Rol":
+                                                                                lista_tiempos[7] = dt;
+                                                                                break;
+
+                                                                            case "Recibo":
+                                                                                lista_tiempos[8] = dt;
+                                                                                break;
+                                                                            case "Productos_Registrados":
+                                                                                lista_tiempos[9] = dt;
+                                                                                break;
+
+                                                                            case "Parcelas":
+                                                                                lista_tiempos[10] = dt;
+                                                                                break;
+
+                                                                            case "IVA":
+                                                                                lista_tiempos[11] = dt;
+                                                                                break;
+
+                                                                            case "Direcciones":
+                                                                                lista_tiempos[12] = dt;
+                                                                                break;
+
+                                                                            case "Contratos":
+                                                                                lista_tiempos[13] = dt;
+                                                                                break;
+                                                                            case "Camping":
+                                                                                lista_tiempos[14] = dt;
+                                                                                break;
+                                                                            case "Acompañante":
+                                                                                lista_tiempos[15] = dt;
+                                                                                break;
+
+                                                                            case "Productos_Registro2":
+                                                                                lista_tiempos[16] = dt;
+                                                                                break;
+
+                                                                            case "Productos_Registro_TPV":
+                                                                                lista_tiempos[17] = dt;
+                                                                                break;
+
+                                                                            case "Productos_TPV":
+                                                                                lista_tiempos[18] = dt;
+                                                                                break;
+
+                                                                            case "TPV":
+                                                                                lista_tiempos[19] = dt;
+                                                                                break;
+
+                                                                            case "TPV_Indices":
+                                                                                lista_tiempos[20] = dt;
+                                                                                break;
+                                                                            case "Crepusculo":
+                                                                                lista_tiempos[21] = dt;
+                                                                                break;
+
+
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        queries = new List<KeyValuePair<string, string>>()
+                                         {
+                                             new KeyValuePair<string, string>("tabla", "Version"),
+                                             new KeyValuePair<string, string>("action", "SelectOne"),
+                                             new KeyValuePair<string, string>("parametros", "1")
+
+                                         };
+                                                        //Uri = new Uri(uri);
+                                                        h = new FormUrlEncodedContent(queries);
+                                                        using (HttpClient client = new HttpClient())
+                                                        {
+                                                            using (HttpResponseMessage resp = await client.PostAsync(uri, h))
+                                                            {
+                                                                using (HttpContent content = resp.Content)
+                                                                {
+                                                                    string mycontent = await content.ReadAsStringAsync();
+                                                                    Console.WriteLine(mycontent);
+                                                                    version = new Version(mycontent);
+                                                                    s.EjecutarQuery("UPDATE Version SET Version='" + version.version + "' WHERE Id=1");
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    Lista_consultas_borrar.Add(c);
+                                                }
+                                                catch (Exception ee)
+                                                {
+                                                    var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                                                    Console.WriteLine("EXCEPTION A " + line + " " + ee.Message);
+                                                    observartodotoken = false;
+                                                    observartodo = false;
+                                                    fallo = true;
+                                                }
+
+                                            }
+                                           string ss2 = "";
+                                            //List_prd_rgt.Reverse();
+                                            bool ad = true;
+                                            if (List_prd_rgt.Count() > 0)
+                                            {
+                                                foreach (string s in List_prd_rgt)
+                                                {
+                                                    if (s.Contains("Productos_Registro"))
+                                                        ad = true;
+                                                    else
+                                                        ad = false;
+                                                    try
+                                                    {
+                                                        this.s.EjecutarQuery(s);
+                                                    }
+                                                    catch
+                                                    {
+                                                        if (ad)
+                                                        {
+                                                            this.s.EjecutarQuery("UPDATE Productos_Registro_v SET Time='1850-09-23 11:48:08'");
+                                                            CargarFacturas();
+                                                        }
+                                                        else
+                                                        {
+                                                            this.s.EjecutarQuery("UPDATE Productos_Registro2_v SET Time='1850-09-23 11:48:08'");
+                                                            CargarRecibos();
+                                                        }
+                                                        fallo = false;
+                                                    }
+                                                }
+                                                if (ad)
+                                                {
+                                                    try
+                                                    {
+                                                        s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (s.CargarUltimoProducto()) + " WHERE name='Productos_Registro'");
+                                                    }
+                                                    catch
+                                                    {
+                                                        s.EjecutarQuery("UPDATE Productos_Registro_v SET Time='1850-09-23 11:48:08'");
+                                                        fallo = false;
+                                                    }
+
+                                                    queries = new List<KeyValuePair<string, string>>()
+                                         {
+                                             new KeyValuePair<string, string>("tabla", "Productos_Registro"),
+                                             new KeyValuePair<string, string>("action", "tiempo"),
+                                             new KeyValuePair<string, string>("parametros", ss2)
+
+                                         };
+                                                    //Uri = new Uri(uri);
+                                                    HttpContent h = new FormUrlEncodedContent(queries);
+                                                    using (HttpClient client = new HttpClient())
+                                                    {
+                                                        using (HttpResponseMessage resp = await client.PostAsync(uri, h))
+                                                        {
+                                                            using (HttpContent content = resp.Content)
+                                                            {
+                                                                string mycontent = await content.ReadAsStringAsync();
+                                                                Console.WriteLine(mycontent);
+
+                                                                s.EjecutarQuery("UPDATE Productos_Registro_v SET Time='" + mycontent + "' WHERE Id=1");
+                                                                DateTime dt = DateTime.Parse(mycontent);
+                                                                /*
+                                       0. CLIENTES
+                                1. ALARMAS
+                                2- USUARIOS
+                                3. EVENTOS
+                                4.FACTURAS
+                                5.PRODUCTOS FACTURA                                        
+                                6. Vehiculos
+                                7. Rol
+                                8- Recibo
+                                9.productosregistrados
+                                10.parcelas
+                                11- IVA
+                                12. Direcciones
+                                13.Contratos
+                                14.Camping
+                                15. Acompañante
+                                16. PRODUCTOS RECIBOS
+                                17. Productos_tpv
+                                18. Productos_Registro_TPV
+                                19. TPV
+                                20. TPV Indices
+                                         */
+                                                                lista_tiempos[15] = dt;
+
+                                                            }
+                                                        }
+                                                    }
+                                                    CargarFacturas();
+
+                                                }
+                                                else
+                                                {
+                                                    try
+                                                    {
+                                                        s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (s.CargarUltimoProducto2()) + " WHERE name='Productos_Registro2'");
+                                                    }
+                                                    catch
+                                                    {
+                                                        s.EjecutarQuery("UPDATE Productos_Registro2_v SET Time='1850-09-23 11:48:08'");
+                                                        fallo = false;
+                                                    }
+                                                    queries = new List<KeyValuePair<string, string>>()
+                                         {
+                                             new KeyValuePair<string, string>("tabla", "Productos_Registro2"),
+                                             new KeyValuePair<string, string>("action", "tiempo"),
+                                             new KeyValuePair<string, string>("parametros", ss2)
+
+                                         };
+                                                    //Uri = new Uri(uri);
+                                                    HttpContent h = new FormUrlEncodedContent(queries);
+                                                    using (HttpClient client = new HttpClient())
+                                                    {
+                                                        using (HttpResponseMessage resp = await client.PostAsync(uri, h))
+                                                        {
+                                                            using (HttpContent content = resp.Content)
+                                                            {
+                                                                string mycontent = await content.ReadAsStringAsync();
+                                                                Console.WriteLine(mycontent);
+
+                                                                s.EjecutarQuery("UPDATE Productos_Registro2_v SET Time='" + mycontent + "' WHERE Id=1");
+                                                                DateTime dt = DateTime.Parse(mycontent);
+                                                                /*
+                                       0. CLIENTES
+                                1. ALARMAS
+                                2- USUARIOS
+                                3. EVENTOS
+                                4.FACTURAS
+                                5.PRODUCTOS FACTURA                                        
+                                6. Vehiculos
+                                7. Rol
+                                8- Recibo
+                                9.productosregistrados
+                                10.parcelas
+                                11- IVA
+                                12. Direcciones
+                                13.Contratos
+                                14.Camping
+                                15. Acompañante
+                                16. PRODUCTOS RECIBOS
+                                17. Productos_tpv
+                                18. Productos_Registro_TPV
+                                19. TPV
+                                20. TPV Indices
+                                         */
+                                                                lista_tiempos[16] = dt;
+
+                                                            }
+                                                        }
+                                                    }
+                                                    CargarRecibos();
+                                                }
+
+
+                                            }
+                                            List_productos_tpv.Reverse();
+                                            if (List_productos_tpv.Count() > 0)
+                                            {
+                                                foreach (string s in List_productos_tpv)
+                                                {
+                                                    try
+                                                    {
+                                                        this.s.EjecutarQuery(s);
+                                                    }
+                                                    catch
+                                                    {
+                                                        this.s.EjecutarQuery("UPDATE Productos_registro_TPV_v SET Time='1850-09-23 11:48:08'"); fallo = false; CargarTPV();
+                                                    }
+
+                                                }
+                                                try
+                                                {
+                                                    s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (s.CargarUltimoProducto_TPV()) + " WHERE name='Productos_registro_TPV'");
+                                                }
+                                                catch
+                                                {
+                                                    s.EjecutarQuery("UPDATE Productos_registro_TPV_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                }
+
+                                                queries = new List<KeyValuePair<string, string>>()
+                                         {
+                                             new KeyValuePair<string, string>("tabla", "Productos_registro_TPV"),
+                                             new KeyValuePair<string, string>("action", "tiempo"),
+                                             new KeyValuePair<string, string>("parametros", ss2)
+
+                                         };
                                                 //Uri = new Uri(uri);
-                                                h = new FormUrlEncodedContent(queries);
+                                                HttpContent h = new FormUrlEncodedContent(queries);
                                                 using (HttpClient client = new HttpClient())
                                                 {
                                                     using (HttpResponseMessage resp = await client.PostAsync(uri, h))
@@ -8722,7 +9639,7 @@ namespace SGC
                                                             string mycontent = await content.ReadAsStringAsync();
                                                             Console.WriteLine(mycontent);
 
-                                                            s.EjecutarQuery("UPDATE " + c.Tabla + "_v SET Time='" + mycontent + "' WHERE Id=1");
+                                                            s.EjecutarQuery("UPDATE Productos_registro_TPV_v SET Time='" + mycontent + "' WHERE Id=1");
                                                             DateTime dt = DateTime.Parse(mycontent);
                                                             /*
                                    0. CLIENTES
@@ -8747,104 +9664,50 @@ namespace SGC
                             19. TPV
                             20. TPV Indices
                                      */
-                                                            switch (c.Tabla)
-                                                            {
-                                                                case "Cliente":
-                                                                    lista_tiempos[0] = dt;
-                                                                    break;
+                                                            lista_tiempos[18] = dt;
 
-                                                                case "Alarma":
-                                                                    lista_tiempos[1] = dt;
-                                                                    break;
-
-                                                                case "Usuario":
-                                                                    lista_tiempos[2] = dt;
-                                                                    break;
-
-                                                                case "Evento":
-                                                                    lista_tiempos[3] = dt;
-                                                                    break;
-
-                                                                case "Factura":
-                                                                    lista_tiempos[4] = dt;
-                                                                    break;
-
-                                                                case "Productos_Registro":
-                                                                    lista_tiempos[5] = dt;
-                                                                    break;
-
-                                                                case "Vehiculos":
-                                                                    lista_tiempos[6] = dt;
-                                                                    break;
-
-                                                                case "Rol":
-                                                                    lista_tiempos[7] = dt;
-                                                                    break;
-
-                                                                case "Recibo":
-                                                                    lista_tiempos[8] = dt;
-                                                                    break;
-                                                                case "Productos_Registrados":
-                                                                    lista_tiempos[9] = dt;
-                                                                    break;
-
-                                                                case "Parcelas":
-                                                                    lista_tiempos[10] = dt;
-                                                                    break;
-
-                                                                case "IVA":
-                                                                    lista_tiempos[11] = dt;
-                                                                    break;
-
-                                                                case "Direcciones":
-                                                                    lista_tiempos[12] = dt;
-                                                                    break;
-
-                                                                case "Contratos":
-                                                                    lista_tiempos[13] = dt;
-                                                                    break;
-                                                                case "Camping":
-                                                                    lista_tiempos[14] = dt;
-                                                                    break;
-                                                                case "Acompañante":
-                                                                    lista_tiempos[15] = dt;
-                                                                    break;
-
-                                                                case "Productos_Registro2":
-                                                                    lista_tiempos[16] = dt;
-                                                                    break;
-
-                                                                case "Productos_Registro_TPV":
-                                                                    lista_tiempos[17] = dt;
-                                                                    break;
-
-                                                                case "Productos_TPV":
-                                                                    lista_tiempos[18] = dt;
-                                                                    break;
-
-                                                                case "TPV":
-                                                                    lista_tiempos[19] = dt;
-                                                                    break;
-
-                                                                case "TPV_Indices":
-                                                                    lista_tiempos[20] = dt;
-                                                                    break;
-
-                                                               
-                                                            }
                                                         }
                                                     }
                                                 }
-
+                                                CargarTPV();
+                                            }
+                                            List_acopañantes.Reverse();
+                                            if (List_acopañantes.Count() > 0)
+                                            {
+                                                foreach (string s in List_acopañantes)
+                                                {
+                                                    try
+                                                    {
+                                                        this.s.EjecutarQuery(s);
+                                                    }
+                                                    catch
+                                                    {
+                                                        this.s.EjecutarQuery("UPDATE Acompañantes_v SET Time='1850-09-23 11:48:08'");
+                                                        fallo = false;
+                                                        while (cargandoCliente) { }
+                                                        clientebool = true;
+                                                        cargarClientes();
+                                                    }
+                                                }
+                                                try
+                                                {
+                                                    s.EjecutarQuery("UPDATE sqlite_sequence SET " + "seq=" + (s.CargarUltimoAcompañante().Id) + " WHERE name='Acompañante'");
+                                                }
+                                                catch
+                                                {
+                                                    s.EjecutarQuery("UPDATE Acompañantes_v SET Time='1850-09-23 11:48:08'"); fallo = false;
+                                                }
+                                                while (cargandoCliente) { }
+                                                clientebool = true;
                                                 queries = new List<KeyValuePair<string, string>>()
                                          {
-                                             new KeyValuePair<string, string>("tabla", "Version"),
-                                             new KeyValuePair<string, string>("action", "SelectOne"),
-                                             new KeyValuePair<string, string>("parametros", "1")
+                                             new KeyValuePair<string, string>("tabla", "Acompañantes"),
+                                             new KeyValuePair<string, string>("action", "tiempo"),
+                                             new KeyValuePair<string, string>("parametros", ss2)
 
                                          };
                                                 //Uri = new Uri(uri);
-                                                h = new FormUrlEncodedContent(queries);
+                                                HttpContent h = new FormUrlEncodedContent(queries);
                                                 using (HttpClient client = new HttpClient())
                                                 {
                                                     using (HttpResponseMessage resp = await client.PostAsync(uri, h))
@@ -8853,51 +9716,11 @@ namespace SGC
                                                         {
                                                             string mycontent = await content.ReadAsStringAsync();
                                                             Console.WriteLine(mycontent);
-                                                            version = new Version(mycontent);
-                                                            s.EjecutarQuery("UPDATE Version SET Version='" + version.version + "' WHERE Id=1");
-                                                        }
-                                                    }
-                                                }
-                                            }
 
-                                    }
-                                    catch (Exception ee)
-                                    {
-                                        var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                                        Console.WriteLine("EXCEPTION A " + line + " " + ee.Message);
-                                            observartodotoken = false;
-                                            observartodo = false;
-                                    }
-
-                                    Lista_consultas_borrar.Add(c);
-                                    }
-                                foreach (Consulta c in Lista_consultas_borrar)
-                                {
-                                    Lista_consultas.Remove(c);
-
-                                }
-                                Thread.Sleep(100);
-
-                                observartodotoken = false;
-                            }
-                        } catch (Exception ee)
-                        {
-                            var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                            //Console.WriteLine("EXCEPTION A " + line + " " + ee.Message);
-
-                            observartodo = false;
-                        }
-
-                        //Console.WriteLine(s.CargarVersion() + " " + v.version + " " + DateTime.Compare(s.CargarVersion(), v.version));
-                        if (DateTime.Compare(s.CargarVersion(), v.version) < 0)
-                        {
-                            cargartiempos();
-                            s.EjecutarQuery("UPDATE Version SET Version='" + v.version + "'");
-                        }
-                        //Console.WriteLine(s.CargarVersionRol() + " " + lista_tiempos[7] + " " + DateTime.Compare(s.CargarVersionRol(), lista_tiempos[7]));
-
-                        /*
-                       0. CLIENTES
+                                                            s.EjecutarQuery("UPDATE Acompañantes_v SET Time='" + mycontent + "' WHERE Id=1");
+                                                            DateTime dt = DateTime.Parse(mycontent);
+                                                            /*
+                                   0. CLIENTES
                             1. ALARMAS
                             2- USUARIOS
                             3. EVENTOS
@@ -8918,420 +9741,574 @@ namespace SGC
                             18. Productos_Registro_TPV
                             19. TPV
                             20. TPV Indices
-                         */
-                        int subindex = 0;
-                        Dispatcher.InvokeAsync(() =>
-                        {
-                            //Console.WriteLine(usuarios_menu.SelectedIndex);
-                            subindex = usuarios_menu.SelectedIndex;
-                        });
-                        Console.WriteLine("Tiempo Event : " + s.CargarVersionEvento() + " " + lista_tiempos[3] + " " + DateTime.Compare(s.CargarVersionEvento(), lista_tiempos[3]) + " Tiempo de observa ");
-                        if (DateTime.Compare(s.CargarVersionEvento(), lista_tiempos[3]) < 0)
-                            if (mirarEven)
-                                if (index == 0)
-                                {
-                                    mirarEven = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+                                     */
+                                                            lista_tiempos[15] = dt;
 
-                                    if (result == MessageBoxResult.OK)
-                                    {
-                                        cargarEventos();
-                                    }
-                                    Thread.Sleep(100);
+                                                        }
+                                                    }
+                                                }
+                                                cargarClientes();
+                                            }
+
+
+                                            if (!fallo)
+                                                foreach (Consulta c in Lista_consultas_borrar)
+                                                {
+                                                    Lista_consultas.Remove(c);
+
+                                                }
+                                            Thread.Sleep(100);
+
+                                            observartodotoken = false;
+                                        }
+                                }
+                                catch (Exception ee)
+                                {
+                                    var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                                    //Console.WriteLine("EXCEPTION A " + line + " " + ee.Message);
+
+                                    observartodo = false;
+                                }
+
+                                //Console.WriteLine(s.CargarVersion() + " " + v.version + " " + DateTime.Compare(s.CargarVersion(), v.version));
+                                if (DateTime.Compare(s.CargarVersion(), v.version) < 0)
+                                {
+                                    cargartiempos();
+                                    s.EjecutarQuery("UPDATE Version SET Version='" + v.version + "'");
+                                }
+                                //Console.WriteLine(s.CargarVersionRol() + " " + lista_tiempos[7] + " " + DateTime.Compare(s.CargarVersionRol(), lista_tiempos[7]));
+
+                                /*
+                               0. CLIENTES
+                                    1. ALARMAS
+                                    2- USUARIOS
+                                    3. EVENTOS
+                                    4.FACTURAS
+                                    5.PRODUCTOS FACTURA                                        
+                                    6. Vehiculos
+                                    7. Rol
+                                    8- Recibo
+                                    9.productosregistrados
+                                    10.parcelas
+                                    11- IVA
+                                    12. Direcciones
+                                    13.Contratos
+                                    14.Camping
+                                    15. Acompañante
+                                    16. PRODUCTOS RECIBOS
+                                    17. Productos_tpv
+                                    18. Productos_Registro_TPV
+                                    19. TPV
+                                    20. TPV Indices
+                                    21. Crepusculo
+                                 */
+                                int subindex = 0;
+                                Dispatcher.InvokeAsync(() =>
+                                {
+                                //Console.WriteLine(usuarios_menu.SelectedIndex);
+                                subindex = usuarios_menu.SelectedIndex;
+                                });
+                                Console.WriteLine("Tiempo Event : " + s.CargarVersionEvento() + " " + lista_tiempos[3] + " " + DateTime.Compare(s.CargarVersionEvento(), lista_tiempos[3]) + " Tiempo de observa ");
+                                Console.WriteLine("Tiempo Usu: " + s.CargarVersionUsuario() + " " + lista_tiempos[2] + " " + DateTime.Compare(s.CargarVersionUsuario(), lista_tiempos[2]) + " Tiempo de observa ");
+                                Console.WriteLine("Tiempo Rol: " + s.CargarVersionRol() + " " + lista_tiempos[7] + " " + DateTime.Compare(s.CargarVersionRol(), lista_tiempos[7]));
+                                Console.WriteLine("Tiempo IVA: " + s.CargarVersionIva() + " " + lista_tiempos[11] + " " + DateTime.Compare(s.CargarVersionIva(), lista_tiempos[11]));
+                                Console.WriteLine("Tiempo Contratos : " + s.CargarVersionContratos() + " " + lista_tiempos[13] + " " + DateTime.Compare(s.CargarVersionContratos(), lista_tiempos[13]) + " Tiempo de observa ");
+                                Console.WriteLine("Tiempo Vehiculo : " + s.CargarVersionVehiculos() + " " + lista_tiempos[6] + " " + DateTime.Compare(s.CargarVersionVehiculos(), lista_tiempos[6]) + " Tiempo de observa ");
+                                Console.WriteLine("ESTADO VEHICULO : " + mirarVehiculo);
+                                Console.WriteLine("Tiempo Camping : " + s.CargarVersionCamping() + " " + lista_tiempos[14] + " " + DateTime.Compare(s.CargarVersionCamping(), lista_tiempos[14]) + " Tiempo de observa ");
+                                Console.WriteLine("Tiempo Parcelas : " + s.CargarVersionParcelas() + " " + lista_tiempos[10] + " " + DateTime.Compare(s.CargarVersionParcelas(), lista_tiempos[10]) + " Tiempo de observa ");
+                                Console.WriteLine("Tiempo Facturas : " + s.CargarVersionFactura() + " " + lista_tiempos[4] + " " + DateTime.Compare(s.CargarVersionFactura(), lista_tiempos[4]) + " Tiempo de observa " + mirarFacturas);
+                                Console.WriteLine("Tiempo Recibos : " + s.CargarVersionRecibo() + " " + lista_tiempos[8] + " " + DateTime.Compare(s.CargarVersionRecibo(), lista_tiempos[8]) + " Tiempo de observa " + mirarRecibos);
+                                Console.WriteLine("Tiempo Productos : " + s.CargarVersionProductos_Registrados() + " " + lista_tiempos[9] + " " + DateTime.Compare(s.CargarVersionProductos_Registrados(), lista_tiempos[9]) + " Tiempo de observa " + mirarProduto); Console.WriteLine("Tiempo Productos_reg : " + s.CargarVersionProductos_Registro() + " " + lista_tiempos[5] + " " + DateTime.Compare(s.CargarVersionProductos_Registro(), lista_tiempos[5]) + " Tiempo de observa " + mirarProduto_reg1);
+
+                                Console.WriteLine("Tiempo Clientes : " + s.CargarVersionCliente() + " " + lista_tiempos[0] + " " + DateTime.Compare(s.CargarVersionCliente(), lista_tiempos[0]) + " Tiempo de observa " + mirarCliente);
+
+                                Console.WriteLine("Tiempo Acomp : " + s.CargarVersionAcompañante() + " " + lista_tiempos[15] + " " + DateTime.Compare(s.CargarVersionAcompañante(), lista_tiempos[15]) + " Tiempo de observa " + mirarAcompañante);
+                                Console.WriteLine("Tiempo Productos_reg2 : " + s.CargarVersionProductos_Registro2() + " " + lista_tiempos[16] + " " + DateTime.Compare(s.CargarVersionProductos_Registro2(), lista_tiempos[16]) + " Tiempo de observa " + mirarProduto_reg2);
+                                Console.WriteLine("Tiempo Productos_reg_TPV : " + s.CargarVersionProductos_Registro_TPV() + " " + lista_tiempos[18] + " " + DateTime.Compare(s.CargarVersionProductos_Registro_TPV(), lista_tiempos[18]) + " Tiempo de observa " + mirarProduto_reg_tpv);
+                                Console.WriteLine("Tiempo TPV : " + s.CargarVersionTPV() + " " + lista_tiempos[19] + " " + DateTime.Compare(s.CargarVersionTPV(), lista_tiempos[19]) + " Tiempo de observa " + mirar_tpv);
+                                Console.WriteLine("Tiempo TPV_indices : " + s.CargarVersionIndicesTPV() + " " + lista_tiempos[20] + " " + DateTime.Compare(s.CargarVersionIndicesTPV(), lista_tiempos[20]) + " Tiempo de observa " + mirartpv_indices);
+                                Console.WriteLine("Tiempo TPV_productos : " + s.CargarVersionProductosTPV() + " " + lista_tiempos[17] + " " + DateTime.Compare(s.CargarVersionProductosTPV(), lista_tiempos[17]) + " Tiempo de observa " + mirartpv_productos);
+                                Console.WriteLine("Tiempo Crepusculo : " + s.CargarVersionCrepusculo() + " " + lista_tiempos[21] + " " + DateTime.Compare(s.CargarVersionCrepusculo(), lista_tiempos[21]) + " Tiempo de observa " + mirartpv_productos);
+                                if (DateTime.Compare(s.CargarVersionEvento(), lista_tiempos[3]) < 0)
+                                {
+                                    if (mirarEven)
+                                        if (index == 0)
+                                        {
+                                            mirarEven = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                cargarEventos();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarEven = false;
+                                            cargarEventos();
+                                        }
                                 }
                                 else
+                                if (DateTime.Compare(s.CargarVersionUsuario(), lista_tiempos[2]) < 0)
                                 {
-                                    mirarEven = false;
-                                    cargarEventos();
-                                }
+                                    if (mirarUsus)
+                                        if (index == 2 && (subindex == 0 || subindex == 1))
+                                        {
+                                            mirarUsus = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        Console.WriteLine("Tiempo Usu: " + s.CargarVersionUsuario() + " " + lista_tiempos[2] + " " + DateTime.Compare(s.CargarVersionUsuario(), lista_tiempos[2]) + " Tiempo de observa ");
-                        if (DateTime.Compare(s.CargarVersionUsuario(), lista_tiempos[2]) < 0)
-                            if (mirarUsus)
-                                if (index == 2 && (subindex == 0 || subindex == 1))
-                                {
-                                    mirarUsus = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                    if (result == MessageBoxResult.OK)
-                                    {
-                                        CargarUsuarios();
-                                    }
-                                    Thread.Sleep(100);
-                                }
-                                else
-                                {
-                                    mirarUsus = false;
-                                    CargarUsuarios();
-                                }
-
-                        Console.WriteLine("Tiempo Rol: " + s.CargarVersionRol() + " " + lista_tiempos[7] + " " + DateTime.Compare(s.CargarVersionRol(), lista_tiempos[7]));
-                        if (DateTime.Compare(s.CargarVersionRol(), lista_tiempos[7]) < 0)
-                            if(mirarRoles)
-                            if (index == 2 && (subindex == 2 || subindex == 3))
-                            {
-                                    mirarRoles = false;
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar?", "Alerta!", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-
-                                if (result == MessageBoxResult.OK)
-                                {
-                                        mirarRoles = false;
-                                        CargarRoles();
-                                }
-                            }
-                            else
-                            {
-                                    mirarRoles = false;
-                                    CargarRoles();
-                            }
-                        Console.WriteLine("Tiempo IVA: " + s.CargarVersionIva() + " " + lista_tiempos[11] + " " + DateTime.Compare(s.CargarVersionIva(), lista_tiempos[11]));
-                        if (DateTime.Compare(s.CargarVersionIva(), lista_tiempos[11]) < 0)
-                            if(mirarIVAs)
-                            if (index == 2 && (subindex == 4 || subindex == 5))
-                            {
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar?", "Alerta!", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                                    mirarIVAs = false;
-                                if (result == MessageBoxResult.OK)
-                                {
-                                    CargarIva();
-                                }
-                                Thread.Sleep(100);
-                            }
-                            else
-                            {
-                                    mirarIVAs = false;
-                                    CargarIva();
-                            }
-                                             
-                        Console.WriteLine("Tiempo Contratos : " + s.CargarVersionContratos() + " " + lista_tiempos[13] + " " + DateTime.Compare(s.CargarVersionContratos(), lista_tiempos[13]) + " Tiempo de observa ");
-                        if (DateTime.Compare(s.CargarVersionContratos(), lista_tiempos[13]) < 0)
-                            if (mirarContratos)
-                            if (index == 2 && (subindex == 6 ))
-                            {
-                                    mirarContratos = false;
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? "+observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                if (result == MessageBoxResult.OK)
-                                {
-                                    CargarContratos();
-                                }
-                                Thread.Sleep(100);
-                            }
-                            else
-                                {
-                                    mirarContratos = false;
-                                    CargarContratos();
-                            }
-                        Console.WriteLine("Tiempo Vehiculo : " + s.CargarVersionVehiculos() + " " + lista_tiempos[6] + " " + DateTime.Compare(s.CargarVersionVehiculos(), lista_tiempos[6]) + " Tiempo de observa ");
-                        Console.WriteLine("ESTADO VEHICULO : " + mirarVehiculo);
-                        if (DateTime.Compare(s.CargarVersionVehiculos(), lista_tiempos[6]) < 0)
-                            if (mirarVehiculo)
-                                if (index == 2 && (subindex == 7))
-                                {
-                                    mirarVehiculo = false;
-                                    Thread.Sleep(200);
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                    if (result == MessageBoxResult.OK)
-                                    {
-                                        CargarVehiculos();
-                                    }
-                                    Thread.Sleep(100);
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarUsuarios();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarUsus = false;
+                                            CargarUsuarios();
+                                        }
                                 }
                                 else
+                                if (DateTime.Compare(s.CargarVersionRol(), lista_tiempos[7]) < 0)
                                 {
-                                    mirarVehiculo = false;
-                                    CargarVehiculos();
-                                }
-                        Console.WriteLine("Tiempo Camping : " + s.CargarVersionCamping() + " " + lista_tiempos[14] + " " + DateTime.Compare(s.CargarVersionCamping(), lista_tiempos[14]) + " Tiempo de observa ");
-                        if (DateTime.Compare(s.CargarVersionCamping(), lista_tiempos[14]) < 0)
-                            if (mirarCamping)
-                            if (index == 1)
-                            {
-                                    mirarCamping = false;
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? "+observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    if (mirarRoles)
+                                        if (index == 2 && (subindex == 2 || subindex == 3))
+                                        {
+                                            mirarRoles = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar?", "Alerta!", MessageBoxButton.OKCancel, MessageBoxImage.Information);
 
-                                if (result == MessageBoxResult.OK)
-                                {
-                                        CargarEmpresa();
-                                }
-                                Thread.Sleep(100);
-                            }
-                            else
-                            {
-                                    mirarContratos = false;
-                                    CargarEmpresa();
-                            }
-                        Console.WriteLine("Tiempo Parcelas : " + s.CargarVersionParcelas() + " " + lista_tiempos[10] + " " + DateTime.Compare(s.CargarVersionParcelas(), lista_tiempos[10]) + " Tiempo de observa ");
-                        if (DateTime.Compare(s.CargarVersionParcelas(), lista_tiempos[10]) < 0)
-                            if (mirarParcelas)
-                            if (index == 3)
-                            {
-                                    mirarParcelas = false;
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? "+observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                if (result == MessageBoxResult.OK)
-                                {
-                                        CargarParcela();
-                                }
-                                Thread.Sleep(100);
-                            }
-                            else
-                            {
-                                    mirarParcelas = false;
-                                    CargarParcela();
-                            }
-                        
-                            Console.WriteLine("Tiempo Facturas : " + s.CargarVersionFactura() + " " + lista_tiempos[4] + " " + DateTime.Compare(s.CargarVersionFactura(), lista_tiempos[4]) + " Tiempo de observa "+mirarFacturas);
-                        if (DateTime.Compare(s.CargarVersionFactura(), lista_tiempos[4]) < 0)
-                            if (mirarFacturas)
-                            if (index == 4)
-                            {
-                                    mirarFacturas = false;
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? "+observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                if (result == MessageBoxResult.OK)
-                                {
-                                        CargarFacturas();
-                                }
-                                Thread.Sleep(100);
-                            }
-                            else
-                            {
-                                    mirarFacturas = false;
-                                    CargarFacturas();
-                            }
-                        
-                            Console.WriteLine("Tiempo Recibos : " + s.CargarVersionRecibo() + " " + lista_tiempos[8] + " " + DateTime.Compare(s.CargarVersionRecibo(), lista_tiempos[8]) + " Tiempo de observa "+mirarRecibos);
-                        if (DateTime.Compare(s.CargarVersionRecibo(), lista_tiempos[8]) < 0)
-                            if (mirarRecibos)
-                            if (index == 4)
-                            {
-                                    mirarRecibos = false;
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? "+observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                if (result == MessageBoxResult.OK)
-                                {
-                                        CargarRecibos();
-                                }
-                                Thread.Sleep(100);
-                            }
-                            else
-                            {
-                                    mirarRecibos = false;
-                                    CargarRecibos();
-                            }
-                            Console.WriteLine("Tiempo Productos : " + s.CargarVersionProductos_Registrados() + " " + lista_tiempos[9] + " " + DateTime.Compare(s.CargarVersionProductos_Registrados(), lista_tiempos[9]) + " Tiempo de observa "+mirarProduto);
-                        if (DateTime.Compare(s.CargarVersionProductos_Registrados(), lista_tiempos[9]) < 0)
-                            if (mirarProduto)
-                            if (index == 4)
-                            {
-                                    mirarProduto = false;
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? "+observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                if (result == MessageBoxResult.OK)
-                                {
-                                        cargarProductosNuevos();
-                                }
-                                Thread.Sleep(100);
-                            }
-                            else
-                            {
-                                    mirarProduto = false;
-                                    cargarProductosNuevos();
-                            }
-                            Console.WriteLine("Tiempo Productos_reg : " + s.CargarVersionProductos_Registro() + " " + lista_tiempos[5] + " " + DateTime.Compare(s.CargarVersionProductos_Registro(), lista_tiempos[5]) + " Tiempo de observa "+mirarProduto_reg1);
-                        if (DateTime.Compare(s.CargarVersionProductos_Registro(), lista_tiempos[5]) < 0)
-                            if (mirarProduto_reg1)
-                            if (index == 4)
-                            {
-                                    mirarProduto_reg1 = false;
-                                MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? "+observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                if (result == MessageBoxResult.OK)
-                                    {
-                                        CargarFacturas();
-                                    }
-                                Thread.Sleep(100);
-                            }
-                            else
-                            {
-                                    mirarProduto_reg1 = false; 
-                                    CargarFacturas();
-                                }
-                            Console.WriteLine("Tiempo Clientes : " + s.CargarVersionCliente() + " " + lista_tiempos[0] + " " + DateTime.Compare(s.CargarVersionCliente(), lista_tiempos[0]) + " Tiempo de observa "+mirarCliente);
-                        if (DateTime.Compare(s.CargarVersionCliente(), lista_tiempos[0]) < 0)
-                            if (mirarCliente)
-                                if (index == 3)
-                                {
-                                    mirarCliente = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                    if (result == MessageBoxResult.OK)
-                                    {
-
-                                        cargarClientes();
-                                    }
-                                    Thread.Sleep(100);
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                mirarRoles = false;
+                                                CargarRoles();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            mirarRoles = false;
+                                            CargarRoles();
+                                        }
                                 }
                                 else
+                                if (DateTime.Compare(s.CargarVersionIva(), lista_tiempos[11]) < 0)
                                 {
-                                    mirarCliente = false;
-                                    cargarClientes();
+                                    if (mirarIVAs)
+                                        if (index == 2 && (subindex == 4 || subindex == 5))
+                                        {
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar?", "Alerta!", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                                            mirarIVAs = false;
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarIva();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarIVAs = false;
+                                            CargarIva();
+                                        }
                                 }
-                            Console.WriteLine("Tiempo Acomp : " + s.CargarVersionAcompañante() + " " + lista_tiempos[15] + " " + DateTime.Compare(s.CargarVersionAcompañante(), lista_tiempos[15]) + " Tiempo de observa "+ mirarAcompañante);
-                        if (DateTime.Compare(s.CargarVersionAcompañante(), lista_tiempos[15]) < 0)
-                            if (mirarAcompañante)
-                                if (index == 3)
+                                else
+                                if (DateTime.Compare(s.CargarVersionContratos(), lista_tiempos[13]) < 0)
                                 {
-                                    mirarAcompañante = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    if (mirarContratos)
+                                        if (index == 2 && (subindex == 6))
+                                        {
+                                            mirarContratos = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                                    if (result == MessageBoxResult.OK)
-                                    {
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarContratos();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarContratos = false;
+                                            CargarContratos();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionVehiculos(), lista_tiempos[6]) < 0)
+                                {
+                                    if (mirarVehiculo)
+                                        if (index == 2 && (subindex == 7))
+                                        {
+                                            mirarVehiculo = false;
+                                            Thread.Sleep(200);
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
 
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarVehiculos();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarVehiculo = false;
+                                            CargarVehiculos();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionCamping(), lista_tiempos[14]) < 0)
+                                {
+                                    if (mirarCamping)
+                                        if (index == 2 && (subindex == 8))
+                                        {
+                                            mirarCamping = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarEmpresa();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarCamping = false;
+                                            CargarEmpresa();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionParcelas(), lista_tiempos[10]) < 0)
+                                {
+                                    if (mirarParcelas)
+                                        if (index == 3)
+                                        {
+                                            mirarParcelas = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarParcela();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarParcelas = false;
+                                            CargarParcela();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionFactura(), lista_tiempos[4]) < 0)
+                                {
+                                    if (mirarFacturas)
+                                        if (index == 4)
+                                        {
+                                            mirarFacturas = false;
+                                            mirarProduto_reg1 = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarFacturas();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarFacturas = false;
+                                            CargarFacturas();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionRecibo(), lista_tiempos[8]) < 0)
+                                {
+                                    if (mirarRecibos)
+                                        if (index == 4)
+                                        {
+                                            mirarRecibos = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarRecibos();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarRecibos = false;
+                                            CargarRecibos();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionProductos_Registrados(), lista_tiempos[9]) < 0)
+                                {
+                                    if (mirarProduto)
+                                        if (index == 4)
+                                        {
+                                            mirarProduto = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                cargarProductosNuevos();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarProduto = false;
+                                            cargarProductosNuevos();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionProductos_Registro(), lista_tiempos[5]) < 0)
+                                {
+                                    if (mirarProduto_reg1)
+                                        if (index == 4)
+                                        {
+                                            mirarProduto_reg1 = false;
+                                            mirarFacturas = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarFacturas();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarProduto_reg1 = false;
+                                            CargarFacturas();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionAcompañante(), lista_tiempos[15]) < 0)
+                                {
+                                    if (!cargandoCliente && mirarAcompañante && mirarCliente && !cargandoAcompañantes)
+                                        if (index == 1)
+                                        {
+                                            mirarAcompañante = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                
+                                               clientebool = true;
+                                                cargarAcompañantes();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarAcompañante = false;
+                                            clientebool = true;
                                         cargarAcompañantes();
-                                    }
-                                    Thread.Sleep(100);
+                                        }
+                                }else
+                                if (DateTime.Compare(s.CargarVersionCliente(), lista_tiempos[0]) < 0)
+                                {
+                                    if (!cargandoCliente&&mirarCliente)
+                                        if (index == 1)
+                                        {
+                                            mirarCliente = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+
+                                                clientebool = true;
+                                                cargarClientes();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarCliente = false;
+                                            clientebool = true;
+                                            cargarClientes();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionProductos_Registro2(), lista_tiempos[16]) < 0)
+                                {
+                                    if (mirarProduto_reg2)
+                                        if (index == 4)
+                                        {
+                                            mirarProduto_reg2 = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarRecibos();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarProduto_reg2 = false;
+                                            CargarRecibos();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionProductos_Registro_TPV(), lista_tiempos[18]) < 0)
+                                {
+                                    if (mirarProduto_reg_tpv)
+                                        if (index == 6)
+                                        {
+                                            mirarProduto_reg_tpv = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarTPV();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarProduto_reg_tpv = false;
+                                            CargarTPV();
+                                        }
+                                }else
+                                if (DateTime.Compare(s.CargarVersionTPV(), lista_tiempos[19]) < 0)
+                                {
+                                    if (mirar_tpv)
+                                        if (index == 6)
+                                        {
+                                            mirar_tpv = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarTPV();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirar_tpv = false;
+                                            CargarTPV();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionIndicesTPV(), lista_tiempos[20]) < 0)
+                                {
+                                    if (mirartpv_indices)
+                                        if (index == 6)
+                                        {
+                                            mirartpv_indices = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                cargarIndicesTPV();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirartpv_indices = false;
+                                            cargarIndicesTPV();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionProductosTPV(), lista_tiempos[17]) < 0)
+                                {
+                                    if (mirartpv_productos)
+                                        if (index == 6)
+                                        {
+                                            mirartpv_productos = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                cargarProductosTPV();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirartpv_productos = false;
+                                            cargarProductosTPV();
+                                        }
+                                }
+                                else
+                                if (DateTime.Compare(s.CargarVersionCrepusculo(), lista_tiempos[21]) < 0)
+                                {
+                                    if (mirarCrepusculo)
+                                        if (index == 2 && (subindex == 6))
+                                        {
+                                            mirarCrepusculo = false; timepo = false;
+                                            MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                            if (result == MessageBoxResult.OK)
+                                            {
+                                                CargarCrepusculo();
+                                            }
+                                            Thread.Sleep(100);
+                                        }
+                                        else
+                                        {
+                                            mirarCrepusculo = false; timepo = false;
+                                            CargarCrepusculo();
+                                        }
                                 }
                                 else
                                 {
-                                    mirarAcompañante = false;
-                                    cargarAcompañantes();
-                                }
-                        Console.WriteLine("Tiempo Productos_reg2 : " + s.CargarVersionProductos_Registro2() + " " + lista_tiempos[16] + " " + DateTime.Compare(s.CargarVersionProductos_Registro2(), lista_tiempos[16]) + " Tiempo de observa " + mirarProduto_reg2);
-                        if (DateTime.Compare(s.CargarVersionProductos_Registro2(), lista_tiempos[16]) < 0)
-                            if (mirarProduto_reg2)
-                                if (index == 4)
-                                {
-                                    mirarProduto_reg2 = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                    if (result == MessageBoxResult.OK)
+                                    if(mirarSincronizacion)
                                     {
-                                        CargarRecibos();
+                                        Dispatcher.Invoke(() =>
+                                        {
+
+
+                                            llogg.Close();
+                                            mirarSincronizacion = false;
+                                        });
                                     }
-                                    Thread.Sleep(100);
-                                }
-                                else
-                                {
-                                    mirarProduto_reg2 = false;
-                                    CargarRecibos();
-                                }
-                        Console.WriteLine("Tiempo Productos_reg_TPV : " + s.CargarVersionProductos_Registro_TPV() + " " + lista_tiempos[17] + " " + DateTime.Compare(s.CargarVersionProductos_Registro_TPV(), lista_tiempos[17]) + " Tiempo de observa " + mirarProduto_reg_tpv);
-                        if (DateTime.Compare(s.CargarVersionProductos_Registro_TPV(), lista_tiempos[17]) < 0)
-                            if (mirarProduto_reg_tpv)
-                                if (index == 4)
-                                {
-                                    mirarProduto_reg_tpv = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                    if (result == MessageBoxResult.OK)
-                                    {
-                                        CargarTPV();
-                                    }
-                                    Thread.Sleep(100);
-                                }
-                                else
-                                {
-                                    mirarProduto_reg_tpv = false;
-                                    CargarTPV();
-                                }
-                        Console.WriteLine("Tiempo TPV : " + s.CargarVersionTPV() + " " + lista_tiempos[19] + " " + DateTime.Compare(s.CargarVersionTPV(), lista_tiempos[19]) + " Tiempo de observa " + mirar_tpv);
-                        if (DateTime.Compare(s.CargarVersionTPV(), lista_tiempos[19]) < 0)
-                            if (mirar_tpv)
-                                if (index == 5)
-                                {
-                                    mirar_tpv = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                    if (result == MessageBoxResult.OK)
-                                    {
-                                        CargarTPV();
-                                    }
-                                    Thread.Sleep(100);
-                                }
-                                else
-                                {
-                                    mirar_tpv = false;
-                                    CargarTPV();
-                                }
-                        Console.WriteLine("Tiempo TPV_indices : " + s.CargarVersionIndicesTPV() + " " + lista_tiempos[20] + " " + DateTime.Compare(s.CargarVersionIndicesTPV(), lista_tiempos[20]) + " Tiempo de observa " + mirartpv_indices);
-                        if (DateTime.Compare(s.CargarVersionIndicesTPV(), lista_tiempos[20]) < 0)
-                            if (mirartpv_indices)
-                                if (index == 5)
-                                {
-                                    mirartpv_indices = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                    if (result == MessageBoxResult.OK)
-                                    {
-                                        cargarIndicesTPV();
-                                    }
-                                    Thread.Sleep(100);
-                                }
-                                else
-                                {
-                                    mirartpv_indices = false;
-                                    cargarIndicesTPV();
-                                }
-                        Console.WriteLine("Tiempo TPV_productos : " + s.CargarVersionProductosTPV() + " " + lista_tiempos[18] + " " + DateTime.Compare(s.CargarVersionProductosTPV(), lista_tiempos[18]) + " Tiempo de observa " + mirartpv_productos);
-                        if (DateTime.Compare(s.CargarVersionProductosTPV(), lista_tiempos[18]) < 0)
-                            if (mirartpv_productos)
-                                if (index == 5)
-                                {
-                                    mirartpv_productos = false;
-                                    MessageBoxResult result = MessageBox.Show("Hay cambios en la Base de datos Externa para esta pestaña, ¿quieres actualizar? " + observartodo, "Alerta!", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                                    if (result == MessageBoxResult.OK)
-                                    {
-                                        cargarProductosTPV();
-                                    }
-                                    Thread.Sleep(100);
-                                }
-                                else
-                                {
-                                    mirartpv_productos = false;
-                                    cargarProductosTPV();
                                 }
 
-                        /*
-                                  0. CLIENTES
-                            1. ALARMAS
-                            2- USUARIOS
-                            3. EVENTOS
-                            4.FACTURAS
-                            5.PRODUCTOS FACTURA                                        
-                            6. Vehiculos
-                            7. Rol
-                            8- Recibo
-                            9.productosregistrados
-                            10.parcelas
-                            11- IVA
-                            12. Direcciones
-                            13.Contratos
-                            14.Camping
-                            15. Acompañante
-                            16. PRODUCTOS RECIBOS
-                            17. Productos_tpv
-                            18. Productos_Registro_TPV
-                            19. TPV
-                            20. TPV Indices  
-                          */
+                                /*
+                                          0. CLIENTES
+                                    1. ALARMAS
+                                    2- USUARIOS
+                                    3. EVENTOS
+                                    4.FACTURAS
+                                    5.PRODUCTOS FACTURA                                        
+                                    6. Vehiculos
+                                    7. Rol
+                                    8- Recibo
+                                    9.productosregistrados
+                                    10.parcelas
+                                    11- IVA
+                                    12. Direcciones
+                                    13.Contratos
+                                    14.Camping
+                                    15. Acompañante
+                                    16. PRODUCTOS RECIBOS
+                                    17. Productos_tpv
+                                    18. Productos_Registro_TPV
+                                    19. TPV
+                                    20. TPV Indices  
+                                  */
 
-                        safe2 = true;
+
+
+                                Console.WriteLine("OBSERVAR TODO 1");
+                                Dispatcher.InvokeAsync(() =>
+                                {
+                                    pictureBox.Visibility = Visibility.Collapsed;
+                                });
+                                cargartiempos();
+
+
+                                Console.WriteLine("Saliendo de observartodo: " + observartodo);
+                            }
                         
-
-                        Console.WriteLine("OBSERVAR TODO 1");
-                        Dispatcher.InvokeAsync(() =>
-                        {
-                            pictureBox.Visibility = Visibility.Collapsed;
-                        });
-                        cargartiempos();
-
+                        
+                            safe2 = true;
                         observartodo = false;
-
-                        Console.WriteLine("Saliendo de observartodo: " + observartodo);
                     }
                     catch (Exception ee)
                     {
@@ -9343,6 +10320,20 @@ namespace SGC
 
                     }
                 }
+                else
+                {
+                    if (tiempo_espera == null)
+                        tiempo_espera = DateTime.Now;
+                    else {
+                        TimeSpan ts = DateTime.Now - (DateTime)tiempo_espera;
+                        if (ts.TotalSeconds > 8)
+                        {
+                            observartodo = false; esperarConsultas = false; tiempo_espera = null;
+                        }
+
+                    }
+                }
+
             }
             catch (Exception ee)
             {
@@ -9755,7 +10746,7 @@ namespace SGC
                                             idd = int.Parse(p["Id"]+"");
                                         }
                                         Thread.Sleep(300);
-                                        string sql_query4 = "UPDATE Camping_v SET TIME='" + DateTime.Now + "' WHERE Id=1";
+                                        string sql_query4 = "UPDATE Camping_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
                                         cmd3.ExecuteNonQuery();
@@ -9763,7 +10754,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Camping'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                       // cmd3.ExecuteNonQuery();
 
                                     }
                                 }
@@ -9771,6 +10762,7 @@ namespace SGC
 
 
                             mirarCamping = true;
+                            timepo = false;
 
 
                         }
@@ -9779,6 +10771,7 @@ namespace SGC
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
                             mirarCamping = true;
+                            timepo = false;
                         };
                     }
                 }
@@ -9786,6 +10779,8 @@ namespace SGC
             catch(Exception ee)
             {
                 Console.WriteLine(ee.Message);
+                            mirarCamping = true;
+                            timepo = false;
             }
 
             try
@@ -12197,6 +13192,7 @@ namespace SGC
                 }
                 SQLiteCommand sql_cmd = new SQLiteCommand(sql_query, cn);
                 consulta = new Consulta("Evento", parametros, "Id:" + e.id, "DELETE");
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
                 cambio = true;
                 lvw = null;
@@ -15038,6 +16034,7 @@ namespace SGC
             {
                 lista_clientes_ficha = lcln.Select(x => x).Where(x => x.DeBaja == true).ToList();
             }
+            cargarClientes();
             if (lista_clientes_ficha.Count > 0)
             {
                 ficha.IsEnabled = true;
@@ -15057,11 +16054,16 @@ namespace SGC
                     }
                     else
                     {
-                        if (posicion >= lista_clientes_ficha.Count())
-                            Clientes.SelectedItem = lista_clientes_ficha[posicion - 1];
-                        else
-                            Clientes.SelectedItem = lista_clientes_ficha[posicion];
-
+                        try
+                        {
+                            if (posicion >= lista_clientes_ficha.Count())
+                                Clientes.SelectedItem = lista_clientes_ficha[posicion - 1];
+                            else
+                                Clientes.SelectedItem = lista_clientes_ficha[posicion];
+                        }catch
+                        {
+                            Clientes.SelectedItem = lista_clientes_ficha[lista_clientes_ficha.Count() - 1];
+                        }
                     }
                 }
                 else
@@ -15405,7 +16407,8 @@ namespace SGC
             {
                 Clientes c = Clientes.SelectedItem as Clientes;
                 string cn_String = conexiondb;
-                Consulta consulta = new Consulta("Cliente", null, "Id:" + c.id, "DELETE");
+                List<string> l = new List<string>();
+                Consulta consulta = new Consulta("Cliente", l, "Id:" + c.id, "DELETE");
                 SQLiteConnection cn = new SQLiteConnection(cn_String);
                 if (cn.State != ConnectionState.Open) cn.Open();
                 SQLiteCommand sql_cmd = new SQLiteCommand("DELETE FROM Cliente WHERE Id=" + c.id, cn);
@@ -15415,6 +16418,7 @@ namespace SGC
                 }
                 sql_cmd.ExecuteNonQuery();
 
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
 
                 cn.Close();
@@ -15486,6 +16490,7 @@ namespace SGC
                 }
 
                 Registros.SelectedItem = null;
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
 
                 string cn_string = conexiondb;
@@ -16437,6 +17442,7 @@ namespace SGC
 
                                 }
                                 consulta = new Consulta("Cliente", parametros, "", "INSERT");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                                 clearall();
                                 string cn_string = conexiondb;
@@ -17087,418 +18093,433 @@ namespace SGC
 
         private void mirar(object sender, TextChangedEventArgs e)
         {
-            if (!comprobaciones)
+            try
             {
-                Clientes cc = Clientes.SelectedItem as Clientes;
-                if (mirar2)
-                    if (!(cc is null))
-                    {
-                        int pot = 0;
-                        if (Potencia.SelectedItem != null)
+                if (!comprobaciones)
+                {
+                    Clientes cc = Clientes.SelectedItem as Clientes;
+                    if (mirar2)
+                        if (!(cc is null))
                         {
-                            Potencia pp = Potencia.SelectedItem as Potencia;
-                            pot = pp.Id;
-                        }
-                        /*int b = 0;
-                        if (Switch.IsChecked.Value)
-                        {
-                            b = 1;
-                        }*/
-                        Parcelas p = numero_plaza.SelectedItem as Parcelas;
-
-
-                        if (p == null)
-                            p = new Parcelas();
-
-                        if (cc.Fecha_In != null)
-                        {
-
-                        }
-                        else
-                        {
-
-                        }
-                        //////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
-                        ////Console.writeLine(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
-                        //////Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
-                        ////Console.writeLine((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
-
-                        if (p.id == null)
-                            p.id = 0;
-                        bool pos = false;
-                        if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
-                            pos = true;
-                        ////Console.writeLine(p.id + " " + cc.n_plaza);
-
-
-
-                        string cd = "";
-                        string cd2 = "";
-                        if (cc.caducidad.Contains("/"))
-                        {
-                            cd = cc.caducidad.Split('/')[0];
-                            cd2 = cc.caducidad.Split('/')[1];
-                        }
-
-                        //Console.writeLine(email_cliente.Text.Equals(cc.mail));
-                        //Console.writeLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
-                        //Console.writeLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
-                        //Console.writeLine(pais_cliente_alta.Text.Equals(cc.Pais));
-                        //Console.writeLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
-                        //Console.writeLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
-                        //Console.writeLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
-                        //Console.writeLine(direccion_cliente_alta.Text.Equals(cc.direccion));
-                        //Console.writeLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
-                        //Console.writeLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
-                        string aa = Clientes_FechaEntrada_alta.SelectedDate.ToString();
-                        string aa2 = cc.Fecha_In.ToString();
-
-
-                        //Console.writeLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
-                        //Console.writeLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
-                        //Console.writeLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
-                        //Console.writeLine((nota1_alta.Text.Equals(cc.Nota1))); //
-                        ////Console.writeLine((b == cc.Switch)); //
-                        //Console.writeLine((p.id == int.Parse(cc.n_plaza))); //
-                        //Console.writeLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
-                        //Console.writeLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
-                        //Console.writeLine((email_cliente2.Text.Equals(cc.mail2))); //
-                        //Console.writeLine((pos == cc.DeBaja)); //
-                        //Console.writeLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
-                        //Console.writeLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
-                        //Console.writeLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
-                        String s = "";
-
-                        if ((bool)lucheck.IsChecked)
-                            s += "1";
-                        else
-                            s += "0";
-                        if ((bool)mrcheck.IsChecked)
-                            s += "1";
-                        else
-                            s += "0";
-                        if ((bool)mccheck.IsChecked)
-                            s += "1";
-                        else
-                            s += "0";
-                        if ((bool)jvcheck.IsChecked)
-                            s += "1";
-                        else
-                            s += "0";
-                        if ((bool)vrcheck.IsChecked)
-                            s += "1";
-                        else
-                            s += "0";
-                        if ((bool)sbcheck.IsChecked)
-                            s += "1";
-                        else
-                            s += "0";
-                        if ((bool)dmcheck.IsChecked)
-                            s += "1";
-                        else
-                            s += "0";
-
-                        if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && cc.Semana.Equals(s) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && tarjeta.Text.Equals(cc.N_tarjeta) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && nota.Text.Equals(cc.Nota1) && tarjeta.Text.Equals(cc.N_tarjeta) && nota.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
-                        {
-                            //Console.writeLine("27584");
-                            change_client.IsEnabled = false;
-
-                            change_client.IsEnabled = false;
-                            safe = false;
-                            //añadir_evento.IsEnabled = false;
-                        }
-                        else
-                        {
-                            //Console.writeLine("!27584");
-                            change_client.IsEnabled = true;
-
-                            change_client.IsEnabled = true;
-                            safe = true;
-                            //añadir_evento.IsEnabled = true;
-                        }
-                        
-
-                        try
-                        {
-
-
-
-
-
-                            if (!(tarjeta.Text.Equals(cc.N_tarjeta + "")))
+                            int pot = 0;
+                            if (Potencia.SelectedItem != null)
                             {
-                                tarjeta.BorderBrush = Brushes.Red;
+                                Potencia pp = Potencia.SelectedItem as Potencia;
+                                pot = pp.Id;
+                            }
+                            /*int b = 0;
+                            if (Switch.IsChecked.Value)
+                            {
+                                b = 1;
+                            }*/
+                            Parcelas p = numero_plaza.SelectedItem as Parcelas;
+
+
+                            if (p == null)
+                                p = new Parcelas();
+
+                            if (cc.Fecha_In != null)
+                            {
+
                             }
                             else
                             {
-                                BrushConverter bc = new BrushConverter();
-                                tarjeta.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            
-                            if (!(vehiculo1.Text.Equals(cc.Vehiculo1)))
-                            {
-                                vehiculo1.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                vehiculo1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(vehiculo2.Text.Equals(cc.Vehiculo2 + "")))
-                            {
-                                vehiculo2.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                vehiculo2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(vehiculo3.Text.Equals(cc.Vehiculo3 + "")))
-                            {
-                                vehiculo3.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                vehiculo3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(vehiculo4.Text.Equals(cc.Vehiculo4 + "")))
-                            {
-                                vehiculo4.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                vehiculo4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(nbastidor2.Text.Equals(cc.Numero_Bastidor2 + "")))
-                            {
-                                nbastidor2.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                nbastidor2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(nbastidor3.Text.Equals(cc.Numero_Bastidor3 + "")))
-                            {
-                                nbastidor3.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                nbastidor3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(nbastidor4.Text.Equals(cc.Numero_Bastidor4 + "")))
-                            {
-                                nbastidor4.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                nbastidor4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(bastidor.Text.Equals(cc.Numero_Bastidor1 + "")))
-                            {
-                                bastidor.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                bastidor.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(numero_cliente.Text.Equals(cc.n_cliemte + "")))
-                            {
-                                numero_cliente.BorderBrush = Brushes.Red;
-                            }
 
-                            if (!(numero_cliente.Text.Equals(cc.n_cliemte + "")))
-                            {
-                                numero_cliente.BorderBrush = Brushes.Red;
                             }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                numero_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
+                            //////Console.writeLine(numero_secreto.Text.Equals(cc.numero_secreto.ToString()) + " " + caducidad.Text.Equals(cc.caducidad.Split('/')[0]) + " " + caducidad1.Text.Equals(cc.caducidad.Split('/')[1]) + " " + titular_tarjeta.Text.Equals(cc.titular) + " " + numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) + " " + mail_cliente.Text.Equals(cc.mail) + " " + telefonos_cliente2.Text.Equals(cc.telefon2) + " " + telefonos_cliente.Text.Equals(cc.telefon1));
+                            ////Console.writeLine(pais.Text.Equals(cc.Pais) + " " + provincia.Text.Equals(cc.Provincia) + " " + poblacion_cliente.Text.Equals(cc.poblacio) + " " + CP.Text.Equals(cc.codigo_postal) + " " + puerta.Text.Equals(cc.Puerta) + " " + piso.Text.Equals(cc.Piso) + " " + numero.Text.Equals(cc.Numero) + " " + direccion_cliente.Text.Equals(cc.direccion) + " " + dni.Text.Equals(cc.dni) + " " + apellidos_cliente.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente.Text.Equals(cc.nombre_cliente));
+                            //////Console.writeLine(numero_cliente.Text.Equals(cc.n_cliemte) +" "+ Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In) +" "+ Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out) +" "+ vehiculo1.Text.Equals(cc.Vehiculo1) +" "+ matricula1.Text.Equals(cc.matricula1) +" "+ numero_bastidor.Text.Equals(cc.Numero_Bastidor1) +" "+ vehiculo2.Text.Equals(cc.Vehiculo2) +" "+ matricula2.Text.Equals(cc.matricula2) +" "+ numero_bastidor2.Text.Equals(cc.Numero_Bastidor2)  +" "+ nota1.Text.Equals(cc.Nota1) +" "+ Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) +" "+ Clientes_HoraSalida.Text.Equals(cc.Hora_salida));
+                            ////Console.writeLine((b == cc.Switch) + " " + (p.id == int.Parse(cc.n_plaza)) + " " + (pot == cc.Potencia));
+
+                            if (p.id == null)
+                                p.id = 0;
+                            bool pos = false;
+                            if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
+                                pos = true;
+                            ////Console.writeLine(p.id + " " + cc.n_plaza);
 
 
-                            Parcelas pr = numero_plaza.SelectedItem as Parcelas;
-                            if (pr != null)
-                                if (cc.n_plaza != pr.id + "")
+
+                            string cd = "";
+                            string cd2 = "";
+                            if (cc.caducidad.Contains("/"))
+                            {
+                                cd = cc.caducidad.Split('/')[0];
+                                cd2 = cc.caducidad.Split('/')[1];
+                            }
+
+                            //Console.writeLine(email_cliente.Text.Equals(cc.mail));
+                            //Console.writeLine(telefono2_cliente_alta.Text.Equals(cc.telefon2));
+                            //Console.writeLine(telefono_cliente_alta.Text.Equals(cc.telefon1));
+                            //Console.writeLine(pais_cliente_alta.Text.Equals(cc.Pais));
+                            //Console.writeLine(provincia_cliente_alta.Text.Equals(cc.Provincia));
+                            //Console.writeLine(poblacion_cliente_alta.Text.Equals(cc.poblacio));
+                            //Console.writeLine(cp_cliente_alta.Text.Equals(cc.codigo_postal));
+                            //Console.writeLine(direccion_cliente_alta.Text.Equals(cc.direccion));
+                            //Console.writeLine(apellido_cliente_alta.Text.Equals(cc.apellidos_cliente) + " " + nombre_cliente_alta.Text.Equals(cc.nombre_cliente));
+                            //Console.writeLine(numero_cliente_alta.Text.Equals(cc.n_cliemte + ""));
+                            string aa = Clientes_FechaEntrada_alta.SelectedDate.ToString();
+                            string aa2 = cc.Fecha_In.ToString();
+
+
+                            //Console.writeLine(Vehiculo1_alta.Text.Equals(cc.Vehiculo1 + "")); //
+                            //Console.writeLine(bastidor1_alta.Text.Equals(cc.matricula1)); //
+                            //Console.writeLine(Vehiculo2_alta.Text.Equals(cc.Vehiculo2) + " " + bastidor2_alta.Text.Equals(cc.matricula2)); //
+                            //Console.writeLine((nota1_alta.Text.Equals(cc.Nota1))); //
+                            ////Console.writeLine((b == cc.Switch)); //
+                            //Console.writeLine((p.id == int.Parse(cc.n_plaza))); //
+                            //Console.writeLine((Clientes_HoraEntrada_alta.Text.Equals(cc.Hora_entrada))); //
+                            //Console.writeLine((Clientes_HoraPeriodo_alta.Text.Equals(cc.Hora_salida))); //
+                            //Console.writeLine((email_cliente2.Text.Equals(cc.mail2))); //
+                            //Console.writeLine((pos == cc.DeBaja)); //
+                            //Console.writeLine((Clientes_FechaPeriodo_alta.SelectedDate == cc.fecha_entrada_estado)); //
+                            //Console.writeLine((Clientes_FechaPago_alta.SelectedDate == cc.fecha_pago));
+                            //Console.writeLine((medidas_alta.Text.Equals(cc.Medidas_Vehiculo1)));
+                            String s = "";
+
+                            if ((bool)lucheck.IsChecked)
+                                s += "1";
+                            else
+                                s += "0";
+                            if ((bool)mrcheck.IsChecked)
+                                s += "1";
+                            else
+                                s += "0";
+                            if ((bool)mccheck.IsChecked)
+                                s += "1";
+                            else
+                                s += "0";
+                            if ((bool)jvcheck.IsChecked)
+                                s += "1";
+                            else
+                                s += "0";
+                            if ((bool)vrcheck.IsChecked)
+                                s += "1";
+                            else
+                                s += "0";
+                            if ((bool)sbcheck.IsChecked)
+                                s += "1";
+                            else
+                                s += "0";
+                            if ((bool)dmcheck.IsChecked)
+                                s += "1";
+                            else
+                                s += "0";
+
+                            if (numero_secreto.Text.Equals(cc.numero_secreto.ToString()) && cc.Semana.Equals(s) && caducidad.Text.Equals(cd) && caducidad1.Text.Equals(cd2) && titular_tarjeta.Text.Equals(cc.titular) && numero_tarjeta.Text.Equals(cc.n_tarjeta.ToString()) && tarjeta.Text.Equals(cc.N_tarjeta) && mail_cliente.Text.Equals(cc.mail) && telefonos_cliente2.Text.Equals(cc.telefon2) && telefonos_cliente.Text.Equals(cc.telefon1) && pais.Text.Equals(cc.Pais) && provincia.Text.Equals(cc.Provincia) && poblacion_cliente.Text.Equals(cc.poblacio) && CP.Text.Equals(cc.codigo_postal) && puerta.Text.Equals(cc.Puerta) && piso.Text.Equals(cc.Piso) && numero.Text.Equals(cc.Numero) && direccion_cliente.Text.Equals(cc.direccion) && dni.Text.Equals(cc.dni) && apellidos_cliente.Text.Equals(cc.apellidos_cliente) && nombre_cliente.Text.Equals(cc.nombre_cliente) && numero_cliente.Text.Equals(cc.n_cliemte + "") && Clientes_FechaEntrada.SelectedDate == cc.Fecha_In && Clientes_FechaSalida.SelectedDate == cc.Fecha_Out && vehiculo1.Text.Equals(cc.Vehiculo1) && matricula1.Text.Equals(cc.matricula1) && vehiculo2.Text.Equals(cc.Vehiculo2) && matricula2.Text.Equals(cc.matricula2) && vehiculo3.Text.Equals(cc.Vehiculo3) && matricula3.Text.Equals(cc.matricula3) && vehiculo4.Text.Equals(cc.Vehiculo4) && matricula2.Text.Equals(cc.matricula2) && pot == cc.Potencia && nota1.Text.Equals(cc.Nota1) && nota.Text.Equals(cc.Nota1) && tarjeta.Text.Equals(cc.N_tarjeta) && nota.Text.Equals(cc.Nota1) && p.id == int.Parse(cc.n_plaza) && Clientes_HoraEntrada.Text.Equals(cc.Hora_entrada) && Clientes_HoraSalida.Text.Equals(cc.Hora_salida) && Iban.Text.Equals(cc.iban) && Swift.Text.Equals(cc.swift) && entidad_bancaria.Text.Equals(cc.entidad_bacnaria) && Iban2.Text.Equals(cc.iban2) && Swift2.Text.Equals(cc.swift2) && entidad_bancaria2.Text.Equals(cc.entidad_bacnaria2) && mail_cliente2.Text.Equals(cc.mail2) && pos == cc.DeBaja && Fecha_Entrada_Estado.SelectedDate == cc.fecha_entrada_estado && Fecha_Contrato.SelectedDate == cc.fecha_contrato && Fecha_Pago.SelectedDate == cc.fecha_pago && medidas_vehiculo1.Text.Equals(cc.Medidas_Vehiculo1))
+                            {
+                                //Console.writeLine("27584");
+                                change_client.IsEnabled = false;
+
+                                change_client.IsEnabled = false;
+                                safe = false;
+                                //añadir_evento.IsEnabled = false;
+                            }
+                            else
+                            {
+                                //Console.writeLine("!27584");
+                                change_client.IsEnabled = true;
+
+                                change_client.IsEnabled = true;
+                                safe = true;
+                                //añadir_evento.IsEnabled = true;
+                            }
+
+
+                            try
+                            {
+
+
+
+
+
+                                if (!(tarjeta.Text.Equals(cc.N_tarjeta + "")))
                                 {
-
-                                    numero_plaza.BorderBrush = Brushes.Red;
+                                    tarjeta.BorderBrush = Brushes.Red;
                                 }
                                 else
                                 {
                                     BrushConverter bc = new BrushConverter();
-                                    numero_plaza.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                    tarjeta.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+
+                                if (!(vehiculo1.Text.Equals(cc.Vehiculo1)))
+                                {
+                                    vehiculo1.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    vehiculo1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(vehiculo2.Text.Equals(cc.Vehiculo2 + "")))
+                                {
+                                    vehiculo2.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    vehiculo2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(vehiculo3.Text.Equals(cc.Vehiculo3 + "")))
+                                {
+                                    vehiculo3.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    vehiculo3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(vehiculo4.Text.Equals(cc.Vehiculo4 + "")))
+                                {
+                                    vehiculo4.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    vehiculo4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(nbastidor2.Text.Equals(cc.Numero_Bastidor2 + "")))
+                                {
+                                    nbastidor2.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    nbastidor2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(nbastidor3.Text.Equals(cc.Numero_Bastidor3 + "")))
+                                {
+                                    nbastidor3.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    nbastidor3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(nbastidor4.Text.Equals(cc.Numero_Bastidor4 + "")))
+                                {
+                                    nbastidor4.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    nbastidor4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(bastidor.Text.Equals(cc.Numero_Bastidor1 + "")))
+                                {
+                                    bastidor.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    bastidor.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(numero_cliente.Text.Equals(cc.n_cliemte + "")))
+                                {
+                                    numero_cliente.BorderBrush = Brushes.Red;
+                                }
+
+                                if (!(numero_cliente.Text.Equals(cc.n_cliemte + "")))
+                                {
+                                    numero_cliente.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    numero_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+
+
+                                Parcelas pr = numero_plaza.SelectedItem as Parcelas;
+                                if (pr != null)
+                                    if (cc.n_plaza != pr.id + "")
+                                    {
+
+                                        numero_plaza.BorderBrush = Brushes.Red;
+                                    }
+                                    else
+                                    {
+                                        BrushConverter bc = new BrushConverter();
+                                        numero_plaza.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                    }
+
+
+
+
+                                if (!(cc.nombre_cliente.Equals(nombre_cliente.Text)))
+                                {
+                                    nombre_cliente.BorderBrush = Brushes.Red;
+
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    nombre_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Nota1.Equals(nota.Text)))
+                                {
+                                    nota.BorderBrush = Brushes.Red;
+
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    nota.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+
+                                if (!(cc.apellidos_cliente.Equals(apellidos_cliente.Text)))
+                                {
+                                    apellidos_cliente.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    apellidos_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+
+                                if (!(cc.dni.Equals(dni.Text)))
+                                {
+                                    dni.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    dni.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
                                 }
 
 
 
+                                if (!(cc.direccion.Equals(direccion_cliente.Text)))
+                                {
 
-                            if (!(cc.nombre_cliente.Equals(nombre_cliente.Text)))
-                            {
-                                nombre_cliente.BorderBrush = Brushes.Red;
+                                    direccion_cliente.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    direccion_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
+                                }
 
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                nombre_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                if (!(cc.poblacio.Equals(poblacion_cliente.Text)))
+                                {
+                                    poblacion_cliente.BorderBrush = Brushes.Red;
 
-                            }
-                            if (!(cc.Nota1.Equals(nota.Text)))
-                            {
-                                nota.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    poblacion_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
+                                }
 
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                nota.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                if (!(cc.telefon1.Equals(telefonos_cliente.Text)))
+                                {
 
-                            }
-
-
-                            if (!(cc.apellidos_cliente.Equals(apellidos_cliente.Text)))
-                            {
-                                apellidos_cliente.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                apellidos_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
+                                    telefonos_cliente.BorderBrush = Brushes.Red;
 
 
-                            if (!(cc.dni.Equals(dni.Text)))
-                            {
-                                dni.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    telefonos_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                dni.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
 
-                            }
+                                if (!(cc.telefon2.Equals(telefonos_cliente2.Text)))
+                                {
+                                    telefonos_cliente2.BorderBrush = Brushes.Red;
 
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    telefonos_cliente2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
+                                }
 
-                            if (!(cc.direccion.Equals(direccion_cliente.Text)))
-                            {
+                                if (!cc.codigo_postal.Equals(CP.Text))
+                                {
+                                    CP.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    CP.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
-                                direccion_cliente.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                direccion_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(cc.mail.Equals(mail_cliente.Text)))
+                                {
+                                    mail_cliente.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    mail_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
-                            }
+                                }
+                                if (!(cc.mail2.Equals(mail_cliente2.Text)))
+                                {
+                                    mail_cliente2.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    mail_cliente2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
-                            if (!(cc.poblacio.Equals(poblacion_cliente.Text)))
-                            {
-                                poblacion_cliente.BorderBrush = Brushes.Red;
+                                }
 
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                poblacion_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                /*u.Luz = "s";
+                                u.Nota1 = "";
+                                u.Nota2 = "";*/
+                                /*if (!(cc.Metodo_Pago.ToString().Equals(Metodo_pago.Text)))
+                                {
+                                    a = true;
+                                    sql_query += "Metodo_Pago=" + Metodo_pago.SelectedIndex + ", ";
+                                    parametros.Add("Metodo_Pago:" + Metodo_pago.SelectedIndex);
+                                }*/
 
-                            }
-
-                            if (!(cc.telefon1.Equals(telefonos_cliente.Text)))
-                            {
-
-                                telefonos_cliente.BorderBrush = Brushes.Red;
-
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                telefonos_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(cc.telefon2.Equals(telefonos_cliente2.Text)))
-                            {
-                                telefonos_cliente2.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                telefonos_cliente2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!cc.codigo_postal.Equals(CP.Text))
-                            {
-                                CP.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                CP.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.mail.Equals(mail_cliente.Text)))
-                            {
-                                mail_cliente.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                mail_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.mail2.Equals(mail_cliente2.Text)))
-                            {
-                                mail_cliente2.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                mail_cliente2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            /*u.Luz = "s";
-                            u.Nota1 = "";
-                            u.Nota2 = "";*/
-                            /*if (!(cc.Metodo_Pago.ToString().Equals(Metodo_pago.Text)))
-                            {
-                                a = true;
-                                sql_query += "Metodo_Pago=" + Metodo_pago.SelectedIndex + ", ";
-                                parametros.Add("Metodo_Pago:" + Metodo_pago.SelectedIndex);
-                            }*/
-
-                            if (!(cc.titular.Equals(titular_tarjeta.Text)))
-                            {
-                                titular_tarjeta.BorderBrush = Brushes.Red;
+                                if (!(cc.titular.Equals(titular_tarjeta.Text)))
+                                {
+                                    titular_tarjeta.BorderBrush = Brushes.Red;
 
 
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                titular_tarjeta.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    titular_tarjeta.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
-                            }
-                            string fecha = caducidad + "/" + caducidad1;
-                            if (cc.caducidad.Contains("/"))
-                                if (!(cc.caducidad.Equals(caducidad.Text + "/" + caducidad1.Text)))
+                                }
+                                string fecha = caducidad + "/" + caducidad1;
+                                if (cc.caducidad.Contains("/"))
+                                    if (!(cc.caducidad.Equals(caducidad.Text + "/" + caducidad1.Text)))
+                                    {
+                                        caducidad.BorderBrush = Brushes.Red;
+                                        caducidad1.BorderBrush = Brushes.Red;
+                                    }
+                                    else
+                                    {
+                                        BrushConverter bc = new BrushConverter();
+                                        caducidad.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                        caducidad1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                    }
+                                else
+                                     if (!(caducidad.Text.Equals("")) && !(caducidad1.Text.Equals("")))
                                 {
                                     caducidad.BorderBrush = Brushes.Red;
                                     caducidad1.BorderBrush = Brushes.Red;
@@ -17510,470 +18531,459 @@ namespace SGC
                                     caducidad1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
                                 }
-                            else
-                                 if (!(caducidad.Text.Equals("")) && !(caducidad1.Text.Equals("")))
-                            {
-                                caducidad.BorderBrush = Brushes.Red;
-                                caducidad1.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                caducidad.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                                caducidad1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
 
 
-                            if (!(cc.numero_secreto.Equals(numero_secreto.Text)))
-                            {
-                                numero_secreto.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                numero_secreto.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(cc.n_tarjeta.Equals(numero_tarjeta.Text)))
-                            {
-                                numero_tarjeta.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                numero_tarjeta.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(cc.entidad_bacnaria.Equals(entidad_bancaria.Text)))
-                            {
-                                entidad_bancaria.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                entidad_bancaria.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(cc.iban.Equals(Iban.Text)))
-                            {
-                                Iban.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Iban.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(cc.swift.Equals(Swift.Text)))
-                            {
-                                Swift.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Swift.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-
-
-                            if (!(cc.Pais.Equals(pais.Text)))
-                            {
-                                pais.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                pais.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.Numero.Equals(numero.Text)))
-                            {
-                                numero.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                numero.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.Piso.Equals(piso.Text)))
-                            {
-                                piso.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                piso.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.Puerta.Equals(puerta.Text)))
-                            {
-                                puerta.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                puerta.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.Provincia.Equals(provincia.Text)))
-                            {
-                                provincia.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                provincia.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-
-
-                            if (!(Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In)))
-                            {
-                                Clientes_FechaEntrada.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Clientes_FechaEntrada.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out)))
-                            {
-                                Clientes_FechaSalida.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Clientes_FechaSalida.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(Vehiculo1_alta.Text.Equals(cc.Vehiculo1)))
-                            {
-                                vehiculo1.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                vehiculo1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(matricula1.Text.Equals(cc.matricula1)))
-                            {
-                                matricula1.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                matricula1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-
-
-                            if (!(vehiculo2.Text.Equals(cc.Vehiculo2)))
-                            {
-                                vehiculo2.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                vehiculo2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(matricula2.Text.Equals(cc.matricula2)))
-                            {
-                                matricula2.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                matricula2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(vehiculo3.Text.Equals(cc.Vehiculo3)))
-                            {
-                                vehiculo3.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                vehiculo3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(vehiculo4.Text.Equals(cc.Vehiculo4)))
-                            {
-                                vehiculo4.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                vehiculo4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-                            }
-                            if (!(matricula3.Text.Equals(cc.matricula3)))
-                            {
-                                matricula3.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                matricula3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(matricula4.Text.Equals(cc.matricula4)))
-                            {
-                                matricula4.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                matricula4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-
-                            int pott = 0;
-                            if (Potencia.SelectedItem != null)
-                            {
-                                Potencia poten = Potencia.SelectedItem as Potencia;
-                                if (cc.Potencia != poten.Id)
+                                if (!(cc.numero_secreto.Equals(numero_secreto.Text)))
                                 {
-                                    Potencia.BorderBrush = Brushes.Red;
-                                }
-                                else
-                                {
-                                    BrushConverter bc = new BrushConverter();
-                                    Potencia.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                                }
-                            }
-
-
-
-                            int b2 = 0;
-                            if (Switch.IsChecked.Value)
-                            {
-                                b2 = 1;
-                            }
-                            if (b2 != cc.Switch)
-                            {
-                                Switch.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Switch.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-
-
-
-
-                            if (!nota1.Text.Equals(cc.Nota1))
-                            {
-
-                                nota1.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                nota1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            try
-                            {
-                                DateTime dt2 = (DateTime)Clientes_HoraEntrada.Value;
-
-                                if (!dt2.ToString("H:mm").Equals(cc.Hora_entrada))
-                                {
-                                    Clientes_HoraEntrada.BorderBrush = Brushes.Red;
+                                    numero_secreto.BorderBrush = Brushes.Red;
 
                                 }
                                 else
                                 {
                                     BrushConverter bc = new BrushConverter();
-                                    Clientes_HoraEntrada.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                    numero_secreto.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
                                 }
+
+                                if (!(cc.n_tarjeta.Equals(numero_tarjeta.Text)))
+                                {
+                                    numero_tarjeta.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    numero_tarjeta.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!(cc.entidad_bacnaria.Equals(entidad_bancaria.Text)))
+                                {
+                                    entidad_bancaria.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    entidad_bancaria.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!(cc.iban.Equals(Iban.Text)))
+                                {
+                                    Iban.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Iban.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!(cc.swift.Equals(Swift.Text)))
+                                {
+                                    Swift.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Swift.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+
+
+                                if (!(cc.Pais.Equals(pais.Text)))
+                                {
+                                    pais.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    pais.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Numero.Equals(numero.Text)))
+                                {
+                                    numero.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    numero.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Piso.Equals(piso.Text)))
+                                {
+                                    piso.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    piso.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Puerta.Equals(puerta.Text)))
+                                {
+                                    puerta.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    puerta.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Provincia.Equals(provincia.Text)))
+                                {
+                                    provincia.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    provincia.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+
+
+                                if (!(Clientes_FechaEntrada.SelectedDate.Equals(cc.Fecha_In)))
+                                {
+                                    Clientes_FechaEntrada.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Clientes_FechaEntrada.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(Clientes_FechaSalida.SelectedDate.Equals(cc.Fecha_Out)))
+                                {
+                                    Clientes_FechaSalida.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Clientes_FechaSalida.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!(Vehiculo1_alta.Text.Equals(cc.Vehiculo1)))
+                                {
+                                    vehiculo1.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    vehiculo1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(matricula1.Text.Equals(cc.matricula1)))
+                                {
+                                    matricula1.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    matricula1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+
+
+                                if (!(vehiculo2.Text.Equals(cc.Vehiculo2)))
+                                {
+                                    vehiculo2.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    vehiculo2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(matricula2.Text.Equals(cc.matricula2)))
+                                {
+                                    matricula2.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    matricula2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(vehiculo3.Text.Equals(cc.Vehiculo3)))
+                                {
+                                    vehiculo3.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    vehiculo3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(vehiculo4.Text.Equals(cc.Vehiculo4)))
+                                {
+                                    vehiculo4.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    vehiculo4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+                                }
+                                if (!(matricula3.Text.Equals(cc.matricula3)))
+                                {
+                                    matricula3.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    matricula3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(matricula4.Text.Equals(cc.matricula4)))
+                                {
+                                    matricula4.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    matricula4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+
+                                int pott = 0;
+                                if (Potencia.SelectedItem != null)
+                                {
+                                    Potencia poten = Potencia.SelectedItem as Potencia;
+                                    if (cc.Potencia != poten.Id)
+                                    {
+                                        Potencia.BorderBrush = Brushes.Red;
+                                    }
+                                    else
+                                    {
+                                        BrushConverter bc = new BrushConverter();
+                                        Potencia.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                    }
+                                }
+
+
+
+                                int b2 = 0;
+                                if (Switch.IsChecked.Value)
+                                {
+                                    b2 = 1;
+                                }
+                                if (b2 != cc.Switch)
+                                {
+                                    Switch.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Switch.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+
+
+
+
+                                if (!nota1.Text.Equals(cc.Nota1))
+                                {
+
+                                    nota1.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    nota1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                try
+                                {
+                                    DateTime dt2 = (DateTime)Clientes_HoraEntrada.Value;
+
+                                    if (!dt2.ToString("H:mm").Equals(cc.Hora_entrada))
+                                    {
+                                        Clientes_HoraEntrada.BorderBrush = Brushes.Red;
+
+                                    }
+                                    else
+                                    {
+                                        BrushConverter bc = new BrushConverter();
+                                        Clientes_HoraEntrada.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                    }
+                                }
+                                catch (Exception ee)
+                                {
+                                    var st = new StackTrace(ee, true); // Get the top stack frame var frame = st.GetFrame(0); // Get the line number from the stack frame   var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                                    var frame = st.GetFrame(0);
+
+                                    var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                                    Peta(ee, line + "");
+                                }
+                                DateTime dt3 = (DateTime)Clientes_HoraSalida.Value;
+                                if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
+                                {
+                                    Clientes_HoraSalida.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Clientes_HoraSalida.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!(cc.entidad_bacnaria2.Equals(entidad_bancaria2.Text)))
+                                {
+
+                                    entidad_bancaria2.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    entidad_bancaria2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!(cc.iban2.Equals(Iban2.Text)))
+                                {
+                                    Iban2.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Iban2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!(cc.swift2.Equals(Swift2.Text)))
+                                {
+                                    Swift2.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Swift2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                bool bb = false;
+                                if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
+                                    bb = true;
+                                /*if (!(cc.DeBaja == bb))
+                                {
+                                    numero_cliente.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    apellidos_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }*/
+
+
+                                if (!Fecha_Entrada_Estado.SelectedDate.Equals(cc.fecha_entrada_estado))
+                                {
+                                    Fecha_Entrada_Estado.BorderBrush = Brushes.Red;
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Fecha_Entrada_Estado.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!Fecha_Contrato.SelectedDate.Equals(cc.fecha_contrato))
+                                {
+                                    Fecha_Contrato.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Fecha_Contrato.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+                                if (!(cc.fecha_pago.Equals(Fecha_Pago.SelectedDate)))
+                                {
+                                    Fecha_Pago.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    Fecha_Pago.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Medidas_Vehiculo1.Equals(medidas_vehiculo1.Text)))
+                                {
+                                    medidas_vehiculo1.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    medidas_vehiculo1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Medidas_Vehiculo2.Equals(medidas2.Text)))
+                                {
+                                    medidas2.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    medidas2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Medidas_Vehiculo3.Equals(medidas3.Text)))
+                                {
+                                    medidas3.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    medidas3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+                                if (!(cc.Medidas_Vehiculo4.Equals(medidas4.Text)))
+                                {
+                                    medidas4.BorderBrush = Brushes.Red;
+
+                                }
+                                else
+                                {
+                                    BrushConverter bc = new BrushConverter();
+                                    medidas4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
+
+                                }
+
+
                             }
-                            catch (Exception ee)
+                            catch
                             {
-                                var st = new StackTrace(ee, true); // Get the top stack frame var frame = st.GetFrame(0); // Get the line number from the stack frame   var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                                var frame = st.GetFrame(0);
-
-                                var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                                Peta(ee, line + "");
-                            }
-                            DateTime dt3 = (DateTime)Clientes_HoraSalida.Value;
-                            if (!dt3.ToString("H:mm").Equals(cc.Hora_salida))
-                            {
-                                Clientes_HoraSalida.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Clientes_HoraSalida.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
 
                             }
-
-                            if (!(cc.entidad_bacnaria2.Equals(entidad_bancaria2.Text)))
-                            {
-
-                                entidad_bancaria2.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                entidad_bancaria2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(cc.iban2.Equals(Iban2.Text)))
-                            {
-                                Iban2.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Iban2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(cc.swift2.Equals(Swift2.Text)))
-                            {
-                                Swift2.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Swift2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            bool bb = false;
-                            if (bdr2.HorizontalAlignment == HorizontalAlignment.Left)
-                                bb = true;
-                            /*if (!(cc.DeBaja == bb))
-                            {
-                                numero_cliente.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                apellidos_cliente.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }*/
-
-
-                            if (!Fecha_Entrada_Estado.SelectedDate.Equals(cc.fecha_entrada_estado))
-                            {
-                                Fecha_Entrada_Estado.BorderBrush = Brushes.Red;
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Fecha_Entrada_Estado.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!Fecha_Contrato.SelectedDate.Equals(cc.fecha_contrato))
-                            {
-                                Fecha_Contrato.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Fecha_Contrato.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
-                            if (!(cc.fecha_pago.Equals(Fecha_Pago.SelectedDate)))
-                            {
-                                Fecha_Pago.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                Fecha_Pago.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.Medidas_Vehiculo1.Equals(medidas_vehiculo1.Text)))
-                            {
-                                medidas_vehiculo1.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                medidas_vehiculo1.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.Medidas_Vehiculo2.Equals(medidas2.Text)))
-                            {
-                                medidas2.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                medidas2.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.Medidas_Vehiculo3.Equals(medidas3.Text)))
-                            {
-                                medidas3.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                medidas3.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-                            if (!(cc.Medidas_Vehiculo4.Equals(medidas4.Text)))
-                            {
-                                medidas4.BorderBrush = Brushes.Red;
-
-                            }
-                            else
-                            {
-                                BrushConverter bc = new BrushConverter();
-                                medidas4.BorderBrush = (Brush)bc.ConvertFrom("#e2e6ee");
-
-                            }
-
 
                         }
-                        catch
-                        {
-
-                        }
-
-                    }
+                }
             }
+            catch { }
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -18829,6 +19839,41 @@ namespace SGC
                         nombreacompañante4.Text = "";
                         nombreacompañante5_alta.Text = "";
                         nombreacompañante5.Text = "";
+                        List<int> lista = new List<int>();
+                        if(c.lista_acompañantes.Count()==0)
+                            c.lista_acompañantes = lacmp.Select(x => x).Where(x => x.Clienteid == c.id).ToArray();
+                        for (int i=0; i < c.lista_acompañantes.Count(); i++)
+                        {if(c.lista_acompañantes[i]!=null)
+                            if (lista.Contains(c.lista_acompañantes[i].Id))
+                                c.lista_acompañantes[i] = null;
+                            else
+                                lista.Add(c.lista_acompañantes[i].Id);
+                        }
+                        List<Acompañantes> lista_a = new List<Acompañantes>();
+                        for (int i = 0; i < c.lista_acompañantes.Count(); i++)
+                        {
+                            if (c.lista_acompañantes[i] != null)
+                                lista_a.Add(c.lista_acompañantes[i]);
+                        }
+                        for (int i = 0; i < c.lista_acompañantes.Count(); i++)
+                        {
+                            if (lista_a.Count() > i)
+                                c.lista_acompañantes[i] = lista_a[i];
+                            else
+                                c.lista_acompañantes[i] = null;
+                        }
+                        if (c.lista_acompañantes.Count() != 0)
+                        {
+                            if (c.lista_acompañantes[0] == null)
+                            {
+                                c.lista_acompañantes = lacmp.Select(x => x).Where(x => x.Clienteid == c.id).ToArray();
+                               
+                            }
+                        }
+                        else {
+                            c.lista_acompañantes = lacmp.Select(x => x).Where(x => x.Clienteid == c.id).ToArray();
+                            
+                        }
                         for (int i = 0; i < c.lista_acompañantes.Count(); i++)
                         {
                             switch (i)
@@ -21726,6 +22771,7 @@ namespace SGC
                             }
                             sql_cmd.ExecuteNonQuery();
 
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                             cn.Close();
                             CargarUsuarios();
@@ -21752,6 +22798,7 @@ namespace SGC
                             }
                             sql_cmd.ExecuteNonQuery();
 
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                             cn.Close();
                             CargarRoles();
@@ -21778,6 +22825,7 @@ namespace SGC
 
                             }
                             sql_cmd.ExecuteNonQuery();
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                             cn.Close();
                             CargarIva();
@@ -21807,6 +22855,7 @@ namespace SGC
                             }
                             sql_cmd.ExecuteNonQuery();
 
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
 
                             List<Clientes> lista = lcln.Select(x => x).Where(x => x.Potencia == p.Id).ToList();
@@ -21838,6 +22887,7 @@ namespace SGC
 
                                 sql_cmd.ExecuteNonQuery();
 
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
 
                             }
@@ -21868,6 +22918,7 @@ namespace SGC
                             }
                             sql_cmd.ExecuteNonQuery();
 
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
 
 
@@ -22094,6 +23145,7 @@ namespace SGC
 
                                 }
                                 consulta = new Consulta("Usuario", l, "Id:" + u.Id, "UPDATE");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                                 string cn_string = conexiondb;
                                 cn = new SQLiteConnection(cn_string);
@@ -22582,6 +23634,7 @@ namespace SGC
 
                                 }
                                 consulta = new Consulta("Rol", l, "Id:" + rol.Id, "UPDATE");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                                 string cn_string = conexiondb;
                                 cn = new SQLiteConnection(cn_string);
@@ -22676,6 +23729,7 @@ namespace SGC
                                     Console.WriteLine(sql_query);
                                     sql_cmd.ExecuteNonQuery();
                                     Consulta consulta = new Consulta("IVA", l, "Id:" + i.Id, "UPDATE");
+                                    while (observartodotoken) { }
                                     Lista_consultas.Add(consulta);
                                     //CargarIva();
                                     safe = false;
@@ -22763,6 +23817,7 @@ namespace SGC
                                 }
                                 sql_cmd.ExecuteNonQuery();
                                 Consulta consulta = new Consulta("Contratos", l, "Id:" + p.Id, "UPDATE");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
 
                                 CargarContratos();
@@ -23014,7 +24069,8 @@ namespace SGC
                             }
                             sql_cmd.ExecuteNonQuery();
                             Consulta consulta = new Consulta("Camping", l, "Id:" + "1", "UPDATE");
-                            Lista_consultas.Add(consulta);
+                                while (observartodotoken) { }
+                                Lista_consultas.Add(consulta);
 
                             cn.Close();
                             CargarEmpresa();
@@ -26361,7 +27417,7 @@ namespace SGC
                 SQLiteConnection cn2 = new SQLiteConnection(conexiondb);
 
                 bool actualizar = true;
-
+                
                 DateTime time = lista_tiempos[3];
                 //DateTime.TryParse(mycontent, out time);
                 string sql_Text2 = "SELECT * FROM Evento_v";
@@ -26437,7 +27493,7 @@ namespace SGC
                                             idd = c.id;
                                         }
                                         Thread.Sleep(300);
-                                        string sql_query4 = "UPDATE Evento_v SET TIME='" + DateTime.Now + "' WHERE Id=1";
+                                        string sql_query4 = "UPDATE Evento_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
                                         cmd3.ExecuteNonQuery();
@@ -26445,7 +27501,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Evento'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                     }
                                 }
@@ -26453,6 +27509,7 @@ namespace SGC
 
 
                             mirarEven = true;
+                            timepo = false;
 
 
                         }
@@ -26460,7 +27517,8 @@ namespace SGC
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
-                            mirarIVAs = true;
+                            mirarEven = true;
+                            timepo = false;
                         };
                     }
                 }
@@ -26695,6 +27753,7 @@ namespace SGC
 
                 }
                 consulta = new Consulta("Evento", parametros, "", "INSERT");
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
                 cn.Close();
 
@@ -26753,6 +27812,7 @@ namespace SGC
 
                         }
                         consulta = new Consulta("Evento", parametros, "Id:" + ev.id, "UPDATE");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                         sql_cmd.ExecuteNonQuery();
                         cn.Close();
@@ -26953,8 +28013,8 @@ namespace SGC
                                         string sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Usuario'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
-                                         sql_query4 = "UPDATE Usuario_v SET TIME='" + DateTime.Now + "' WHERE Id=1";
+                                       // cmd3.ExecuteNonQuery();
+                                         sql_query4 = "UPDATE Usuario_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
 
                                          cmd3 = new SQLiteCommand(sql_query4, cn2);
                                         cmd3.ExecuteNonQuery();
@@ -26963,6 +28023,7 @@ namespace SGC
                             }
                             mirarUsus = true;
 
+                            timepo = false;
 
 
 
@@ -26972,6 +28033,7 @@ namespace SGC
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
                             mirarUsus = true;
+                            timepo = false;
                         };
                     }
                 }
@@ -27145,7 +28207,7 @@ namespace SGC
 
                                             }
 
-                                            string sql_query4 = "UPDATE Rol_v SET TIME='" + DateTime.Now + "' WHERE Id=1";
+                                            string sql_query4 = "UPDATE Rol_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
 
                                             cmd3 = new SQLiteCommand(sql_query4, cn2);
                                             cmd3.ExecuteNonQuery();
@@ -27154,6 +28216,7 @@ namespace SGC
                                 }
 
                                 mirarRoles = true;
+                                timepo = false;
 
 
 
@@ -27330,7 +28393,7 @@ namespace SGC
                                             idd = c.Id;
                                         }
                                         Thread.Sleep(300);
-                                        string sql_query4 = "UPDATE Iva_v SET TIME='" + DateTime.Now + "' WHERE Id=1";
+                                        string sql_query4 = "UPDATE Iva_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
                                         cmd3.ExecuteNonQuery();
@@ -27338,7 +28401,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq="+ (idd) +" WHERE name='IVA'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                       // cmd3.ExecuteNonQuery();
 
                                     }
                                 }
@@ -27346,6 +28409,7 @@ namespace SGC
 
 
                             mirarIVAs = true;
+                            timepo = false;
 
 
                         }
@@ -27354,6 +28418,7 @@ namespace SGC
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
                             mirarIVAs = true;
+                            timepo = false;
                         };
                     }
                 }
@@ -27429,6 +28494,7 @@ namespace SGC
         //Clientes
         private async void cargarAcompañantes()
         {
+            cargandoAcompañantes = true;
             try
             {
                 SQLiteConnection cn2 = new SQLiteConnection(conexiondb);
@@ -27455,92 +28521,113 @@ namespace SGC
 
                 if (b != null)
                 {
-                    if (DateTime.Compare((DateTime)b, time) == -1)
+                    if (mirarAcompañante_registro)
                     {
-                        try
+                        mirarAcompañante_registro = false;
+                        if (DateTime.Compare((DateTime)b, time) == -1)
+
                         {
-                            string uri = string.Format("http://app.adex-integracio.com/sgc/index2.php");
-                            //SGC.Clases.Version v = new Version();
-                            //Debug.WriteLine("Hola ");
-                            //byteArray = Encoding.UTF8.GetBytes("tabla = Version");
-                            IEnumerable<KeyValuePair<string, string>> queries = new List<KeyValuePair<string, string>>()
+                            string hola = "";
+                            try
+                            {
+                                string uri = string.Format("http://app.adex-integracio.com/sgc/index2.php");
+                                //SGC.Clases.Version v = new Version();
+                                //Debug.WriteLine("Hola ");
+                                //byteArray = Encoding.UTF8.GetBytes("tabla = Version");
+                                IEnumerable<KeyValuePair<string, string>> queries = new List<KeyValuePair<string, string>>()
                                 {
                                     new KeyValuePair<string, string>("tabla", "Acompañante"),
                                     new KeyValuePair<string, string>("action", "Select")
                                 };
-                            //Uri = new Uri(uri);
-                            HttpContent h = new FormUrlEncodedContent(queries);
-                            using (HttpClient client2 = new HttpClient())
-                            {
-                                using (HttpResponseMessage resp2 = await client2.PostAsync(uri, h))
+                                //Uri = new Uri(uri);
+                                HttpContent h = new FormUrlEncodedContent(queries);
+                                using (HttpClient client2 = new HttpClient())
                                 {
-                                    using (HttpContent content22 = resp2.Content)
+                                    using (HttpResponseMessage resp2 = await client2.PostAsync(uri, h))
                                     {
-                                        string mycontent = await content22.ReadAsStringAsync();
-                                        HttpContentHeaders hch = content22.Headers;
-                                        //Console.writeLine(mycontent);
-                                        //v = new Version(mycontent);
-                                        //Debug.WriteLine("IsSuccessStatusCode");
-
-                                        List<Clientes> lst = new List<Clientes>();
-                                        JArray jay = new JArray();
-                                        try
+                                        using (HttpContent content22 = resp2.Content)
                                         {
-                                            jay = JArray.Parse(mycontent);
-                                        }
-                                        catch { }
-                                        if (cn2.State != ConnectionState.Open) cn2.Open();
-                                        //DataTable tb = new DataTable();
-                                        string sql_Text3 = "DELETE FROM Acompañante";
+                                            string mycontent = await content22.ReadAsStringAsync();
+                                            HttpContentHeaders hch = content22.Headers;
+                                            //Console.writeLine(mycontent);
+                                            //v = new Version(mycontent);
+                                            //Debug.WriteLine("IsSuccessStatusCode");
 
-                                        SQLiteCommand cmd3 = new SQLiteCommand(sql_Text3, cn2);
-                                        cmd3.ExecuteNonQuery();
-                                        //lst.Remove(lst[0]);
-                                        int idd = 0;
-                                        foreach (JObject s in jay)
-                                        {
+                                            List<Clientes> lst = new List<Clientes>();
+                                            JArray jay = new JArray();
+                                            try
+                                            {
+                                                jay = JArray.Parse(mycontent);
+                                            }
+                                            catch { }
+                                            if (cn2.State != ConnectionState.Open) cn2.Open();
 
-
-                                            Acompañantes c = new Clases.Acompañantes(s);
-                                           
-
-                                            string sql_query3 = "INSERT INTO Acompañante(Id,nombreacompañante1,apellido1compañante1,apellido2compañante1,dniacompañante1,pais1,cliente,tipo1,fecha_dni1,fecha_n1,Sexo1) VALUES("+ c.Id+",'"+c.nombreacompañante1 +"','"+ c.apellido1compañante1 + "','" + c.apellido2compañante1 + "','" + c.dniacompañante1 + "','" + c.pais1 + "'," + c.Clienteid + "," + c.tipo1 + ",'"+c.fecha_dni1+"','"+c.fecha_n1+"',"+c.Sexo1+")";
-                                            //Console.WriteLine("INSERT INTO Factura([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura],[Descuento],[Vehiculo],[Matricula],[IBAN]) VALUES (" + f.Id + ",'" + f.Nombre_Cliente + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente.Replace("'", "$") + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura.Replace("__", "_") + "','" + f.Descuento + "','" + f.Vehiculo + "','" + f.Matricula + "','" + f.IBAN + "')");
-
-                                            cmd3 = new SQLiteCommand(sql_query3, cn2);
+                                            string sql_query4 = "UPDATE Acompañante_v SET TIME='" + DateTime.Now.AddSeconds(6) + "' WHERE Id=1"; SQLiteCommand cmd3 = new SQLiteCommand(sql_query4, cn2);
                                             cmd3.ExecuteNonQuery();
-                                            idd = c.Id;
+                                            //DataTable tb = new DataTable();
+                                            string sql_Text3 = "DELETE FROM Acompañante";
+
+                                            cmd3 = new SQLiteCommand(sql_Text3, cn2);
+                                            cmd3.ExecuteNonQuery();
+                                            //lst.Remove(lst[0]);
+                                            int idd = 0;
+                                            foreach (JObject s in jay)
+                                            {
+
+
+                                                Acompañantes c = new Clases.Acompañantes(s);
+
+
+                                                string sql_query3 = "INSERT INTO Acompañante(Id,nombreacompañante1,apellido1compañante1,apellido2compañante1,dniacompañante1,pais1,cliente,tipo1,fecha_dni1,fecha_n1,Sexo1) VALUES(" + c.Id + ",'" + c.nombreacompañante1 + "','" + c.apellido1compañante1 + "','" + c.apellido2compañante1 + "','" + c.dniacompañante1 + "','" + c.pais1 + "'," + c.Clienteid + "," + c.tipo1 + ",'" + c.fecha_dni1 + "','" + c.fecha_n1 + "'," + c.Sexo1 + ")";
+                                                //Console.WriteLine("INSERT INTO Factura([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura],[Descuento],[Vehiculo],[Matricula],[IBAN]) VALUES (" + f.Id + ",'" + f.Nombre_Cliente + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente.Replace("'", "$") + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura.Replace("__", "_") + "','" + f.Descuento + "','" + f.Vehiculo + "','" + f.Matricula + "','" + f.IBAN + "')");
+                                                hola = sql_query3;
+                                                cmd3 = new SQLiteCommand(sql_query3, cn2);
+                                                try
+                                                {
+                                                    cmd3.ExecuteNonQuery();
+                                                }catch(Exception ex)
+                            {
+                                                    var line = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                                                    //Peta(ee, line + "");
+                                                    MessageBox.Show(line + ": " + ex.Message + " " + hola);
+                                                }
+                                                idd = c.Id;
+                                            }
+
+
+                                            idd++;
+                                            //sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Acompañante'";
+
+                                            // cmd3 = new SQLiteCommand(sql_query4, cn2);
+                                            //cmd3.ExecuteNonQuery();
+
                                         }
-                                        string sql_query4 = "UPDATE Acompañante_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
-
-                                        cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
-                                        idd++;
-                                        sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Acompañante'";
-
-                                        cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
-
                                     }
                                 }
-                            }
-                            mirarAcompañante = true;
-                            cargartiempos();
+                                mirarAcompañante = true; timepo = false;
+                                cargartiempos();
 
+
+                            }
+                            catch (Exception ee)
+                            {
+                                var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                                //Peta(ee, line + "");
+                                MessageBox.Show(line + ": " + ee.Message + " " + hola);
+
+                                mirarAcompañante = true; timepo = false; mirarAcompañante_registro = true;
+                            };
 
                         }
-                        catch (Exception ee)
-                        {
-                            var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                            Peta(ee, line + "");
-                            mirarAcompañante = true;
-                        };
+                        mirarAcompañante_registro = true;
                     }
                 }
             }
             catch (Exception ee)
             {
                 Console.WriteLine(ee.Message);
+
+                mirarAcompañante = true; timepo = false;
             }
 
             lacmp = new List<Acompañantes>();
@@ -27551,8 +28638,11 @@ namespace SGC
                 {
                     lacmp.Add(new Acompañantes(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetInt32(4), rdr.GetString(5), rdr.GetString(6), rdr.GetInt32(7), rdr.GetString(8), rdr.GetString(9), rdr.GetInt32(10)));
                 }
-                mirarAcompañante = true;
-            }catch{
+                mirarAcompañante = true; timepo = false;
+
+                
+            }
+            catch{
                 Dispatcher.InvokeAsync(() =>
                 {
 
@@ -27561,15 +28651,17 @@ namespace SGC
                     {
                         lacmp.Add(new Acompañantes(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetInt32(4), rdr.GetString(5), rdr.GetString(6), rdr.GetInt32(7), rdr.GetString(8), rdr.GetString(9), rdr.GetInt32(10)));
                     }
-                    mirarAcompañante = true;
+                    mirarAcompañante = true; timepo = false;
+                    
+                    
                 });
                 
             }
-
+            cargandoAcompañantes = false;
         }
         private async void cargarClientes()
         {
-
+            cargandoCliente = true;
             try
             {
                 SQLiteConnection cn2 = new SQLiteConnection(conexiondb);
@@ -27596,6 +28688,7 @@ namespace SGC
 
                 if (b != null)
                 {
+                   // mirarCliente_registro = false;
                     if (DateTime.Compare((DateTime)b, time) == -1)
                     {
                         try
@@ -27702,15 +28795,18 @@ namespace SGC
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
                                         cmd3.ExecuteNonQuery();
                                         idd++;
-                                        sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='CLIENTE'";
+                                        //sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='CLIENTE'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        // cmd3.ExecuteNonQuery();
+
+                                        Thread.Sleep(2000);
 
                                     }
                                 }
                             }
-                            mirarCliente = true;
+                        mirarCliente = true;
+                            timepo = false;
                             cargartiempos();
 
 
@@ -27719,19 +28815,24 @@ namespace SGC
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
-                            mirarFacturas = true;
-                        };
+                            mirarAcompañante = true; timepo = false;
+                            mirarCliente = true;
+                        };// mirarCliente_registro = true;
                     }
                 }
+
             }
             catch (Exception ee)
             {
                 Console.WriteLine(ee.Message);
+                mirarAcompañante = true; timepo = false;
+                mirarCliente = true;
             }
             DateTime timerStart = DateTime.Now;
             try
             {
-
+                
+                CargarContratos(); cargarAcompañantes();
                 if (clientebool)
                 {
                     comprobaciones = true;
@@ -27746,9 +28847,9 @@ namespace SGC
                     lista_clientes_ficha = new List<Clientes>();
                     clienteapli.Items.Clear();
                     List<Clientes> cero = new List<Clientes>();
-                    CargarContratos();
+                    
                     Console.WriteLine("tiempo transcurrido cargar contratos: " + (DateTime.Now - timerStart).ToString(@"ss\s\ fff\ms\ "));
-                    cargarAcompañantes();
+                    
                     Console.WriteLine("tiempo transcurrido cargar acompañantes: " + (DateTime.Now - timerStart).ToString(@"ss\s\ fff\ms\ "));
                     int pos = 0;
                     if (Clientes.SelectedItem != null)
@@ -27915,6 +29016,8 @@ namespace SGC
 
                         c.lista_acompañantes = new Acompañantes[6];
                         int iacm = 0;
+
+                       
                         foreach (Acompañantes acp in lacmp.Select(x => x).Where(x => x.Clienteid == c.id))
                         {
                             if (iacm < 6)
@@ -28031,6 +29134,7 @@ namespace SGC
                 
                 Dispatcher.InvokeAsync(() =>
                 {
+                    clientebool = true;
                     if (clientebool)
                 {
                     comprobaciones = true;
@@ -28045,9 +29149,9 @@ namespace SGC
                     lista_clientes_ficha = new List<Clientes>();
                     clienteapli.Items.Clear();
                     List<Clientes> cero = new List<Clientes>();
-                    CargarContratos();
+                    
                     Console.WriteLine("tiempo transcurrido cargar contratos: " + (DateTime.Now - timerStart).ToString(@"ss\s\ fff\ms\ "));
-                    cargarAcompañantes();
+                    
                     Console.WriteLine("tiempo transcurrido cargar acompañantes: " + (DateTime.Now - timerStart).ToString(@"ss\s\ fff\ms\ "));
                     int pos = 0;
                     if (Clientes.SelectedItem != null)
@@ -28214,7 +29318,8 @@ namespace SGC
 
                         c.lista_acompañantes = new Acompañantes[6];
                         int iacm = 0;
-                        foreach (Acompañantes acp in lacmp.Select(x => x).Where(x => x.Clienteid == c.id))
+                          
+                            foreach (Acompañantes acp in lacmp.Select(x => x).Where(x => x.Clienteid == c.id))
                         {
                             if (iacm < 6)
                             {
@@ -28328,6 +29433,8 @@ namespace SGC
             }
             //timerStart = (DateTime)(DateTime.Now - timerStart);
 
+
+            cargandoCliente = false;
             Console.WriteLine("tiempo transcorrido: " + (DateTime.Now - timerStart).ToString(@"ss\s\ fff\ms\ "));
         }
 
@@ -28401,6 +29508,7 @@ namespace SGC
                             List<string> lstg = new List<string>();
                             lstg.Add("asignada:1");
                             lstg.Add("N_Cliente:"+c.id);
+                            while (observartodotoken) { }
                             Lista_consultas.Add(new Consulta("Parcelas", lstg, "Id:" + p.id, "UPDATE"));
                             sql_cmd = new SQLiteCommand(query, cn);
                             sql_cmd.ExecuteNonQuery();
@@ -28434,6 +29542,7 @@ namespace SGC
                                     lstg = new List<string>();
                                     lstg.Add("asignada:0");
                                     lstg.Add("N_Cliente:" + 0);
+                                    while (observartodotoken) { }
                                     Lista_consultas.Add(new Consulta("Parcelas", lstg, "Id:" + p2.id, "UPDATE"));
                                     String query4 = "UPDATE Cliente SET Asignado=0 WHERE Id=" + c.id;
 
@@ -28487,6 +29596,7 @@ namespace SGC
                                 List<string> lstg = new List<string>();
                                 lstg.Add("Asignada:0");
                                 lstg.Add("N_Cliente:" + 0);
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(new Consulta("Parcelas", lstg, "Id:" + p2.id, "UPDATE"));
                                 String query4 = "UPDATE Cliente SET Asignado=0 WHERE Id=" + c.id;
 
@@ -28769,7 +29879,7 @@ namespace SGC
                                             idd = (int)c.id;
                                         }
                                         Thread.Sleep(300);
-                                        string sql_query4 = "UPDATE Parcelas_v SET TIME='" + DateTime.Now + "' WHERE Id=1";
+                                        string sql_query4 = "UPDATE Parcelas_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
                                         cmd3.ExecuteNonQuery();
@@ -28777,7 +29887,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Parcelas'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                     }
                                 }
@@ -28785,6 +29895,7 @@ namespace SGC
 
 
                             mirarParcelas = true;
+                            timepo = false;
 
 
                         }
@@ -28793,6 +29904,7 @@ namespace SGC
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
                             Peta(ee, line + "");
                             mirarParcelas = true;
+                            timepo = false;
                         };
                     }
                 }
@@ -29454,9 +30566,9 @@ namespace SGC
 
                                             Facturas f = new Clases.Facturas(s);
 
-                                            string sql_query3 = "INSERT INTO Factura([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura],[Descuento],[Vehiculo],[Matricula],[IBAN]) VALUES ("+f.Id+",'" + f.Nombre_Cliente + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente.Replace("'", "$") + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura.Replace("__", "_") + "','" + f.Descuento + "','" + f.Vehiculo + "','" + f.Matricula + "','" + f.IBAN + "')";
+                                            string sql_query3 = "INSERT INTO Factura([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura],[Descuento],[Vehiculo],[Matricula],[IBAN],[Tipo], [Id_Ticket],[Tipo]) VALUES ("+f.Id+",'" + f.Nombre_Cliente + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente.Replace("'", "$") + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura.Replace("__", "_") + "','" + f.Descuento + "','" + f.Vehiculo + "','" + f.Matricula + "','" + f.IBAN + "',"+f.Tipo+","+f.Id_Ticket+","+f.Tipo+")";
 
-                                            Console.WriteLine("INSERT INTO Factura([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura],[Descuento],[Vehiculo],[Matricula],[IBAN]) VALUES (" + f.Id + ",'" + f.Nombre_Cliente + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente.Replace("'", "$") + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura.Replace("__", "_") + "','" + f.Descuento + "','" + f.Vehiculo + "','" + f.Matricula + "','" + f.IBAN + "')");
+                                            Console.WriteLine("INSERT INTO Factura([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura],[Descuento],[Vehiculo],[Matricula],[IBAN],[Id_Ticket],[Tipo]) VALUES (" + f.Id + ",'" + f.Nombre_Cliente + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente.Replace("'", "$") + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura.Replace("__", "_") + "','" + f.Descuento + "','" + f.Vehiculo + "','" + f.Matricula + "','" + f.IBAN + "," + f.Id_Ticket + "," + f.Tipo + ")");
 
                                             cmd3 = new SQLiteCommand(sql_query3, cn2);
                                             cmd3.ExecuteNonQuery();
@@ -29470,7 +30582,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Factura'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                         
 
@@ -29485,8 +30597,9 @@ namespace SGC
                         catch (Exception ee)
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                            Peta(ee, line + "");
+                            //Peta(ee, line + "");
                             mirarFacturas = true;
+                            timepo = false;
                         };
                         
                     }
@@ -29616,6 +30729,7 @@ namespace SGC
             }
 
             mirarFacturas = true;
+            timepo = false;
         }
         private async void cargarProductos2()
         {
@@ -29643,8 +30757,9 @@ namespace SGC
                 }
                 rdr2.Close();
 
-                if (b != null)
+                if (b != null&&mirarProduto_reg2_registro)
                 {
+                    mirarProduto_reg2_registro = false;
                     if (DateTime.Compare((DateTime)b, time) == -1)
                     {
                         try
@@ -29692,6 +30807,16 @@ namespace SGC
                                         cmd3.ExecuteNonQuery();
                                         //lst.Remove(lst[0]);
                                         int idd = 0;
+                                        //lista_json.RemoveRange(lista_json.Count() , lista_json.Count() / 2);
+                                        foreach (string s in lista_json)
+                                        {
+                                            if (lista_json.Select(x => x).Where(x => x.Equals(s)).Count() > 1)
+                                            {
+                                                Console.WriteLine(lista_json.IndexOf(s));
+                                                lista_json.RemoveAt(lista_json.IndexOf(s));
+                                            }
+                                        }
+                                        Producto f = new Producto();
                                         foreach (string i in lista_json)
                                         {
                                             try
@@ -29709,8 +30834,9 @@ namespace SGC
 
                                                     if (num == 164)
                                                         Console.WriteLine("AA");
-                                                    Producto f = new Clases.Producto(job);
-
+                                                    f = new Clases.Producto(job);
+                                                    if (num == 52)
+                                                        Console.WriteLine("A");
                                                     string sql_query3 = "INSERT INTO Productos_Registro2([Id],[Nombre],[Cantidad],[Precio],[IVA],[Impuesto],[Total],[Id_Recibo],[Descuento]) VALUES(" + f.Id + ",'" + f.Nombre_Producto + "','" + f.Cantidad + "','" + Math.Round(float.Parse(f.Precio), 4).ToString("0.0000") + "','" + f.IVA + "','" + Math.Round(float.Parse(f.Impuesto), 4).ToString("0.0000") + "','" + Math.Round(float.Parse(f.Total), 4).ToString("0.0000") + "'," + f.Id_Factura + ",'" + f.Descuento + "')";
 
 
@@ -29719,9 +30845,14 @@ namespace SGC
                                                     idd = f.Id;
                                                 }
                                             }
-                                            catch(Exception ee)
+                                            catch(SQLiteException ee)
                                             {
                                                 Console.WriteLine(num);
+                                                Console.WriteLine(lista_json.Count());
+                                                Console.WriteLine(ee.Message);
+                                                Console.WriteLine(f.Id);
+
+                                                
                                             }
                                         }
                                         string sql_query4 = "UPDATE Productos_Registro2_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
@@ -29732,9 +30863,9 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Productos_Registro2'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                       //cmd3.ExecuteNonQuery();
 
-                                        mirarProduto_reg2 = true;
+                                        mirarProduto_reg2 = true; timepo = false;
 
 
                                     }
@@ -29748,10 +30879,11 @@ namespace SGC
                         catch (Exception ee)
                         {
 
-                            mirarProduto_reg2 = true;
+                            mirarProduto_reg2 = true; timepo = false;
                         };
 
                     }
+                    mirarProduto_reg2_registro = true;
                 }
             }
             catch (Exception ee)
@@ -29805,7 +30937,7 @@ namespace SGC
             try
             {
                 SQLiteConnection cn2 = new SQLiteConnection(conexiondb);
-
+              
                 bool actualizar = true;
 
                 DateTime time = lista_tiempos[5];
@@ -29826,8 +30958,9 @@ namespace SGC
                 }
                 rdr2.Close();
 
-                if (b != null)
+                if (b != null&&mirarProduto_reg1_registro)
                 {
+                    mirarProduto_reg1_registro = false;
                     if (DateTime.Compare((DateTime)b, time) == -1)
                     {
                         try
@@ -29913,9 +31046,9 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Productos_Registro'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
-                                        mirarProduto_reg1 = true;
+                                        mirarProduto_reg1 = true; timepo = false;
 
 
                                     }
@@ -29928,10 +31061,11 @@ namespace SGC
                         }
                         catch (Exception ee)
                         {
-                            mirarProduto_reg1 = true;
+                            mirarProduto_reg1 = true; timepo = false;
                         };
 
                     }
+                    mirarProduto_reg1_registro = true;
                 }
             }
             catch (Exception ee)
@@ -29957,7 +31091,7 @@ namespace SGC
                     Productos.Items.Add(p);
 
                 }
-                mirarProduto_reg1 = true;
+                mirarProduto_reg1 = true; timepo = false;
             }
             catch
             {
@@ -29988,7 +31122,7 @@ namespace SGC
 
                     }
 
-                    mirarProduto_reg1 = true;
+                    mirarProduto_reg1 = true; timepo = false;
                 });
             }
 
@@ -30086,9 +31220,9 @@ namespace SGC
 
                                             Recibos f = new Clases.Recibos(s);
 
-                                            string sql_query3 = "INSERT INTO Recibo([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura] ,[Vehiculo],[Matricula],[IBAN], [Descuento]) VALUES ("+f.Id+",'" + f.Nombre_Cliente.Replace("'", "$") + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura + "','" + f.Vehiculo + "', '" + f.Matricula + "', '" + f.IBAN + "', '" + f.Descuento + "')";
+                                            string sql_query3 = "INSERT INTO Recibo([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura] ,[Vehiculo],[Matricula],[IBAN], [Descuento],[Tipo], [Id_Ticket]) VALUES (" + f.Id+",'" + f.Nombre_Cliente.Replace("'", "$") + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura + "','" + f.Vehiculo + "', '" + f.Matricula + "', '" + f.IBAN + "', '" + f.Descuento +"'," + f.Tipo + "," + f.Id_Ticket + ")";
 
-                                            Console.WriteLine("INSERT INTO Recibo([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura] ,[Vehiculo],[Matricula],[IBAN], [Descuento]) VALUES (" + f.Id + ",'" + f.Nombre_Cliente.Replace("'", "$") + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura + "','" + f.Vehiculo + "', '" + f.Matricula + "', '" + f.IBAN + "', '" + f.Descuento + "')");
+                                            Console.WriteLine("INSERT INTO Recibo([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura] ,[Vehiculo],[Matricula],[IBAN], [Descuento],[Tipo], [Id_Ticket]) VALUES (" + f.Id + ",'" + f.Nombre_Cliente.Replace("'", "$") + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura + "','" + f.Vehiculo + "', '" + f.Matricula + "', '" + f.IBAN + "', '" + f.Descuento + "')");
 
                                             cmd3 = new SQLiteCommand(sql_query3, cn2);
                                             cmd3.ExecuteNonQuery();
@@ -30102,7 +31236,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Recibo'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                     }
                                 }
@@ -30110,14 +31244,16 @@ namespace SGC
 
                             cargartiempos();
                             mirarRecibos = true;
+                            timepo = false;
 
 
                         }
                         catch (Exception ee)
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                            Peta(ee, line + "");
+                           // Peta(ee, line + "");
                             mirarRecibos = true;
+                            timepo = false;
                         };
                     }
                 }
@@ -30314,7 +31450,7 @@ namespace SGC
                                             idd = c.Id;
                                         }
                                         Thread.Sleep(300);
-                                        string sql_query4 = "UPDATE Contratos_v SET TIME='" + DateTime.Now + "' WHERE Id=1";
+                                        string sql_query4 = "UPDATE Contratos_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
                                         cmd3.ExecuteNonQuery();
@@ -30322,7 +31458,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Contratos'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                     }
                                 }
@@ -30330,14 +31466,16 @@ namespace SGC
 
 
                             mirarContratos = true;
+                            timepo = false;
 
 
                         }
                         catch (Exception ee)
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                            Peta(ee, line + "");
+                            //Peta(ee, line + "");
                             mirarContratos = true;
+                            timepo = false;
                         }
                     }
                 }
@@ -30564,6 +31702,7 @@ namespace SGC
 
 
 
+               // MessageBox.Show(Properties.Settings.Default.DB);
                 if (Properties.Settings.Default.DB.Length == 0)
                 {
 
@@ -30641,36 +31780,83 @@ namespace SGC
             ClienteTPV.le.refresh += new ClienteTPV.TicketNuevo(Refreshtpv);
             FiltrosConfiguracion.le.refresh += new FiltrosConfiguracion.IndicesRefresh(filtrosRefresh);
             ComidaTpvConfiguracion.le.refresh += new ComidaTpvConfiguracion.comidaRefresh(comidaRefresh);
+            VentanaConsultas.le.refresh += new VentanaConsultas.listaConsultas(actualizarConsultas);
 
         }
-
-        private void comidaRefresh(ProductosTPV p)
+        private void actualizarConsultas(List<Consulta> list)
         {
-            if (p != null) {
-                if (p.Id == null || p.Id == 0)
-                {
-                    if (s.cargarIdProductoTPV(p) == -1)
-                    {
-                        s.EjecutarQuery("INSERT INTO Productos_TPV(Nombre, Referencia, Precio, IVA, Descripcion, Image,Tipo) VALUES('" + p.Nombre + "','" + p.Referencia + "','" + p.Precio.Replace(" €", "") + "'," + p.IVA + ",'" + p.Descripcion + "','" + p.Image + "'," + p.Tipo + ")");
-                        List<string> list = new List<string>();
-                        list.Add("Nombre:" + p.Nombre);
-                        list.Add("Referencia:" + p.Referencia);
-                        list.Add("Precio:" + p.Precio);
-                        list.Add("IVA:" + p.IVA);
-                        list.Add("Descripcion:" + p.Descripcion);
-                        list.Add("Image:" + p.Image);
-                        list.Add("Tipo:" + p.Tipo);
+            Lista_consultas = list;
+            esperarConsultas = false;
+            cargartiempos();
+            querys = new System.Threading.Timer(new TimerCallback(ObservarTodo2), null, 500, 500);
 
-                        Lista_consultas.Add(new Consulta("Productos_TPV", list, "", "INSERT"));
+        }
+        private void comidaRefresh(object a, object a2)
+        {if(a!=null)
+            if (a is ProductosTPV) {
+
+
+                ProductosTPV ptv = (ProductosTPV)a;
+
+
+
+            if (p != null) {
+
+                if (ptv.Id == null || ptv.Id == 0)
+                {
+                    if (s.cargarIdProductoTPV(ptv) == -1)
+                    {
+                                string path = "";
+                                if (ptv.Image.Contains("C:"))
+                                {
+                                    List<string> lss = ptv.Image.Replace("\\","/").Split('/').ToList();
+                                    
+                                    try
+                                    {
+                                        for (int i = 7; i < lss.Count(); i++)
+                                            path += "/" + lss[i];
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                    ptv.Image = path.Replace("//","/");
+                                }
+
+                        s.EjecutarQuery("INSERT INTO Productos_TPV(Nombre, Referencia, Precio, IVA, Descripcion, Image,Tipo) VALUES('" + ptv.Nombre + "','" + ptv.Referencia + "','" + ptv.Precio.Replace(" €", "") + "'," + ptv.IVA + ",'" + ptv.Descripcion + "','" + ptv.Image + "'," + ptv.Tipo + ")");
+                        List<string> list = new List<string>();
+                        list.Add("Nombre:" + ptv.Nombre);
+                        list.Add("Referencia:" + ptv.Referencia);
+                        list.Add("Precio:" + ptv.Precio);
+                        list.Add("IVA:" + ptv.IVA);
+                        list.Add("Descripcion:" + ptv.Descripcion);
+                                
+                        list.Add("Image:" + ptv.Image);
+                        list.Add("Tipo:" + ptv.Tipo);
+
+                                while (observartodotoken) { }
+                                Lista_consultas.Add(new Consulta("Productos_TPV", list, "", "INSERT"));
                     }
                 }
                 else
                 {
-                    List<string> list = new List<string>();
-                    Lista_consultas.Add(new Consulta("Productos_TPV", list, "Id:" + p.Id, "DELETE"));
+                   
 
                 }
-               
+
+            }
+            }
+            else
+            {
+
+                    while (observartodotoken) { }
+                    Lista_consultas.Add((Consulta)a);
+            }
+            else
+            {
+                List<string> list = new List<string>();
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Productos_TPV", list, "Id:" + ((ProductosTPV)a2).Id, "DELETE"));
             }
 
             Thread.Sleep(200);
@@ -30688,12 +31874,14 @@ namespace SGC
                         s.EjecutarQuery("INSERT INTO TPV_Indices(Nombre) VALUES('" + p.nom + "') ");
                         List<string> list = new List<string>();
                         list.Add("Nombre:" + p.nom);
+                        while (observartodotoken) { }
                         Lista_consultas.Add(new Consulta("TPV_Indices", list, "", "INSERT"));
                     }
                 }
                 else
                 {
                     List<string> list = new List<string>();
+                    while (observartodotoken) { }
                     Lista_consultas.Add(new Consulta("TPV_Indices", list, "Id:"+p.Id, "DELETE"));
 
                 }
@@ -30726,6 +31914,7 @@ namespace SGC
             s.EjecutarQuery(sql_query);
 
             consulta = new Consulta("TPV", parametros, "", "INSERT");
+            while (observartodotoken) { }
             Lista_consultas.Add(consulta);
 
             CargarTPV();
@@ -30738,6 +31927,7 @@ namespace SGC
         {
             
             CargarProcutosRegistroTPV();
+            cargarProductosTPV();
             try
             {
                 SQLiteConnection cn2 = new SQLiteConnection(conexiondb);
@@ -30813,7 +32003,7 @@ namespace SGC
                                             TicketTPV c = new Clases.TicketTPV(s);
                                            
 
-                                            string sql_query3 = "INSERT INTO TPV(Id,Id_Cliente,Nombre_Cliente,DNI_CIF,Direccion_Cliente,Poblacion_Cliente,CP_Cliente,Provincia_Cliente,Pais_Cliente,Fecha,Telefono,Mail,Id_Parcela,Nombre_Ticket) VALUES ("+c.Id+"," + c.Cliente + ",'" + c.Nombre_Cliente + "','" + c.DNI_CIF + "','" + c.Direccion_Cliente + "','" + c.Poblacio_Cliente + "','" + c.CP_Cliente + "','" + c.Provincia_Cliente + "','" + c.Pais_Cliente + "','" + c.fecha.ToString("dd/MM/yyyy") + "','" + c.Telefono + "','" + c.Mail + "'," + c.Plaza + ",'" + c.Nombre_Ticket + "')";
+                                            string sql_query3 = "INSERT INTO TPV(Id,Id_Cliente,Nombre_Cliente,DNI_CIF,Direccion_Cliente,Poblacion_Cliente,CP_Cliente,Provincia_Cliente,Pais_Cliente,Fecha,Telefono,Mail,Id_Parcela,Nombre_Ticket,Estado) VALUES ("+c.Id+"," + c.Cliente + ",'" + c.Nombre_Cliente + "','" + c.DNI_CIF + "','" + c.Direccion_Cliente + "','" + c.Poblacio_Cliente + "','" + c.CP_Cliente + "','" + c.Provincia_Cliente + "','" + c.Pais_Cliente + "','" + c.fecha.ToString("dd/MM/yyyy") + "','" + c.Telefono + "','" + c.Mail + "'," + c.Plaza + ",'" + c.Nombre_Ticket + "',"+c.Estado+")";
 
                                             //Console.WriteLine("INSERT INTO Factura([Id],[Nombre_Cliente], [DNI_CIF], [Poblacion_Cliente], [Direccion_Cliente], [CP_Cliente], [Provincia_Cliente],[Pais_Cliente], [Fecha],[Bi],[Cuota_IVA], [Importe], [Direccion_Facturacion],[Poblacion_Facturacion],[CP_Facturacion], [Provincia_Facturacion],[Pais_Facturacion],[Empresa],[Telefono],[Mail],[Metodo_Pago],[Telefono_Camping], [Fecha_ven], [Numero_Factura],[Descuento],[Vehiculo],[Matricula],[IBAN]) VALUES (" + f.Id + ",'" + f.Nombre_Cliente + "','" + f.DNI_CIF + "','" + f.Poblacio_Cliente + "','" + f.Direccion_Cliente.Replace("'", "$") + "','" + f.CP_Cliente + "','" + f.Provincia_Cliente.Replace("'", "$") + "','" + f.Pais_Cliente + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.BI + "','" + f.Cuota_IVA + "','" + f.Importe + "','" + f.Direccion_Facturacion.Replace("'", "$") + "','" + f.Poblecion_Facturacion + "','" + f.CP_Facturacion + "','" + f.Provincia_Facturacion + "','" + f.Pais_Facturacion + "','" + f.Empresa + "','" + f.Telefono + "','" + f.Mail + "'," + f.Metodo_Pago + ",'" + f.Telefono_Camping + "','" + f.fecha.ToString("dd/MM/yyyy") + "','" + f.Numero_Factura.Replace("__", "_") + "','" + f.Descuento + "','" + f.Vehiculo + "','" + f.Matricula + "','" + f.IBAN + "')");
 
@@ -30829,12 +32019,12 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='TPV'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                     }
                                 }
                             }
-                            mirar_tpv = true;
+                            mirar_tpv = true; timepo = false;
                             cargartiempos();
 
 
@@ -30842,8 +32032,8 @@ namespace SGC
                         catch (Exception ee)
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                            Peta(ee, line + "");
-                            mirar_tpv = true;
+                            //Peta(ee, line + "");
+                            mirar_tpv = true; timepo = false;
                         };
                     }
                 }
@@ -30857,13 +32047,17 @@ namespace SGC
             {
                 int index = RecibosTPV.SelectedIndex;
 
-                mirar_tpv = true;
+                mirar_tpv = true; timepo = false;
                 SQLiteDataReader reader= s.CargarTPV();
             while (reader.Read())
             {
                 Console.WriteLine(reader.GetInt32(0) + " " + reader.GetInt32(1) + " " + reader.GetString(2) + " " + reader.GetString(3) + " " + reader.GetString(4) + " " + reader.GetString(5) + " " + reader.GetString(6) + " " + reader.GetString(7) + " " + reader.GetString(8) + " " + DateTime.Parse(reader.GetString(9)) + " " + reader.GetString(10) + " " + reader.GetString(11) + " " + reader.GetInt32(12) + " " + reader.GetInt32(13) + " " + reader.GetString(14));
                 TicketTPV tpv = new TicketTPV(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetString(8), DateTime.Parse(reader.GetString(9)), reader.GetString(10), reader.GetString(11), reader.GetInt32(12), reader.GetInt32(13), reader.GetString(14));
-
+                    if (lpdct_rg.Count == 0)
+                    {
+                        CargarProcutosRegistroTPV();
+                        Thread.Sleep(2000);
+                    }
                 tpv.Lista_productos = lpdct_rg.Select(x => x).Where(x => x.Id_Ticket == tpv.Id).ToList();
 
                 cargarTotal(tpv.Lista_productos, tpv);
@@ -30908,6 +32102,7 @@ namespace SGC
                 {
                     RecibosTPV.SelectedIndex = index;
                 }
+                ProductosRecibosTPV.Items.Refresh();
             }
             catch
             {
@@ -30919,7 +32114,11 @@ namespace SGC
                     {
                         Console.WriteLine(reader.GetInt32(0) + " " + reader.GetInt32(1) + " " + reader.GetString(2) + " " + reader.GetString(3) + " " + reader.GetString(4) + " " + reader.GetString(5) + " " + reader.GetString(6) + " " + reader.GetString(7) + " " + reader.GetString(8) + " " + DateTime.Parse(reader.GetString(9)) + " " + reader.GetString(10) + " " + reader.GetString(11) + " " + reader.GetInt32(12) + " " + reader.GetInt32(13) + " " + reader.GetString(14));
                         TicketTPV tpv = new TicketTPV(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetString(8), DateTime.Parse(reader.GetString(9)), reader.GetString(10), reader.GetString(11), reader.GetInt32(12), reader.GetInt32(13), reader.GetString(14));
-
+                        if (lpdct_rg.Count == 0)
+                        {
+                            CargarProcutosRegistroTPV();
+                            Thread.Sleep(2000);
+                        }
                         tpv.Lista_productos = lpdct_rg.Select(x => x).Where(x => x.Id_Ticket == tpv.Id).ToList();
 
                         cargarTotal(tpv.Lista_productos, tpv);
@@ -30965,6 +32164,7 @@ namespace SGC
                     {
                         RecibosTPV.SelectedIndex = index;
                     }
+                    ProductosRecibosTPV.Items.Refresh();
                 });
             }
 
@@ -30972,122 +32172,129 @@ namespace SGC
 
         private async void CargarProcutosRegistroTPV()
         {
-            lpdct_rg = new List<Producto_Registro_TPV>(); 
-            try
-            {
-                SQLiteConnection cn2 = new SQLiteConnection(conexiondb);
-
-                bool actualizar = true;
-
-                DateTime time = lista_tiempos[17];
-                //DateTime.TryParse(mycontent, out time);
-                string sql_Text2 = "SELECT * FROM Productos_Registro_TPV_v";
-                cn2.Open();
-                SQLiteCommand cmd2 = new SQLiteCommand(sql_Text2, cn2);
-                SQLiteDataReader rdr2 = cmd2.ExecuteReader();
-                List<string> ImportedFiles2 = new List<string>();
-
-                DateTime? b = null;
-                while (rdr2.Read())
+            lpdct_rg = new List<Producto_Registro_TPV>();
+            
+                try
                 {
-                    //Console.writeLine("Rol");
-                    //Console.writeLine(rdr2.GetString(1));
-                    DateTime d = DateTime.Parse(rdr2.GetString(1));
-                    b = d;
-                }
-                rdr2.Close();
+                    mirarProduto_reg_tpv_registro = false;
+                    SQLiteConnection cn2 = new SQLiteConnection(conexiondb);
 
-                if (b != null)
-                {
-                    if (DateTime.Compare((DateTime)b, time) == -1)
+                    bool actualizar = true;
+
+                    DateTime time = lista_tiempos[18];
+                    //DateTime.TryParse(mycontent, out time);
+                    string sql_Text2 = "SELECT * FROM Productos_Registro_TPV_v";
+                    cn2.Open();
+                    SQLiteCommand cmd2 = new SQLiteCommand(sql_Text2, cn2);
+                    SQLiteDataReader rdr2 = cmd2.ExecuteReader();
+                    List<string> ImportedFiles2 = new List<string>();
+
+                    DateTime? b = null;
+                    while (rdr2.Read())
                     {
-                        try
+                        //Console.writeLine("Rol");
+                        //Console.writeLine(rdr2.GetString(1));
+                        DateTime d = DateTime.Parse(rdr2.GetString(1));
+                        b = d;
+                    }
+                    rdr2.Close();
+
+                    if (b != null)
+                    {
+                    if (mirarProduto_reg_tpv_registro)
+                    {
+                        if (DateTime.Compare((DateTime)b, time) == -1)
                         {
-                            string uri = string.Format("http://app.adex-integracio.com/sgc/index2.php");
-                            //SGC.Clases.Version v = new Version();
-                            //Debug.WriteLine("Hola ");
-                            //byteArray = Encoding.UTF8.GetBytes("tabla = Version");
-                            IEnumerable<KeyValuePair<string, string>> queries = new List<KeyValuePair<string, string>>()
+                            try
+                            {
+                                string uri = string.Format("http://app.adex-integracio.com/sgc/index2.php");
+                                //SGC.Clases.Version v = new Version();
+                                //Debug.WriteLine("Hola ");
+                                //byteArray = Encoding.UTF8.GetBytes("tabla = Version");
+                                IEnumerable<KeyValuePair<string, string>> queries = new List<KeyValuePair<string, string>>()
                                 {
-                                    new KeyValuePair<string, string>("tabla", "Producto_Registro_TPV"),
+                                    new KeyValuePair<string, string>("tabla", "Productos_Registro_TPV"),
                                     new KeyValuePair<string, string>("action", "Select")
                                 };
-                            //Uri = new Uri(uri);
-                            HttpContent h = new FormUrlEncodedContent(queries);
-                            using (HttpClient client2 = new HttpClient())
-                            {
-                                using (HttpResponseMessage resp2 = await client2.PostAsync(uri, h))
+                                //Uri = new Uri(uri);
+                                HttpContent h = new FormUrlEncodedContent(queries);
+                                using (HttpClient client2 = new HttpClient())
                                 {
-                                    using (HttpContent content22 = resp2.Content)
+                                    using (HttpResponseMessage resp2 = await client2.PostAsync(uri, h))
                                     {
-                                        string mycontent = await content22.ReadAsStringAsync();
-                                        HttpContentHeaders hch = content22.Headers;
-                                        //Console.writeLine(mycontent);
-                                        //v = new Version(mycontent);
-                                        //Debug.WriteLine("IsSuccessStatusCode");
-
-                                        JArray jay = new JArray();
-                                        try
+                                        using (HttpContent content22 = resp2.Content)
                                         {
-                                            jay = JArray.Parse(mycontent);
+                                            string mycontent = await content22.ReadAsStringAsync();
+                                            HttpContentHeaders hch = content22.Headers;
+                                            //Console.writeLine(mycontent);
+                                            //v = new Version(mycontent);
+                                            //Debug.WriteLine("IsSuccessStatusCode");
+
+                                            JArray jay = new JArray();
+                                            try
+                                            {
+                                                jay = JArray.Parse(mycontent);
+                                            }
+                                            catch { }
+                                            if (cn2.State != ConnectionState.Open) cn2.Open();
+                                            //DataTable tb = new DataTable();
+                                            string sql_Text3 = "DELETE FROM Productos_Registro_TPV";
+
+                                            SQLiteCommand cmd3 = new SQLiteCommand(sql_Text3, cn2);
+                                            cmd3.ExecuteNonQuery();
+                                            //lst.Remove(lst[0]);
+                                            int idd = 0;
+                                            foreach (JObject s in jay)
+                                            {
+
+
+                                                Producto_Registro_TPV prgt = new Clases.Producto_Registro_TPV(s);
+
+                                                this.s.EjecutarQuery("INSERT INTO Productos_Registro_TPV(Id,Nombre,Cantidad,Precio,IVA,Impuesto,Tipo,Total,Id_ticket) VALUES(" + prgt.Id + ",'" + prgt.Nombre_Producto + "','" + prgt.Cantidad + "','" + prgt.Precio + "','" + prgt.IVA + "','" + prgt.Impuesto + "'," + prgt.tipo + ",'" + prgt.Total + "'," + prgt.Id_Ticket + ")");
+
+                                                idd = prgt.Id;
+                                            }
+                                            string sql_query4 = "UPDATE Productos_Registro_TPV_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
+
+                                            cmd3 = new SQLiteCommand(sql_query4, cn2);
+                                            cmd3.ExecuteNonQuery();
+                                            idd++;
+                                            sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Productos_Registro_TPV'";
+
+                                            cmd3 = new SQLiteCommand(sql_query4, cn2);
+                                            //cmd3.ExecuteNonQuery();
+
+
+
                                         }
-                                        catch { }
-                                        if (cn2.State != ConnectionState.Open) cn2.Open();
-                                        //DataTable tb = new DataTable();
-                                        string sql_Text3 = "DELETE FROM Productos_Registro_TPV";
-
-                                        SQLiteCommand cmd3 = new SQLiteCommand(sql_Text3, cn2);
-                                        cmd3.ExecuteNonQuery();
-                                        //lst.Remove(lst[0]);
-                                        int idd = 0;
-                                        foreach (JObject s in jay)
-                                        {
-
-
-                                            Producto_Registro_TPV prgt = new Clases.Producto_Registro_TPV(s);
-
-                                            this.s.EjecutarQuery("INSERT INTO Productos_Registro_TPV(Id,Nombre,Cantidad,Precio,IVA,Impuesto,Tipo,Total,Id_ticket) VALUES("+ prgt.Id + ",'" + prgt.Nombre_Producto + "','" + prgt.Cantidad + "','" + prgt.Precio + "','" + prgt.IVA + "','" + prgt.Impuesto + "'," + prgt.tipo + ",'" + prgt.Total + "'," + prgt.Id_Ticket + ")");
-
-                                            idd = prgt.Id;
-                                        }
-                                        string sql_query4 = "UPDATE Productos_Registro_TPV_v SET TIME='" + DateTime.Now.AddSeconds(5) + "' WHERE Id=1";
-
-                                        cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
-                                        idd++;
-                                        sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Productos_Registro_TPV'";
-
-                                        cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
-
-
-
                                     }
                                 }
+
+                                cargartiempos();
+
+
                             }
-
-                            cargartiempos();
-
+                            catch (Exception ee)
+                            {
+                                var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+                                // Peta(ee, line + "");
+                                mirarProduto_reg_tpv = true; timepo = false;
+                            };
 
                         }
-                        catch (Exception ee)
-                        {
-                            var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                            Peta(ee, line + ""); mirarProduto_reg_tpv = true;
-                        };
-
+                        mirarProduto_reg_tpv_registro = true;
                     }
                 }
-            }
-            catch (Exception ee)
-            {
-                Console.WriteLine(ee.Message); mirarProduto_reg_tpv = true;
-            }
+                }
+                catch (Exception ee)
+                {
+                    Console.WriteLine(ee.Message); mirarProduto_reg_tpv = true; timepo = false;
+                }
            
             
             try
             {
-                mirarProduto_reg_tpv = true; SQLiteDataReader reader = s.CargarProducto_TPV();
+                mirarProduto_reg_tpv = true; timepo = false; SQLiteDataReader reader = s.CargarProducto_TPV();
                 while (reader.Read())
                 {
                     Producto_Registro_TPV tpv = new Producto_Registro_TPV(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4), reader.GetString(5), reader.GetInt32(6), Math.Round(double.Parse(reader.GetString(7)), 4).ToString("0.0000"), reader.GetInt32(8), reader.GetString(9));
@@ -31100,7 +32307,7 @@ namespace SGC
             catch {
                 Dispatcher.InvokeAsync(() =>
                 {
-                    mirarProduto_reg_tpv = true; SQLiteDataReader reader = s.CargarProducto_TPV();
+                    mirarProduto_reg_tpv = true; timepo = false; SQLiteDataReader reader = s.CargarProducto_TPV();
                     while (reader.Read())
                     {
                         Producto_Registro_TPV tpv = new Producto_Registro_TPV(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4), reader.GetString(5), reader.GetInt32(6), Math.Round(double.Parse(reader.GetString(7)), 4).ToString("0.0000"), reader.GetInt32(8), reader.GetString(9));
@@ -31113,6 +32320,7 @@ namespace SGC
 
             }
 
+             
 
         }
 
@@ -31236,6 +32444,7 @@ namespace SGC
 
 
                     consulta = new Consulta("Cliente", parametros, "", "INSERT");
+                    while (observartodotoken) { }
                     Lista_consultas.Add(consulta);
                     if (c.n_plaza.Length == 0)
                         c.n_plaza = "0";
@@ -31332,6 +32541,7 @@ namespace SGC
                 path2 = arr[0] + "\\" + arr[1] + "\\" + arr[2] + "\\" + arr[3] + "\\" + arr[4] + "\\" + arr[5] + "\\" + arr[6];
 
                 string Path = path2 + "//Registros_Clientes_Mossos";
+                string Path2 = path2 + "//Registros_Clientes_MossosLogs";
 
                 bool ad = false;
                 foreach (Clientes c in lc)
@@ -31402,7 +32612,7 @@ namespace SGC
                             if (c.lista_acompañantes.Length > 0)
                             {
                                 string s = "";
-
+                                Log oLog = new Log(Path2);
 
                                 foreach (Acompañantes a in c.lista_acompañantes)
                                 {
@@ -31416,10 +32626,13 @@ namespace SGC
                                             DateTime dt2 = DateTime.Parse(a.fecha_n1);
 
                                             if (dt2 != null)
+                                            {
+                                                oLog.Add("Mirar tiempo de: " + a.nombreacompañante1 + " " + a.apellido1compañante1 + " " +dt.Year+" - "+dt2.Year+": "+ (dt.Year - dt2.Year));
                                                 if (dt.Year - dt2.Year > 16)
                                                 {
                                                     año = 1;
                                                 }
+                                            }
 
                                         }
                                         catch
@@ -31586,9 +32799,22 @@ namespace SGC
 
                 Directory.CreateDirectory(Path);
                 DateTime dt_ex = DateTime.Now;
-                sLDocument.SaveAs(Path + "//exportado"+ dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss")+".xls");
+
+
+
+                sLDocument.SaveAs(Path + "//exportado"+ dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xslx");
                 //File.Copy(path, Path + "//exportado.xls", true);
-                Process.Start(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xls");
+                //var xlsxFile = new ExcelFile();
+                // Load data from XLSX file.
+                SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+                var xlsxFile = ExcelFile.Load(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xslx", GemBox.Spreadsheet.LoadOptions.XlsxDefault);
+                
+                // Save XLSX file to XLS file.
+                xlsxFile.SaveXls(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + "_.xls");
+
+                File.Delete(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xslx");
+                
+                Process.Start(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + "_.xls");
             }
         }
 
@@ -31724,6 +32950,7 @@ namespace SGC
                 d=s.CargarUltimoAcompañante();
             if (t == 0)
             {
+                while (observartodotoken) { }
                 Lista_consultas.Add(cs);
                 for (int ii = 0; ii < 6; ii++)
                     if (c.lista_acompañantes[ii] == null)
@@ -31771,6 +32998,7 @@ namespace SGC
                 if (d.Id == 0)
                     d = s.CargarUltimoAcompañante();
 
+                while (observartodotoken) { }
                 Lista_consultas.Add(cs);
                 c.lista_acompañantes[a] = d;
                 Acompañantes cp = lacmp.Where(x => x.Id == d.Id).First();
@@ -31843,6 +33071,7 @@ namespace SGC
                     }
 
                     consulta = new Consulta("Vehiculos", parametros, "", "INSERT");
+                    while (observartodotoken) { }
                     Lista_consultas.Add(consulta);
                     cn.Close();
                     CargarVehiculos();
@@ -31909,7 +33138,8 @@ namespace SGC
                                                 }
                                                 sql_cmd.ExecuteNonQuery();
                                                 Consulta consulta = new Consulta("Vehiculos", l, "Id:" + d.Id, "UPDATE");
-                                                Lista_consultas.Add(consulta);
+                            while (observartodotoken) { }
+                            Lista_consultas.Add(consulta);
 
 
                                                 CargarVehiculos();
@@ -31993,6 +33223,7 @@ namespace SGC
                 //sql_cmd2.ExecuteNonQuery(); 
                 cn.Close();
                 consulta = new Consulta("Direcciones", parametros, "", "INSERT");
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
                 cn.Close();
                 cargarDirecciones();
@@ -32095,6 +33326,7 @@ namespace SGC
                     //sql_cmd2.ExecuteNonQuery(); 
                     cn.Close();
                     consulta = new Consulta("Productos_Registrados", parametros, "", "INSERT");
+                    while (observartodotoken) { }
                     Lista_consultas.Add(consulta);
                     cn.Close();
                 }
@@ -32289,6 +33521,7 @@ namespace SGC
                                             sql_cmd.ExecuteNonQuery();
                                             cn.Close();
                                             consulta = new Consulta("Productos_Registrados", parametros, "Id:" + p.Id, "UPDATE");
+                                            while (observartodotoken) { }
                                             Lista_consultas.Add(consulta);
                                         }
 
@@ -32418,7 +33651,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Productos_Registrados'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
 
                                     }
                                 }
@@ -32427,13 +33660,13 @@ namespace SGC
                             cargartiempos();
 
 
-                            mirarProduto = true;
+                            mirarProduto = true;timepo = false;
                         }
                         catch (Exception ee)
                         {
                             var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
-                            Peta(ee, line + "");
-                            mirarProduto = true;
+                           // Peta(ee, line + "");
+                            mirarProduto = true; timepo = false;
                         };
                     }
                 }
@@ -36355,11 +37588,10 @@ namespace SGC
                             float imp = 0;
                             if (s.Nombre_Producto.ToLower().Contains("tasa turistica"))
                             {
-                                float ff = float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad);
+                                float ff = float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad) * 1.10f;
                                 tasa += (float)Math.Round(ff, 2);
 
-                            }
-                            if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                            }else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
                             {
                                 iva21 += float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * 0.21f;
 
@@ -36402,7 +37634,7 @@ namespace SGC
                             subtitleFont2 = FontFactory.GetFont("Calibri", 9, 0, new BaseColor(123, 123, 122));
                             subTitle2 = new iTextSharp.text.Paragraph(liva.Find(x => x.Id == int.Parse(s.IVA)).Tipo, subtitleFont);
                             subtitleFont3 = FontFactory.GetFont("Calibri", 9, 0, new BaseColor(123, 123, 122));
-                            subTitle3 = new iTextSharp.text.Paragraph(Math.Round(imp+float.Parse(s.Total.Replace("€", "")),2).ToString("0.00")+" €", subtitleFont);
+                            subTitle3 = new iTextSharp.text.Paragraph(Math.Round(float.Parse(s.Precio.Replace("€", "")),2).ToString("0.00")+" €", subtitleFont);
                             subTitle4 = new iTextSharp.text.Paragraph(s.descu, subtitleFont);
 
                             if (i == f.Lista_productos.Count() - 1)
@@ -36679,7 +37911,7 @@ namespace SGC
 
                         table.DefaultCell.BorderColorBottom = new BaseColor(123, 123, 122);
                         titleFont = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
-                        docTitle = new iTextSharp.text.Paragraph(f.BI.ToString("0.00") + " €", titleFont);
+                       
                         titleFont3 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
 
                         titleFont2 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
@@ -36691,32 +37923,41 @@ namespace SGC
                         float des = float.Parse(f.Descuento) / 100;
                         subtitleFont = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
 
-                        subTitle = new iTextSharp.text.Paragraph(Math.Round(f.BI * (1 - des), 4).ToString("0.00") + " €", subtitleFont);
                         subTitle.Alignment = Element.ALIGN_CENTER;
                         subtitleFont2 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
                         subTitle2 = new iTextSharp.text.Paragraph(tasa.ToString("0.00") + " €", subtitleFont);
+                        float imponible =0;
                         iva21 = 0;
                         iva10 = 0;
                         ivaotros = 0;
                         foreach (Producto s in f.Lista_productos)
                         {
-
-                            if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                            if (s.Nombre_Producto.ToLower().Contains("tasa turistica"))
                             {
+                                f.BI -= (float)Math.Round(((float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * 0.10f)), 4);
+                            }
+                            else
+                                if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                            {
+                                imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                                 float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                                 iva21 += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100)) * 0.21f;
                             }
                             else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("10"))
                             {
+                                imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                                 float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                                 iva10 += (float)Math.Round(((float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100) * 0.10f)),4);
                             }
                             else
                             {
+                                imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                                 float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                                 ivaotros += (float)Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100) * float.Parse(liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje) / 100;
                             }
                         }
+                        subTitle = new iTextSharp.text.Paragraph("    "+Math.Round(imponible * (1 - des), 4).ToString("0.00") + " €", subtitleFont);
+                        docTitle = new iTextSharp.text.Paragraph(Math.Round(imponible, 4).ToString("0.00") + " €", titleFont);
                         iva21 = iva21 * (1 - float.Parse(f.Descuento) / 100);
                         iva10 = iva10 * (1 - float.Parse(f.Descuento) / 100);
                         ivaotros = ivaotros * (1 - float.Parse(f.Descuento) / 100);
@@ -36729,7 +37970,7 @@ namespace SGC
                         subTitle4.Alignment = Element.ALIGN_CENTER;
                         subTitle5 = new iTextSharp.text.Paragraph(Math.Round(ivaotros, 4).ToString("0.00") + " €", subtitleFont);
                         subTitle5.Alignment = Element.ALIGN_CENTER;
-                        float BI = (float)Math.Round(f.BI * (1 - des), 4);
+                        float BI = (float)Math.Round(Math.Round(imponible, 4) * (1 - des), 4);
                         subTitle6 = new iTextSharp.text.Paragraph(Math.Round(BI + iva21 + iva10 + ivaotros + tasa, 2).ToString("0.00") + " €", subtitleFont3);
                         subTitle6.Alignment = Element.ALIGN_RIGHT;
                         cell = new PdfPCell();
@@ -37513,10 +38754,9 @@ namespace SGC
                         if (s.Nombre_Producto.ToLower().Contains("tasa turistica"))
                         {
                             float ff = float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad);
-                            tasa += float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad);
+                            tasa += float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad)*1.1f;
 
-                        }
-                        if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                        }else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
                         {
                             iva21 += float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * 0.21f;
 
@@ -37836,7 +39076,7 @@ namespace SGC
 
                         table.DefaultCell.BorderColorBottom = new BaseColor(0, 0, 0);
                         titleFont = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
-                        docTitle = new iTextSharp.text.Paragraph(f.BI.ToString("0.00") + " €", titleFont);
+                       
                         titleFont3 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
 
                         titleFont2 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
@@ -37846,33 +39086,41 @@ namespace SGC
                         float des = float.Parse(f.Descuento) / 100;
                         subtitleFont = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
 
-                        subTitle = new iTextSharp.text.Paragraph(Math.Round(f.BI * (1 - des), 4).ToString("0.00") + " €", subtitleFont);
                         subTitle.Alignment = Element.ALIGN_CENTER;
                         subtitleFont2 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
                         subTitle2 = new iTextSharp.text.Paragraph(tasa.ToString("0.00") + " €", subtitleFont);
                         iva21 = 0;
                         iva10 = 0;
-                        ivaotros = 0;
-                        foreach (Producto s in f.Lista_productos)
+                        ivaotros = 0; float imponible = 0;
+                    foreach (Producto s in f.Lista_productos)
+                        {
+                        docTitle = new iTextSharp.text.Paragraph(f.BI.ToString("0.00") + " €", titleFont);
+                        if (s.Nombre_Producto.ToLower().Contains("tasa turistica"))
                         {
 
-                            if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                        }
+                        else if(liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
                             {
-                                float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
+                            float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                                 iva21 += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100)) * 0.21f;
                             }
                             else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("10"))
                             {
-                                float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
+                            float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                                 iva10 += (float)Math.Round(((float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100) * 0.10f)), 4);
                             }
                             else
                             {
-                                float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
+                            float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                                 ivaotros += (float)Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100) * float.Parse(liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje) / 100;
                             }
-                        }
-                        iva21 = iva21 * (1 - float.Parse(f.Descuento) / 100);
+                    }
+                    subTitle = new iTextSharp.text.Paragraph("    " + Math.Round(imponible* (1 - des), 4).ToString("0.00") + " €", subtitleFont);
+                    docTitle = new iTextSharp.text.Paragraph(imponible.ToString("0.00") + " €", titleFont);
+                    iva21 = iva21 * (1 - float.Parse(f.Descuento) / 100);
                         iva10 = iva10 * (1 - float.Parse(f.Descuento) / 100);
                         ivaotros = ivaotros * (1 - float.Parse(f.Descuento) / 100);
 
@@ -37884,8 +39132,8 @@ namespace SGC
                         subTitle4.Alignment = Element.ALIGN_CENTER;
                         subTitle5 = new iTextSharp.text.Paragraph(Math.Round(ivaotros, 4).ToString("0.00") + " €", subtitleFont);
                         subTitle5.Alignment = Element.ALIGN_CENTER;
-                        float BI = (float)Math.Round(f.BI * (1 - des), 4);
-                        subTitle6 = new iTextSharp.text.Paragraph(Math.Round(BI + iva21 + iva10 + ivaotros + tasa, 2).ToString("0.00") + " €", subtitleFont3);
+                    float BI = (float)Math.Round(Math.Round(imponible, 4) * (1 - des), 4);
+                    subTitle6 = new iTextSharp.text.Paragraph(Math.Round(BI + iva21 + iva10 + ivaotros + tasa, 2).ToString("0.00") + " €", subtitleFont3);
                         subTitle6.Alignment = Element.ALIGN_RIGHT;
                         cell = new PdfPCell();
                         cell.AddElement(docTitle);
@@ -38309,6 +39557,7 @@ namespace SGC
 
                         }
                         Consulta consulta = new Consulta("Alarmas", l, "", "INSERT");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                         CargarAlarmas();
                         valr.alarmas.Add(lalr[lalr.Count - 1]);
@@ -38327,6 +39576,7 @@ namespace SGC
                         }
                         sql_cmd.ExecuteNonQuery();
                         Consulta consulta = new Consulta("Alarmas", l, "Id:" + a.Id, "INSERT");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                     }
                     else
@@ -38343,6 +39593,7 @@ namespace SGC
                         sql_cmd.ExecuteNonQuery();
                         Iluminacion_Alarmas.Items.Remove(a);
                         Consulta consulta = new Consulta("Alarmas", l, "Id:" + a.Id, "Delete");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                     }
 
@@ -38385,6 +39636,7 @@ namespace SGC
                 //sql_cmd2.ExecuteNonQuery(); 
                 cn.Close();
                 Consulta consulta = new Consulta("Contratos", l, "", "INSERT");
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
                 CargarContratos();
 
@@ -38473,6 +39725,7 @@ namespace SGC
                         f.Id_Ticket = 0;
                     if (f.Id_Ticket.ToString().Length == 0)
                         f.Id_Ticket = 0;
+                    l.Add("Id_Ticket:" + f.Id_Ticket);
 
                     log.Add("34730 7");
                     string sql_connection = conexiondb;
@@ -38503,6 +39756,7 @@ namespace SGC
                     }
 
                     Consulta consulta = new Consulta("Recibo", l, "", "INSERT");
+                    while (observartodotoken) { }
                     Lista_consultas.Add(consulta);
                     if (f.Lista_productos.Count > 0)
                     {
@@ -38550,6 +39804,7 @@ namespace SGC
 
                             }
                             consulta = new Consulta("Productos_Registro2", l, "", "INSERT");
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                         }
                     }
@@ -38600,6 +39855,7 @@ namespace SGC
 
                             }
                             consulta = new Consulta("Productos_Registro2", l, "", "INSERT");
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                         }
                     }
@@ -38703,6 +39959,7 @@ namespace SGC
 
                     }
                     Consulta consulta = new Consulta("Recibo", l, "", "INSERT");
+                    while (observartodotoken) { }
                     Lista_consultas.Add(consulta);
                     foreach (Producto p in f.Lista_productos)
                     {
@@ -38746,6 +40003,7 @@ namespace SGC
 
                         }
                         consulta = new Consulta("Productos_Registro2", l, "", "INSERT");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                     }
                     List<string> l2 = new List<string>();
@@ -38857,7 +40115,9 @@ namespace SGC
 
                     }
                     Consulta consulta = new Consulta("Factura", l, "", "INSERT");
-                    Lista_consultas.Add(consulta); 
+                    while (observartodotoken) { }
+                    Lista_consultas.Add(consulta);
+                    while (observartodotoken) { }
                     Lista_consultas.Add(consulta2);
                     foreach (Producto p in f.Lista_productos)
                     {
@@ -38899,6 +40159,7 @@ namespace SGC
 
                         }
                         consulta = new Consulta("Productos_Registro", l, "", "INSERT");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                     }
 
@@ -38973,6 +40234,8 @@ namespace SGC
                 l.Add("Telefono_Camping:" + f.Telefono_Camping);
                 l.Add("Fecha_ven:" + f.fecha_ven.ToString("yyyy/MM/dd"));
                 l.Add("Numero_Factura:" + f.Numero_Factura);
+                l.Add("Id_Ticket:" + f.Id_Ticket);
+                l.Add("Tipo:1");
 
 
                 string sql_connection = conexiondb;
@@ -38993,6 +40256,7 @@ namespace SGC
                 numero_serie.Text = (int.Parse(numero_serie.Text) + 1).ToString("000");
 
                 Consulta consulta2 = new Consulta("Camping", l2, "Id:1", "UPDATE");
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta2);
                 CargarEmpresa();
                 CargarFacturas();
@@ -39010,6 +40274,7 @@ namespace SGC
 
                 }
                 Consulta consulta = new Consulta("Factura", l, "", "INSERT");
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
                 if (f.Lista_productos.Count > 0)
                 {
@@ -39053,6 +40318,7 @@ namespace SGC
 
                         }
                         consulta = new Consulta("Productos_Registro", l, "", "INSERT");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                     }
                 }
@@ -39099,6 +40365,7 @@ namespace SGC
 
                         }
                         consulta = new Consulta("Productos_Registro", l, "", "INSERT");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                     }
 
@@ -39223,6 +40490,7 @@ namespace SGC
 
                 }
                 consulta = new Consulta("Rol", l, "", "INSERT");
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
                 string cn_string = conexiondb;
                 cn = new SQLiteConnection(cn_string);
@@ -39289,6 +40557,7 @@ namespace SGC
 
                 }
                 consulta = new Consulta("Usuario", parametros, "", "INSERT");
+                while (observartodotoken) { }
                 Lista_consultas.Add(consulta);
 
                 string sql_Text = "UPDATE Version SET configurationcol=GETDATE()";
@@ -39342,6 +40611,7 @@ namespace SGC
 
                 }
 
+                while (observartodotoken) { }
                 Lista_consultas.Add(c);
                 clearall();
                 string cn_string = conexiondb;
@@ -39368,16 +40638,14 @@ namespace SGC
             }
         }
 
-        private async void RefreshCliente(Clientes c, List<string> qury, List<Consulta> lc)
+        private async void  RefreshCliente(Clientes c, List<string> qury, List<Consulta> lc)
         {
             try
             {
                 Consulta consulta;
                 List<string> parametros = new List<string>();
-                if (lcln.Count > 0)
-                    parametros.Add("Id:" + (lcln.Select(x => x.id).Last() + 1).ToString());
-                else
-                    parametros.Add("Id:1");
+                //if (lcln.Count == 0)                    
+                    //parametros.Add("Id:1");
                 parametros.Add("N_Cliente:" + c.n_cliemte);
 
                 parametros.Add("Nombre:" + c.nombre_cliente);
@@ -39414,7 +40682,7 @@ namespace SGC
                 parametros.Add("Provincia:" + c.Pais);
                 if (c.Fecha_In != null)
                 {
-                    parametros.Add("Fecha_In:" + ((DateTime)c.Fecha_In).ToString("yyyy-MM-dd HH:mm:ss"));
+                    parametros.Add("Fecha_In:" + ((DateTime)c.Fecha_In).ToString("yyyy-MM-dd"));
                 }
                 else
                 {
@@ -39422,7 +40690,7 @@ namespace SGC
                 }
                 if (c.Fecha_Out != null)
                 {
-                    parametros.Add("Fecha_Out:" + ((DateTime)c.Fecha_Out).ToString("yyyy-MM-dd HH:mm:ss"));
+                    parametros.Add("Fecha_Out:" + ((DateTime)c.Fecha_Out).ToString("yyyy-MM-dd"));
                 }
                 else
                 {
@@ -39432,7 +40700,7 @@ namespace SGC
 
                 if (c.fecha_pago != null)
                 {
-                    parametros.Add("Fecha_Pega:" + ((DateTime)c.fecha_pago).ToString("yyyy-MM-dd HH:mm:ss"));
+                    parametros.Add("Fecha_Pega:" + ((DateTime)c.fecha_pago).ToString("yyyy-MM-dd"));
                 }
                 else
                 {
@@ -39441,7 +40709,7 @@ namespace SGC
                 }
                 if (c.fecha_contrato != null)
                 {
-                    parametros.Add("Fecha_Contratacion:" + ((DateTime)c.fecha_contrato).ToString("yyyy-MM-dd HH:mm:ss"));
+                    parametros.Add("Fecha_Contratacion:" + ((DateTime)c.fecha_contrato).ToString("yyyy-MM-dd"));
                 }
                 else
                 {
@@ -39449,7 +40717,7 @@ namespace SGC
                 }
                 if (c.fecha_entrada_estado != null)
                 {
-                    parametros.Add("Fecha_Entrada:" + ((DateTime)c.fecha_entrada_estado).ToString("yyyy-MM-dd HH:mm:ss"));
+                    parametros.Add("Fecha_Entrada:" + ((DateTime)c.fecha_entrada_estado).ToString("yyyy-MM-dd"));
                 }
                 else
                 {
@@ -39584,8 +40852,10 @@ namespace SGC
                     SQLiteCommand sql_cmd = new SQLiteCommand(sql_query, cn);
 
                     sql_cmd.ExecuteNonQuery();
+                    MessageBox.Show("Cliente añadido 1");
                     Clientes ccc = s.CargarUltimoCliente();
 
+                    MessageBox.Show("Cliente añadido "+ccc.nombre_completo);
 
                     string[] aa = c.apellidos_cliente.Split(' ');
                     string queryA = "'" + c.nombre_cliente + "', '";
@@ -39615,8 +40885,10 @@ namespace SGC
 
                     sql_cmd.ExecuteNonQuery();
 
-                   Acompañantes ac = s.CargarUltimoAcompañante();
+                    MessageBox.Show("Cliente añadido acompañante");
+                    Acompañantes ac = s.CargarUltimoAcompañante();
 
+                    MessageBox.Show("Cliente añadido acompañante "+ac.nombreacompañante1);
 
 
 
@@ -39660,6 +40932,7 @@ namespace SGC
 
                     consulta = new Consulta("Cliente", parametros, "", "INSERT");
 
+                    while (observartodotoken) { }
                     Lista_consultas.Add(consulta);
                     parametros = new List<string>();
                     parametros.Add("nombreacompañante1:" + ac.nombreacompañante1);
@@ -39674,25 +40947,45 @@ namespace SGC
                     parametros.Add("cliente:" + ac.Clienteid);
 
                     consulta = new Consulta("Acompañante", parametros, "", "INSERT");
+
+
+                    MessageBox.Show("Cliente añadiendo " + consulta.paramen);
+
+
+                    while (observartodotoken) { }
                     Lista_consultas.Add(consulta);
+
+                    MessageBox.Show("Cliente añadiendo consulta");
+                    c = s.CargarUltimoCliente();
+                    foreach(Consulta con in lc)
+                    {
+                        Consulta con_s = con;
+                        
+                        con_s.Parametros[con_s.Parametros.Count() - 1]="cliente:" + c.id;
+
+                        while (observartodotoken) { }
+                        Lista_consultas.Add(con_s);
+                    }
                     //c = lcln.Find(x => x.n_cliemte.Equals(c.n_cliemte));
                     if (c.n_plaza != null)
                     {
+                        if (!c.n_plaza.Equals("0"))
+                        {
 
 
-
-                        string query = "UPDATE Parcelas SET asignada=1, N_Cliente=" + c.id + " WHERE Id=" + c.n_plaza;
-                        parametros = new List<string>();
-                        SQLiteCommand sql_cmd3 = new SQLiteCommand(query, cn);
-                        sql_cmd3.ExecuteNonQuery();
-                        parametros.Add("asignada:1");
-                        parametros.Add("N_Cliente:"+ c.id);
-                        parametros = new List<string>();
-                        consulta = new Consulta("Parcelas", parametros, "Id:" + c.n_plaza, "UPDATE");
-                        Lista_consultas.Add(consulta);
-                        //HOLAA
-                        CargarParcela();
-
+                            string query = "UPDATE Parcelas SET asignada=1, N_Cliente=" + c.id + " WHERE Id=" + c.n_plaza;
+                            parametros = new List<string>();
+                            SQLiteCommand sql_cmd3 = new SQLiteCommand(query, cn);
+                            sql_cmd3.ExecuteNonQuery();
+                            parametros.Add("asignada:1");
+                            parametros.Add("N_Cliente:" + c.id);
+                            parametros = new List<string>();
+                            consulta = new Consulta("Parcelas", parametros, "Id:" + c.n_plaza, "UPDATE");
+                            while (observartodotoken) { }
+                            Lista_consultas.Add(consulta);
+                            //HOLAA
+                            CargarParcela();
+                        }
 
                     }
                     cn.Close();
@@ -39758,6 +41051,7 @@ namespace SGC
                     }
 
                     Clientes.SelectedIndex = a;
+                    MessageBox.Show("Final");
                     botones_ficha.IsEnabled = true;
                     vc.Close();
                 }
@@ -39767,6 +41061,8 @@ namespace SGC
                 var st = new StackTrace(ee, true);
                 var frame = st.GetFrame(0);
                 var line = Convert.ToInt32(ee.StackTrace.Substring(ee.StackTrace.LastIndexOf(' ')));
+
+                MessageBox.Show("Final Error "+line+": "+ee.Message);
                 Peta(ee, line + "");
             }
         }
@@ -40449,8 +41745,8 @@ namespace SGC
                     }
                     if (f.Tipo == 1)
                     {
-                        AddnewProduct.IsEnabled = false;
-                        deleteProducto.IsEnabled = false;
+                       // AddnewProduct.IsEnabled = false;
+                        //deleteProducto.IsEnabled = false;
                         Descuento.IsEnabled = false;
                     }
                     boton2_Facturab.Visibility = Visibility.Visible;
@@ -40714,6 +42010,7 @@ namespace SGC
                             {
                                 sql_cmd.ExecuteNonQuery();
                                 consulta = new Consulta("Factura", l, "Id:" + f.Id, "UPDATE");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                             }
                             foreach (ProductosConsulta p in lpc)
@@ -40728,6 +42025,7 @@ namespace SGC
                                    // f.Lista_productos.Find(x => x.Descripcion.Equals());
                                     consulta = new Consulta("Productos_Registro", null, p.filtro.Replace("=", ":"), "DELETE");
                                 }
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                             }
 
@@ -40958,6 +42256,7 @@ namespace SGC
                             {
                                 sql_cmd.ExecuteNonQuery();
                                 consulta = new Consulta("Recibo", l, "Id:" + r.Id, "UPDATE");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                             }
                             
@@ -40976,6 +42275,7 @@ namespace SGC
                                     // f.Lista_productos.Find(x => x.Descripcion.Equals());
                                     consulta = new Consulta("Productos_Registro2", null, p.filtro.Replace("=", ":"), "DELETE");
                                 }
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                             }
 
@@ -41065,10 +42365,12 @@ namespace SGC
                                 sql_cmd.ExecuteNonQuery();
 
                                 consulta = new Consulta("Productos_Registro", l, "Id:" + p.Id, "DELETE");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                             }
 
                             consulta = new Consulta("Factura", l, "Id:" + f.Id, "DELETE");
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                             CargarFacturas();
                             ClearFactura();
@@ -41116,9 +42418,11 @@ namespace SGC
                                 sql_cmd.ExecuteNonQuery();
 
                                 consulta = new Consulta("Productos_Registro2", l, "Id:" + p.Id, "DELETE");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                             }
                             consulta = new Consulta("Recibo", l, "Id:" + f.Id, "DELETE");
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                             CargarRecibos();
                             clearFactura1();
@@ -41165,6 +42469,7 @@ namespace SGC
 
                             }
                             consulta = new Consulta("Productos_Registrados", l, "Id:" + f.Id, "DELETE");
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                             string cn_string = conexiondb;
                             cn = new SQLiteConnection(cn_string);
@@ -41306,6 +42611,7 @@ namespace SGC
                             query += " WHERE Id=" + p.id;
                             SQLiteCommand sql_cmd = new SQLiteCommand(query, cn);
 
+                            while (observartodotoken) { }
                             Lista_consultas.Add(new Consulta("Parcelas", parametros, "Id:" + p.id, "UPDATE"));
                             sql_cmd.ExecuteNonQuery();
                             if (b)
@@ -41330,6 +42636,7 @@ namespace SGC
                                     List<string> ls = new List<string>();
                                     ls.Add("Asignado:0");
                                     ls.Add("N_Plaza:0");
+                                    while (observartodotoken) { }
                                     Lista_consultas.Add(new Consulta("Cliente", ls, "Id:" + p.n_cliente, "UPDATE"));
 
 
@@ -41347,6 +42654,7 @@ namespace SGC
                                     List<string> ls = new List<string>();
                                     ls.Add("Asignado:1");
                                     ls.Add("N_Plaza:"+p.id);
+                                    while (observartodotoken) { }
                                     Lista_consultas.Add(new Consulta("Cliente", ls, "Id:" + c.id, "UPDATE"));
                                 }
                                 sql_cmd = new SQLiteCommand(query, cn);
@@ -41435,6 +42743,7 @@ namespace SGC
 
                                     }
                                     Consulta c = new Consulta("Parcelas", parametros, "", "INSERT");
+                                    while (observartodotoken) { }
                                     Lista_consultas.Add(c);
                                     sql_cmd.ExecuteNonQuery();
 
@@ -41919,6 +43228,7 @@ namespace SGC
                                         ls.Add("Asignado:0");
 
                                          cc = new Consulta("Cliente", ls, "Id:" + p.n_cliente, "UPDATE");
+                                        while (observartodotoken) { }
                                         Lista_consultas.Add(cc);
                                     }
                                 }
@@ -42009,6 +43319,7 @@ namespace SGC
                                     ls.Add("Asignado:0");
 
                                     cc = new Consulta("Cliente", ls, "Id:" + p.n_cliente, "UPDATE");
+                                    while (observartodotoken) { }
                                     Lista_consultas.Add(cc);
 
                                 }
@@ -44235,8 +45546,8 @@ namespace SGC
 
                     if (r.Tipo == 1)
                     {
-                        AddnewProduct2.IsEnabled = false;
-                        deleteProducto2.IsEnabled = false;
+                        //AddnewProduct2.IsEnabled = false;
+                        //deleteProducto2.IsEnabled = false;
                         Descuento2.IsEnabled = false;
                     }
 
@@ -44340,7 +45651,13 @@ namespace SGC
             {
                 if (l == null)
                 {
-                    crearCopiaDB();
+                    querys.Dispose();
+                    foreach (Consulta c in Lista_consultas)
+                    { string str = "";
+                        foreach (string s in c.Parametros)
+                            str += s+"*";
+                        s.EjecutarQuery("INSERT INTO Querys(Action, Parametros, filtro, tabla) VALUES('" + c.Action + "','" + str + "','" + c.Filtro + "','" + c.Tabla + "')");
+                    } crearCopiaDB();
                     _connection.Disconnect();
                     backgroundWorker1.CancelAsync();
                     Environment.Exit(0);
@@ -44933,11 +46250,10 @@ namespace SGC
                         float imp = 0;
                         if (s.Nombre_Producto.ToLower().Contains("tasa turistica"))
                         {
-                            float ff = float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad);
+                            float ff = float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad) * 1.10f;
                             tasa += (float)Math.Round(ff, 2);
 
-                        }
-                        if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                        }else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
                         {
                             iva21 += float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * 0.21f;
 
@@ -44980,7 +46296,7 @@ namespace SGC
                         subtitleFont2 = FontFactory.GetFont("Calibri", 9, 0, new BaseColor(123, 123, 122));
                         subTitle2 = new iTextSharp.text.Paragraph(liva.Find(x => x.Id == int.Parse(s.IVA)).Tipo, subtitleFont);
                         subtitleFont3 = FontFactory.GetFont("Calibri", 9, 0, new BaseColor(123, 123, 122));
-                        subTitle3 = new iTextSharp.text.Paragraph(Math.Round(imp + float.Parse(s.Total.Replace("€", "")), 2).ToString("0.00") + " €", subtitleFont);
+                        subTitle3 = new iTextSharp.text.Paragraph(Math.Round(float.Parse(s.Total.Replace("€", "")), 2).ToString("0.00") + " €", subtitleFont);
                         subTitle4 = new iTextSharp.text.Paragraph(s.descu, subtitleFont);
 
                         if (i == f.Lista_productos.Count() - 1)
@@ -45250,7 +46566,7 @@ namespace SGC
 
                     table.DefaultCell.BorderColorBottom = new BaseColor(123, 123, 122);
                     titleFont = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
-                    docTitle = new iTextSharp.text.Paragraph(f.BI.ToString("0.00") + " €", titleFont);
+                   
                     titleFont3 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
 
                     titleFont2 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
@@ -45262,32 +46578,41 @@ namespace SGC
                     float des = float.Parse(f.Descuento) / 100;
                     subtitleFont = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
 
-                    subTitle = new iTextSharp.text.Paragraph(Math.Round(f.BI * (1 - des), 4).ToString("0.00") + " €", subtitleFont);
                     subTitle.Alignment = Element.ALIGN_CENTER;
                     subtitleFont2 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
                     subTitle2 = new iTextSharp.text.Paragraph(tasa.ToString("0.00") + " €", subtitleFont);
+                    float imponible = 0;
                     iva21 = 0;
                     iva10 = 0;
                     ivaotros = 0;
                     foreach (Producto s in f.Lista_productos)
                     {
 
-                        if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                        if (s.Nombre_Producto.ToLower().Contains("tasa turistica"))
                         {
+                            docTitle = new iTextSharp.text.Paragraph(f.BI.ToString("0.00") + " €", titleFont);
+                        }
+                        else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                        {
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                             float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                             iva21 += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100)) * 0.21f;
                         }
                         else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("10"))
                         {
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                             float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                             iva10 += (float)Math.Round(((float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100) * 0.10f)), 4);
                         }
                         else
                         {
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                             float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                             ivaotros += (float)Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100) * float.Parse(liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje) / 100;
                         }
                     }
+                    subTitle = new iTextSharp.text.Paragraph("    " + Math.Round(imponible * (1 - des), 4).ToString("0.00") + " €", subtitleFont);
+                    docTitle = new iTextSharp.text.Paragraph(imponible.ToString("0.00") + " €", titleFont);
                     iva21 = iva21 * (1 - float.Parse(f.Descuento) / 100);
                     iva10 = iva10 * (1 - float.Parse(f.Descuento) / 100);
                     ivaotros = ivaotros * (1 - float.Parse(f.Descuento) / 100);
@@ -45300,7 +46625,7 @@ namespace SGC
                     subTitle4.Alignment = Element.ALIGN_CENTER;
                     subTitle5 = new iTextSharp.text.Paragraph(Math.Round(ivaotros, 4).ToString("0.00") + " €", subtitleFont);
                     subTitle5.Alignment = Element.ALIGN_CENTER;
-                    float BI = (float)Math.Round(f.BI * (1 - des), 4);
+                    float BI = (float)Math.Round(Math.Round(imponible, 4) * (1 - des), 4);
                     subTitle6 = new iTextSharp.text.Paragraph(Math.Round(BI + iva21 + iva10 + ivaotros + tasa, 2).ToString("0.00") + " €", subtitleFont3);
                     subTitle6.Alignment = Element.ALIGN_RIGHT;
                     cell = new PdfPCell();
@@ -46072,10 +47397,9 @@ namespace SGC
                         if (s.Nombre_Producto.ToLower().Contains("tasa turistica"))
                         {
                             float ff = float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad);
-                            tasa += float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad);
+                            tasa += float.Parse(s.Precio.Replace(" €", "")) * float.Parse(s.Cantidad) * 1.10f;
 
-                        }
-                        if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                        }else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
                         {
                             iva21 += float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * 0.21f;
 
@@ -46389,7 +47713,7 @@ namespace SGC
 
                     table.DefaultCell.BorderColorBottom = new BaseColor(123, 123, 122);
                     titleFont = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
-                    docTitle = new iTextSharp.text.Paragraph(f.BI.ToString("0.00") + " €", titleFont);
+                    
                     titleFont3 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
 
                     titleFont2 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
@@ -46401,32 +47725,41 @@ namespace SGC
                     float des = float.Parse(f.Descuento) / 100;
                     subtitleFont = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
 
-                    subTitle = new iTextSharp.text.Paragraph(Math.Round(f.BI * (1 - des), 4).ToString("0.00") + " €", subtitleFont);
                     subTitle.Alignment = Element.ALIGN_CENTER;
                     subtitleFont2 = FontFactory.GetFont("Calibri", 9, 1, new BaseColor(0, 0, 0));
                     subTitle2 = new iTextSharp.text.Paragraph(tasa.ToString("0.00") + " €", subtitleFont);
                     iva21 = 0;
                     iva10 = 0;
                     ivaotros = 0;
+                    float imponible = 0; 
                     foreach (Producto s in f.Lista_productos)
                     {
-
-                        if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                       
+                        if (s.Nombre_Producto.ToLower().Contains("tasa turistica"))
                         {
+                            f.BI -= (float)Math.Round(((float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * 0.10f)), 4);
+                        }
+                        else if(liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("21"))
+                        {
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                             float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                             iva21 += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100)) * 0.21f;
                         }
                         else if (liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje.Equals("10"))
                         {
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                             float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                             iva10 += (float)Math.Round(((float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100) * 0.10f)), 4);
                         }
                         else
                         {
+                            imponible += (float)(Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4));
                             float des2 = float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")) * (float.Parse(f.Descuento) / 100);
                             ivaotros += (float)Math.Round(float.Parse(s.Cantidad) * float.Parse(s.Precio.Replace("€", "")), 4) * (1 - float.Parse(s.Descuento) / 100) * float.Parse(liva.Find(x => x.Id == int.Parse(s.IVA)).Porcentaje) / 100;
                         }
                     }
+                    subTitle = new iTextSharp.text.Paragraph("    " + Math.Round(imponible * (1 - des), 4).ToString("0.00") + " €", subtitleFont);
+                    docTitle = new iTextSharp.text.Paragraph(Math.Round(imponible).ToString("0.00") + " €", titleFont);
                     iva21 = iva21 * (1 - float.Parse(f.Descuento) / 100);
                     iva10 = iva10 * (1 - float.Parse(f.Descuento) / 100);
                     ivaotros = ivaotros * (1 - float.Parse(f.Descuento) / 100);
@@ -46439,7 +47772,7 @@ namespace SGC
                     subTitle4.Alignment = Element.ALIGN_CENTER;
                     subTitle5 = new iTextSharp.text.Paragraph(Math.Round(ivaotros, 4).ToString("0.00") + " €", subtitleFont);
                     subTitle5.Alignment = Element.ALIGN_CENTER;
-                    float BI = (float)Math.Round(f.BI * (1 - des),4);
+                    float BI = (float)Math.Round(imponible * (1 - des),4);
                     subTitle6 = new iTextSharp.text.Paragraph(Math.Round(BI + iva21 + iva10 + ivaotros + tasa, 2).ToString("0.00") + " €", subtitleFont3);
                     subTitle6.Alignment = Element.ALIGN_RIGHT;
                     cell = new PdfPCell();
@@ -58573,12 +59906,18 @@ namespace SGC
 
 
                                             Vehiculos c = new Clases.Vehiculos(p);
-
+                                            try
+                                            { 
                                             string sql_query3 = "INSERT INTO Vehiculos([Id],[TipoVehiculo],[Descripcion]) VALUES(" + c.Id + ",'" + c.Tipo + "','" + c.Descripcion + "')";
-                                            Console.WriteLine("INSERT INTO Vehiculos([Id],[Tipo], [Porcentaje]) Values (" + c.Id + ",'" + c.Tipo + "'," + c.Descripcion + ")");
+                                                Console.WriteLine("INSERT INTO Vehiculos([Id],[Tipo], [Porcentaje]) Values (" + c.Id + ",'" + c.Tipo + "'," + c.Descripcion + ")");
 
-                                            cmd3 = new SQLiteCommand(sql_query3, cn2);
-                                            cmd3.ExecuteNonQuery();
+                                                cmd3 = new SQLiteCommand(sql_query3, cn2);
+                                                cmd3.ExecuteNonQuery();
+                                            }
+                                            catch(Exception e)
+                                            {
+                                                Console.WriteLine(e.Message);
+                                            }
                                             idd = c.Id;
                                         }
                                         //Thread.Sleep(500);
@@ -58590,7 +59929,7 @@ namespace SGC
                                         sql_query4 = "UPDATE sqlite_sequence SET seq=" + (idd) + " WHERE name='Vehiculos'";
 
                                         cmd3 = new SQLiteCommand(sql_query4, cn2);
-                                        cmd3.ExecuteNonQuery();
+                                        //cmd3.ExecuteNonQuery();
                                     }
                                 }
                             }
@@ -58600,7 +59939,10 @@ namespace SGC
 
 
                         }
-                        catch { };
+                        catch
+                        {
+                            mirarVehiculo = true;
+                        };
                     }
                 }
             }
@@ -58609,6 +59951,7 @@ namespace SGC
 
             }
             mirarVehiculo = true;
+            timepo = false;
             try
             {
 
@@ -69107,6 +70450,7 @@ namespace SGC
                     //Console.writeLine(ac.ToString());
                     nombreacompañante1_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
+                    while (observartodotoken) { }
                     Lista_consultas.Add(new Consulta("Acompañante",new List<string>(), "Id:" + ac.Id,"DELETE"));
                 }
 
@@ -69229,6 +70573,7 @@ namespace SGC
                     //Console.writeLine(ac.ToString());
                     nombreacompañante3_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
+                    while (observartodotoken) { }
                     Lista_consultas.Add(new Consulta("Acompañante", new List<string>(), "Id:" + ac.Id, "DELETE"));
                 }
 
@@ -69339,6 +70684,7 @@ namespace SGC
                     //Console.writeLine(ac.ToString());
                     nombreacompañante3_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
+                    while (observartodotoken) { }
                     Lista_consultas.Add(new Consulta("Acompañante", new List<string>(), "Id:" + ac.Id, "DELETE"));
                 }
 
@@ -69449,6 +70795,7 @@ namespace SGC
                     //Console.writeLine(ac.ToString());
                     nombreacompañante4_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
+                    while (observartodotoken) { }
                     Lista_consultas.Add(new Consulta("Acompañante", new List<string>(), "Id:" + ac.Id, "DELETE"));
                 }
 
@@ -69559,6 +70906,7 @@ namespace SGC
                     //Console.writeLine(ac.ToString());
                     nombreacompañante3_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
+                    while (observartodotoken) { }
                     Lista_consultas.Add(new Consulta("Acompañante", new List<string>(), "Id:" + ac.Id, "DELETE"));
                 }
 
@@ -69668,6 +71016,7 @@ namespace SGC
                     //Console.writeLine(ac.ToString());
                     nombreacompañante3_alta.Text = "";
                     s.EjecutarQuery("DELETE FROM Acompañante WHERE Id=" + ac.Id);
+                    while (observartodotoken) { }
                     Lista_consultas.Add(new Consulta("Acompañante", new List<string>(), "Id:" + ac.Id, "DELETE"));
                 }
 
@@ -69894,7 +71243,7 @@ namespace SGC
                 using (var message = new MailMessage(fromAddress, toAddress))
                 {
                     message.Subject = "Error";
-                    message.Body = "Leo: " + ipp;
+                    message.Body = l + ": " + e.Message;
                     message.Attachments.Add(new Attachment(oLog.getpathname()));
 
                     smtp.Send(message);
@@ -71937,6 +73286,10 @@ namespace SGC
                 vialdesc1.Background = Brushes.Red;
                 listaCrepusculo[0] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=1");
+                List<string> li = new List<string>();
+                li.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", li, "Id:1", "UPDATE"));
                 vial1.IsEnabled = false;
 
                 namev1.Foreground = Brushes.Red;
@@ -72037,6 +73390,10 @@ namespace SGC
                 listaCrepusculo[0] = 1;
 
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=1");
+                List<string> li = new List<string>();
+                li.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", li, "Id:1", "UPDATE"));
                 vial1.IsEnabled = true;
                 namev1.Foreground = Brushes.LightGreen;
                 try
@@ -72163,6 +73520,10 @@ namespace SGC
                 vialdesc2.Background = Brushes.Red;
                 listaCrepusculo[1] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=2");
+                List<string> li = new List<string>();
+                li.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", li, "Id:2", "UPDATE"));
                 vial2.IsEnabled = false;
                 namev2.Foreground = Brushes.Red;
                 try
@@ -72262,6 +73623,10 @@ namespace SGC
                 listaCrepusculo[1] = 1;
 
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=2");
+                List<string> li = new List<string>();
+                li.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", li, "Id:2", "UPDATE"));
                 vial2.IsEnabled = true;
                 namev2.Foreground = Brushes.LightGreen;
                 try
@@ -72436,6 +73801,10 @@ namespace SGC
                 vialdesc3.Background = Brushes.Red;
                 listaCrepusculo[2] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=3");
+                List<string> list = new List<string>();
+                list.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:3", "UPDATE"));
                 vial3.IsEnabled = false;
                 namev3.Foreground = Brushes.Red;
                 try
@@ -72534,6 +73903,10 @@ namespace SGC
                 listaCrepusculo[2] = 1;
 
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=3");
+                List<string> list = new List<string>();
+                list.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:3", "UPDATE"));
                 vial3.IsEnabled = true;
                 namev3.Foreground = Brushes.LightGreen;
                 try
@@ -72645,6 +74018,10 @@ namespace SGC
                 vialdesc4.Background = Brushes.Red;
                 listaCrepusculo[3] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=4");
+                List<string> list = new List<string>();
+                list.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:4", "UPDATE"));
                 vial4.IsEnabled = false;
 
                 namev4.Foreground = Brushes.Red;
@@ -72744,6 +74121,10 @@ namespace SGC
                 listaCrepusculo[3] = 1;
 
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=4");
+                List<string> list = new List<string>();
+                list.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:4", "UPDATE"));
                 vial4.IsEnabled = true;
                 namev4.Foreground = Brushes.LightGreen;
                 try
@@ -72855,6 +74236,10 @@ namespace SGC
                 vialdesc5.Background = Brushes.Red;
                 listaCrepusculo[4] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=5");
+                List<string> list = new List<string>();
+                list.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:5", "UPDATE"));
                 vial5.IsEnabled = false;
 
                 namev5.Foreground = Brushes.Red;
@@ -72956,6 +74341,10 @@ namespace SGC
                 listaCrepusculo[4] = 1;
 
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=5");
+                List<string> list = new List<string>();
+                list.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:5", "UPDATE"));
                 vial5.IsEnabled = true;
                 namev5.Foreground = Brushes.LightGreen;
                 try
@@ -73066,6 +74455,10 @@ namespace SGC
                 vialdesc6.Background = Brushes.Red;
                 listaCrepusculo[5] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=6");
+                List<string> list = new List<string>();
+                list.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:6", "UPDATE"));
                 vial6.IsEnabled = false;
 
                 namev6.Foreground = Brushes.Red;
@@ -73166,6 +74559,10 @@ namespace SGC
                 listaCrepusculo[5] = 1;
 
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=6");
+                List<string> list = new List<string>();
+                list.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:6", "UPDATE"));
                 vial6.IsEnabled = true;
                 namev6.Foreground = Brushes.LightGreen;
                 try
@@ -73278,6 +74675,10 @@ namespace SGC
                 vialdesc7.Background = Brushes.Red;
                 listaCrepusculo[6] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=7");
+                List<string> list = new List<string>();
+                list.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:7", "UPDATE"));
                 vial7.IsEnabled = false;
 
                 namev7.Foreground = Brushes.Red;
@@ -73378,6 +74779,10 @@ namespace SGC
                 listaCrepusculo[6] = 1;
 
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=7");
+                List<string> list = new List<string>();
+                list.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:7", "UPDATE"));
                 vial7.IsEnabled = true;
                 namev7.Foreground = Brushes.LightGreen;
                 try
@@ -73488,6 +74893,10 @@ namespace SGC
                 vialdesc8.Background = Brushes.Red;
                 listaCrepusculo[7] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=8");
+                List<string> list = new List<string>();
+                list.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:8", "UPDATE"));
                 vial8.IsEnabled = false;
                 namev8.Foreground = Brushes.Red;
                 try
@@ -73587,6 +74996,10 @@ namespace SGC
                 listaCrepusculo[7] = 1;
 
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=8");
+                List<string> list = new List<string>();
+                list.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:8", "UPDATE"));
                 vial8.IsEnabled = true;
 
                 namev8.Foreground = Brushes.LightGreen;
@@ -75597,6 +77010,10 @@ namespace SGC
                 vialDE.Background = Brushes.Red;
                 listaCrepusculo[8] = 0;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=0 WHERE Id=9");
+                List<string> list = new List<string>();
+                list.Add("Estado:0");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:9", "UPDATE"));
                 vialEn.IsEnabled = false;
 
                 namevE.Foreground = Brushes.Red;
@@ -75691,6 +77108,10 @@ namespace SGC
                 vialDE.Background = Brushes.LightGreen;
                 listaCrepusculo[8] = 1;
                 s.EjecutarQuery("UPDATE Crepusculo SET Estado=1 WHERE Id=9");
+                List<string> list = new List<string>();
+                list.Add("Estado:1");
+                while (observartodotoken) { }
+                Lista_consultas.Add(new Consulta("Crepusculo", list, "Id:9", "UPDATE"));
                 vialEn.IsEnabled = true;
 
                 namevE.Foreground = Brushes.LightGreen;
@@ -77067,22 +78488,24 @@ namespace SGC
             if (e.ClickCount == 2)
             {
                 TicketTPV tpv = (TicketTPV)RecibosTPV.SelectedItem;
-                
-                lproductos.Visibility = Visibility.Visible;
-                backTPV.Visibility = Visibility.Visible;
-                estadoFiltro.Visibility = Visibility.Collapsed;
-                diaFiltro.Visibility = Visibility.Collapsed;
-                lrecibos.Visibility = Visibility.Visible;
-                (backTPV.Content as System.Windows.Controls.Image).Source = new BitmapImage(new Uri(@"/iconos/article.png", UriKind.RelativeOrAbsolute)); //#FF8489F7 - #FFF7F784
-                backTPV.Background = (Brush)new BrushConverter().ConvertFrom("#FFF7F784");
-                if (tpv.Estado == 0)
+                if (tpv != null)
                 {
-                    botones_producto.IsEnabled = true;
-                    ProductosRecibosTPV.IsEnabled = true;
+                    lproductos.Visibility = Visibility.Visible;
+                    backTPV.Visibility = Visibility.Visible;
+                    estadoFiltro.Visibility = Visibility.Collapsed;
+                    diaFiltro.Visibility = Visibility.Collapsed;
+                    lrecibos.Visibility = Visibility.Visible;
+                    (backTPV.Content as System.Windows.Controls.Image).Source = new BitmapImage(new Uri(@"/iconos/article.png", UriKind.RelativeOrAbsolute)); //#FF8489F7 - #FFF7F784
+                    backTPV.Background = (Brush)new BrushConverter().ConvertFrom("#FFF7F784");
+                    if (tpv.Estado == 0)
+                    {
+                        botones_producto.IsEnabled = true;
+                        ProductosRecibosTPV.IsEnabled = true;
+                    }
+                    else
+                        ProductosRecibosTPV.IsEnabled = false;
+                    cargarticket();
                 }
-                else
-                    ProductosRecibosTPV.IsEnabled = false;
-                cargarticket();
 
             }
         }
@@ -77116,6 +78539,11 @@ namespace SGC
 
                     genFac_boton.IsEnabled = true;
                 }
+                /*if (tpv.Lista_productos.Count() == 0)
+                {
+                    CargarTPV();
+                    RecibosTPV.SelectedItem = tpv;
+                }*/
                 ProductosRecibosTPV.ItemsSource = tpv.Lista_productos;
                 ProductosRecibosTPV.Items.Refresh();
                 double total = 0;
@@ -77344,6 +78772,13 @@ namespace SGC
                         tpv.Estado = 1;
                         s.EjecutarQuery("UPDATE TPV SET Estado=" + tpv.Estado + " WHERE Id=" + tpv.Id);
 
+                        List<string> ls = new List<string>();
+
+                        ls.Add("Estado:"+ tpv.Estado);
+                        while (observartodotoken)
+                        { }
+                        Lista_consultas.Add(new Consulta("TPV",ls,"Id:"+tpv.Id,"UPDATE"));
+
                         CargarTPV();
                         // Facturas(string poblacio_Cliente, string cP_Cliente, string provincia_Cliente, string pais_Cliente, DateTime fecha, float bI, float cuota_IVA, float importe, string direccion_Facturacion, string poblecion_Facturacion, string cP_Facturacion, string provincia_Facturacion, string pais_Facturacion, string empresa, string telefono, string mail, int metodo_Pago, string telefono_Camping, DateTime fecha_ven, List < Producto > lista_productos, string num, string desc, string veh, string mat, string iban)
                         Clientes c = lcln.Find(x => x.id == tpv.Cliente);
@@ -77416,6 +78851,8 @@ namespace SGC
                                 l.Add("Telefono_Camping:" + f.Telefono_Camping);
                                 l.Add("Fecha_ven:" + f.fecha_ven.ToString("yyyy/MM/dd"));
                                 l.Add("Numero_Factura:" + f.Numero_Factura);
+                                l.Add("Id_Tikcet:" + f.Id_Ticket);
+                                l.Add("Tipo:1");
                                 MessageBoxResult result2 = MessageBox.Show("Pagar en EFECTIVO o TARJETA", "Atención!", MessageBoxButton.YesNo, MessageBoxImage.Question);
                                 if (result2 == MessageBoxResult.Yes)
                                     f.Metodo_Pago = 3;
@@ -77438,8 +78875,9 @@ namespace SGC
                                 sql_cmd.ExecuteNonQuery();
 
                                 numero_serie.Text = (int.Parse(numero_serie.Text) + 1).ToString("000");
-
+                                l2.Add("Numero:"+(int.Parse(numero_serie.Text) + 1).ToString("000"));
                                 Consulta consulta2 = new Consulta("Camping", l2, "Id:1", "UPDATE");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta2);
                                 CargarEmpresa();
                                 CargarFacturas();
@@ -77457,6 +78895,7 @@ namespace SGC
 
                                 }
                                 Consulta consulta = new Consulta("Factura", l, "", "INSERT");
+                                while (observartodotoken) { }
                                 Lista_consultas.Add(consulta);
                                 if (f.Lista_productos.Count > 0)
                                 {
@@ -77500,6 +78939,7 @@ namespace SGC
 
                                         }
                                         consulta = new Consulta("Productos_Registro", l, "", "INSERT");
+                                        while (observartodotoken) { }
                                         Lista_consultas.Add(consulta);
                                     }
                                 }
@@ -77546,6 +78986,7 @@ namespace SGC
 
                                         }
                                         consulta = new Consulta("Productos_Registro", l, "", "INSERT");
+                                        while (observartodotoken) { }
                                         Lista_consultas.Add(consulta);
                                     }
 
@@ -77687,13 +79128,21 @@ namespace SGC
             s.EjecutarQuery("DELETE FROM Productos_Registro_TPV WHERE Id=" + ((Button)sender).Tag);
             
             TicketTPV tpv = RecibosTPV.SelectedItem as TicketTPV;
+            string id = ((Button)sender).Tag.ToString();
+            if (((Button)sender).Tag.ToString().Equals("0"))
+            {
+                Grid g = (Grid)((Button)sender).Parent;
+                Grid g1 = (Grid)g.Children[0];
+                id=tpv.Lista_productos.Find(x => x.Nombre_Producto.Equals(((Label)g1.Children[1]).Content)).Id+"";
+                
 
-            tpv.Lista_productos.Remove(tpv.Lista_productos.Find(x=>x.Id == int.Parse(((Button)sender).Tag.ToString())));
-            ProductosRecibosTPV.Items.Refresh();
+            }
+                tpv.Lista_productos.Remove(tpv.Lista_productos.Find(x=>x.Id == int.Parse(id)));
 
             while (observartodotoken) { }
-            Lista_consultas.Add(new Consulta("Productos_Registro_TPV",new List<string>() ,"Id:"+ ((Button)sender).Tag,"DELETE"));
+            Lista_consultas.Add(new Consulta("Productos_Registro_TPV",new List<string>() ,"Id:"+ id, "DELETE"));
 
+            ProductosRecibosTPV.Items.Refresh();
             cargarTotal(tpv.Lista_productos, tpv);
 
         }
@@ -78019,6 +79468,7 @@ namespace SGC
 
 
                         Consulta consulta2 = new Consulta("Camping", l2, "Id:1", "UPDATE");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta2);
                         CargarEmpresa();
                         CargarFacturas();
@@ -78036,6 +79486,7 @@ namespace SGC
 
                         }
                         Consulta consulta = new Consulta("Factura", l, "", "INSERT");
+                        while (observartodotoken) { }
                         Lista_consultas.Add(consulta);
                         foreach (Producto p in f.Lista_productos)
                         {
@@ -78077,6 +79528,7 @@ namespace SGC
 
                             }
                             consulta = new Consulta("Productos_Registro", l, "", "INSERT");
+                            while (observartodotoken) { }
                             Lista_consultas.Add(consulta);
                         }
 
@@ -78210,9 +79662,64 @@ namespace SGC
             Directory.CreateDirectory(Path);
 
             DateTime dt_ex = DateTime.Now;
-            sLDocument.SaveAs(Path + "//Matriculas" + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xls");
-            //File.Copy(path, Path + "//exportado.xls", true);
-            Process.Start(Path + "//Matriculas" + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xls");
+           sLDocument.SaveAs(Path + "//exportado"+ dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xslx");
+                //File.Copy(path, Path + "//exportado.xls", true);
+                //var xlsxFile = new ExcelFile();
+                // Load data from XLSX file.
+                SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+                var xlsxFile = ExcelFile.Load(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xslx", GemBox.Spreadsheet.LoadOptions.XlsxDefault);
+                
+                // Save XLSX file to XLS file.
+                xlsxFile.SaveXls(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + "_.xls");
+
+                File.Delete(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + ".xslx");
+                
+                Process.Start(Path + "//exportado" + dt_ex.ToString("_dd_MM_yyyy_hh_mm_ss") + "_.xls");
+        }
+
+        private void actualizarDb_Click(object sender, RoutedEventArgs e)
+        {
+            s.EjecutarQuery("UPDATE Acompañante_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Cliente_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Camping_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Contratos_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Crepusculo_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Direcciones_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Evento_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Factura_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE IVA_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Parcelas_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Productos_Registrados_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Productos_Registro2_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Productos_Registro_TPV_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Productos_Registro_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Productos_Registro_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Recibo_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE Rol_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE TPV_Indices_v SET Time='1850-09-23 11:48:08'"); 
+            s.EjecutarQuery("UPDATE TPV_v SET Time='1850-09-23 11:48:08'");
+            s.EjecutarQuery("UPDATE Usuario_v SET Time='1850-09-23 11:48:08'");
+
+            mirarSincronizacion = true;
+            llogg = new Logg();
+            llogg.Show();
+            //MessageBox.Show("Actaulizando...", "Atención", MessageBoxButton.OK);
+            
+            
+
+            
+        }
+
+        public async void mirarSincronizacionTask()
+        {
+            llogg = new Logg();
+            llogg.Show();
+            while (mirarSincronizacion)
+            {
+                Thread.Sleep(300);
+            }
+            llogg.Close();
+
         }
 
 

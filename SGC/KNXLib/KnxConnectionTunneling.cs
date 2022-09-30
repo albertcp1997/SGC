@@ -91,7 +91,46 @@ namespace SGC.KNXLib
             }
             catch (SocketException ex)
             {
-                
+                try
+                {
+                    _localEndpoint.Port++;
+                    _udpClient = new UdpClient(_localEndpoint)
+                    {
+                        Client = { DontFragment = true, SendBufferSize = 0, ReceiveTimeout = stateRequestTimerInterval * 2 }
+                    };
+                }
+                catch (SocketException ex3)
+                {
+                    try
+                    {
+                        _localEndpoint.Port++;
+                        _udpClient = new UdpClient(_localEndpoint)
+                        {
+                            Client = { DontFragment = true, SendBufferSize = 0, ReceiveTimeout = stateRequestTimerInterval * 2 }
+                        };
+                    }
+                    catch (SocketException ex2)
+                    {
+                        try
+                        {
+                           _localEndpoint.Port++;
+                            _udpClient = new UdpClient(_localEndpoint)
+                            {
+                                Client = { DontFragment = true, SendBufferSize = 0, ReceiveTimeout = stateRequestTimerInterval * 2 }
+                            };
+                        }
+                        catch (SocketException ex1)
+                        {
+                           
+                                 _localEndpoint.Port++;
+                                _udpClient = new UdpClient(_localEndpoint)
+                                {
+                                    Client = { DontFragment = true, SendBufferSize = 0, ReceiveTimeout = stateRequestTimerInterval * 2 }
+                                };
+                            
+            }
+                    }
+                }
             }
 
             if (KnxReceiver == null || KnxSender == null)

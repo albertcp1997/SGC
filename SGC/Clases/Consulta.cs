@@ -16,6 +16,9 @@ namespace SGC.Clases
 
         public string Date;
         public DateTime dateTime;
+        public string accion { get; set; }
+        public string paramen { get; set; }
+        public string filter { get; set; }
 
 
         public Consulta()
@@ -29,6 +32,25 @@ namespace SGC.Clases
             Filtro = filtro;
             Action = accion;
             dateTime = DateTime.Now;
+            switch (Action){
+                case "INSERT":
+                    this.accion = "Añadir";
+                    break;
+                case "UPDATE":
+                    this.accion = "Actualizar";
+                    break;
+                case "DELETE":
+                    this.accion = "Borrar";
+                    break;
+            }
+            string para = "";
+            if (Parametros == null)
+                Parametros = new List<string>();
+            foreach (string a in Parametros)
+                para += a + " ";
+            paramen= Tabla + " " + para;
+            filter = Filtro;
+
         }
 
         public Consulta(string tabla, List<string> parametros, string filtro, string accion, DateTime dateTime) : this(tabla, parametros, filtro, accion)
@@ -40,7 +62,7 @@ namespace SGC.Clases
         { string para = "";
             foreach (string a in Parametros)
                 para += a + " ";
-            return Tabla + " " + para + " " + Filtro + " " + Action;
+            return Tabla + " " + para;
         }
 
     }

@@ -104,6 +104,24 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
+        internal List<Consulta> CargarQuerys()
+        {
+            string sql_Text = "SELECT * FROM Querys";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<Consulta> list = new List<Consulta>();
+            while (rdr.Read())
+            {
+                List<string> l = rdr.GetString(3).Split('*').ToList();
+                if (l[l.Count() - 1].Length == 0)
+                    l.RemoveAt(l.Count() - 1);
+                list.Add(new Consulta(rdr.GetString(5), l, rdr.GetString(4), rdr.GetString(1)));
+            }
+            sql_Text = "DELETE FROM Querys";
+             cmd = new SQLiteCommand(sql_Text, cn);
+             rdr = cmd.ExecuteReader();
+            return list;
+        }
         internal SQLiteDataReader CargarCliente(int posicionficha, int contadorfiltroficha)
         {
             string sql_Text = "SELECT * FROM CLIENTE";
@@ -726,6 +744,15 @@ namespace SGC
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
         }
+        internal int CargaNProductosTPV(int id)
+        {
+            string sql_Text = "SELECT COUNT(*) FROM Productos_TPV WHERE Tipo="+id;
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+                return rdr.GetInt32(0);
+            return 0;
+        }
         internal int CargarUltimoProductoTPV()
         {
             string sql_Text = "SELECT * FROM Productos_TPV ORDER BY Id DESC Limit 1";
@@ -893,6 +920,32 @@ namespace SGC
                 
             return 0;
         }
+        internal int cargarIdProductoRegistro1(Producto p)
+        {
+            string sql_Text = "SELECT Id FROM Productos_Registro WHERE Nombre='" + p.Nombre_Producto + "' AND Cantidad=" + p.Cantidad + " AND Precio='" + p.Precio + "' AND IVA=" + p.IVA + " AND Id_Factura=" + p.Id_Factura;
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                return rdr.GetInt32(0);
+            }
+            else
+                return -1;
+        }
+        internal int cargarIdProductoRegistro2(Producto p)
+        {
+            string sql_Text = "SELECT Id FROM Productos_Registro2 WHERE Nombre='" + p.Nombre_Producto + "' AND Cantidad="+p.Cantidad+" AND Precio='" + p.Precio + "' AND IVA=" + p.IVA + " AND Id_Recibo=" + p.Id_Factura;
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                return rdr.GetInt32(0);
+            }
+            else
+                return -1;
+        }
         internal SQLiteDataReader CargarProducto_TPV()
         {
             string sql_Text = "SELECT * FROM Productos_Registro_TPV";
@@ -1031,9 +1084,38 @@ namespace SGC
             }
             return list;
         }
+        internal DateTime CargarVersionCrepusculo()
+        {
+            string sql_Text = "SELECT * FROM Crepusculo_v";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<int> list = new List<int>();
+            SGC.Clases.Version a = new SGC.Clases.Version();
+            while (rdr.Read())
+            {
+                string aa = rdr.GetString(1);
+                DateTime dt = DateTime.Now;
+                try
+                {
+                    dt = DateTime.Parse(aa);
+                }
+                catch { }
+
+
+                a = new SGC.Clases.Version(rdr.GetInt32(0), dt);
+            }
+            return a.version;
+        }
         internal SQLiteDataReader CargarAcompañante()
         {
             string sql_Text = "SELECT * FROM Acompañante";
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            return rdr;
+        }
+        internal SQLiteDataReader CargarAcompañantes_Cliente(int id)
+        {
+            string sql_Text = "SELECT * FROM Acompañante WHERE cliente="+id;
             SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
             SQLiteDataReader rdr = cmd.ExecuteReader();
             return rdr;
@@ -1047,6 +1129,29 @@ namespace SGC
             while (rdr.Read())
             {
                 a = new Acompañantes(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetInt32(4), rdr.GetString(5), rdr.GetString(6), rdr.GetInt32(7), rdr.GetString(8), rdr.GetString(9), rdr.GetInt32(10));
+            }
+            return a;
+        }
+        internal Acompañantes CargarUltimoAcompañante(string nom, string apll, string dni, int num)
+        {
+            string sql_Text = "SELECT * FROM Acompañante WHERE nombreacompañante1='"+nom+ "' AND apellido1compañante1='"+apll+ "' AND  dniacompañante1='"+dni+"' AND cliente= "+num;
+            SQLiteCommand cmd = new SQLiteCommand(sql_Text, cn);
+            SQLiteDataReader rdr = cmd.ExecuteReader();
+            Acompañantes a = new Acompañantes();
+            while (rdr.Read())
+            {
+                a = new Acompañantes(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetInt32(4), rdr.GetString(5), rdr.GetString(6), rdr.GetInt32(7), rdr.GetString(8), rdr.GetString(9), rdr.GetInt32(10));
+            }
+            if (a == null)
+            {
+                 sql_Text = "SELECT * FROM Acompañante WHERE nombreacompañante1='" + nom + "' AND apellido1compañante1='" + apll + "' AND  dniacompañante1='" + dni ;
+                 cmd = new SQLiteCommand(sql_Text, cn);
+                 rdr = cmd.ExecuteReader();
+                 a = new Acompañantes();
+                while (rdr.Read())
+                {
+                    a = new Acompañantes(rdr.GetInt32(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetInt32(4), rdr.GetString(5), rdr.GetString(6), rdr.GetInt32(7), rdr.GetString(8), rdr.GetString(9), rdr.GetInt32(10));
+                }
             }
             return a;
         }

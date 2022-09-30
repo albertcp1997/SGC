@@ -8193,7 +8193,7 @@
                                                                                                 </Button.Content>
                                                                                             </Button>
                                                                                             <Label Foreground="#838d99" HorizontalAlignment="Left" Content="Borrar todos los recibos"/>
-                                                                                            <ComboBox HorizontalAlignment="Stretch" SelectionChanged="copiasDb_SelectionChanged" Height="40" x:Name="copiasDb">
+                                                                                            <ComboBox HorizontalAlignment="Stretch" SelectionChanged="copiasDb_SelectionChanged" Height="40" x:Name="copiasDb" IsEnabled="False">
                                                                                                 <ComboBox.ItemTemplate>
                                                                                                     <DataTemplate>
                                                                                                         <StackPanel Orientation="Horizontal">
@@ -8204,6 +8204,20 @@
                                                                                                     </DataTemplate>
                                                                                                 </ComboBox.ItemTemplate>
                                                                                             </ComboBox>
+                                                                                            <Label Foreground="#838d99" HorizontalAlignment="Left" Content="Sincronizar Bases de datos"/>
+                                                                                            <Button Margin="10,0,0,0" HorizontalAlignment="Left"  x:Name="actualizarDb" Visibility="Visible" ToolTip="Sincronizar DB con DB externa" Width="50" Height="45" Click="actualizarDb_Click" Background="#FF71BEFF">
+                                                                                                <Button.Resources>
+                                                                                                    <Style TargetType="Border">
+                                                                                                        <Setter Property="CornerRadius" Value="5"></Setter>
+                                                                                                    </Style>
+                                                                                                </Button.Resources>
+                                                                                                <Button.Content>
+                                                                                                    <Grid>
+                                                                                                        <Image Source="/iconos/actu.png" VerticalAlignment="Stretch" ></Image>
+
+                                                                                                    </Grid>
+                                                                                                </Button.Content>
+                                                                                            </Button>
                                                                                             <Label Visibility="Collapsed" Foreground="#838d99" HorizontalAlignment="Left" Content="Direccion IP"/>
                                                                                             <TextBox Visibility="Collapsed" Height="{Binding Source={x:Static properties:Settings.Default}, Path=Height}" BorderBrush="#e2e6ee" BorderThickness="2" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="helvetica neue" FontSize="{Binding Source={x:Static properties:Settings.Default}, Path=FontSize_Text}"  TextChanged="empresa_TextChanged" Foreground="Black"  x:Name="Ip_dir"></TextBox>
 
@@ -12257,7 +12271,7 @@
                                                                 </Button.Resources>
                                                                 <Image Source="https://cdn-icons-png.flaticon.com/512/2/2199.png" Width="35"></Image>
                                                             </Button>
-                                                            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" PanningMode="Both">
+                                                            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" PanningMode="Both" x:Name="Scroll_botones_Indice">
                                                                 <Grid x:Name="botones_indice">
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition></ColumnDefinition>

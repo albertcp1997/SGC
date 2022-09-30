@@ -51,6 +51,8 @@ namespace SGC.Clases
             //Lista_productos = lista_productos;
             Numero_Factura = (string)p["Numero_Factura"];
             Lista_productos_tpv = new List<Producto_Registro_TPV>();
+            Tipo = (int)p["Tipo"];
+            Id_Ticket = (int)p["Id_Ticket"];
 
         }
 
